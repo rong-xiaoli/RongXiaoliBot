@@ -1,6 +1,7 @@
 package com.rongxiaoli;
 
 import com.rongxiaoli.backend.Log;
+import com.rongxiaoli.plugin.DailySign.DailySign;
 import com.rongxiaoli.plugin.Picture.PicturePlugin;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
@@ -16,12 +17,11 @@ public final class RongXiaoliBot extends JavaPlugin {
     public static Path DataPath;
     public static Path ConfigPath;
     private RongXiaoliBot() {
-        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.0")
+        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.1")
                 .name("RongXiaoli Bot")
                 .author("RongXiaoli")
                 .build());
     }
-
     @Override
     public void onEnable() {
         //Initiate all parts.
@@ -42,6 +42,12 @@ public final class RongXiaoliBot extends JavaPlugin {
                 "setu Plugin initiated. ",
                 Log.Module.PluginMain,
                 PluginName);
+
+        DailySign.Init();
+        Log.WriteLog(Log.Level.Debug,
+                "DailySign Plugin initiated. ",
+                Log.Module.PluginMain,
+                PluginName);
         GlobalEventChannel.INSTANCE.registerListenerHost(new PluginListener());
 
         isPluginRunning = true;
@@ -51,4 +57,33 @@ public final class RongXiaoliBot extends JavaPlugin {
                 Log.Module.PluginMain,
                 PluginName);
     }
+
+    @Override
+    public void onDisable() {
+        //Disable all parts.
+        Log.WriteLog(Log.Level.Info,
+                "Plugin exiting...",
+                Log.Module.PluginMain,
+                PluginName);
+
+        //Disabling plugins.
+        PicturePlugin.isRunning = false;
+        PicturePlugin.CThread.interrupt();
+        Log.WriteLog(Log.Level.Debug,
+                "setu Plugin shutting down. ",
+                Log.Module.PluginMain,
+                PluginName);
+
+        DailySign.Shutdown();
+        Log.WriteLog(Log.Level.Debug,
+                "DailySign Plugin shutting down. ",
+                Log.Module.PluginMain,
+                PluginName);
+
+        Log.WriteLog(Log.Level.Debug,
+                "All modules disabled! ",
+                Log.Module.PluginMain,
+                PluginName);
+    }
+
 }

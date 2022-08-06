@@ -55,7 +55,7 @@ public class PicturePlugin {
     public static CoolingThread CThread = new CoolingThread();
 
     /**
-     * Plugin main method.
+     * Plugin main method for groups.
      * @param arrCommand Command array.
      * @param Friend QQID.
      * @param Group Group ID.
@@ -73,7 +73,7 @@ public class PicturePlugin {
         String PictureAuthor;
         String PictureFilePath;
         String PictureSavingPath = RongXiaoliBot.DataPath.toString() + "/setu/Image/";
-        String PictureTags;
+        //String PictureTags;
         String PictureTitle;
         String PictureUrlString;
 
@@ -102,9 +102,9 @@ public class PicturePlugin {
         FriendID = Friend;
         GroupID = Group;
         Log.WriteLog(Log.Level.Verbose,
-                "Received command from: " + "\n" +
+                "Received group command from: " + "\n" +
                 "Group: " + GroupID + "\n" +
-                "Friend: " + FriendID + "\n" +
+                "Member: " + FriendID + "\n" +
                 "Content: " + Arrays.toString(arrCommand),
                 Log.Module.PluginMain,
                 PluginName);
@@ -269,12 +269,12 @@ public class PicturePlugin {
         isProcessing = false;
         PictureAuthor = PictData.getAuthor();
         PicturePid = PictData.getPid();
-        PictureTags = PictData.getTags().toString();
+        //PictureTags = PictData.getTags().toString();
         PictureTitle = PictData.getTitle();
         PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
         PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
         PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
-        PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
+        //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
         PictureInfoMessage.append("链接: ").append(PictureUrlString);
         PictureMessage.append(image);
         SenderContact.sendMessage(PictureInfoMessage.build());
@@ -286,6 +286,245 @@ public class PicturePlugin {
         isProcessing = false;
     }
 
+    /**
+     * Plugin main method for friends.
+     * @param arrCommand Command array.
+     * @param Friend QQID.
+     * @param SenderContact Contact of the sender.
+     */
+    public static void Main(String[] arrCommand, long Friend, Contact SenderContact) {
+        //0-length array.
+        if (arrCommand.length == 0) {
+            return;
+        }
+
+        //Declare variables.
+        String[] Keywords;
+        String ApiUrlString = "http://api.lolicon.app/setu/v2";
+        String ApiReturnString = null;
+        String PictureAuthor;
+        String PictureFilePath;
+        String PictureSavingPath = RongXiaoliBot.DataPath.toString() + "/setu/Image/";
+        //String PictureTags;
+        String PictureTitle;
+        String PictureUrlString;
+
+        long FriendID;
+
+        int PicturePid;
+
+        short FreezeTime;
+        short RemainingTime;
+
+        File PictureLocalFile;
+
+        MessageChainBuilder PictureInfoMessage = new MessageChainBuilder();
+        MessageChainBuilder PictureMessage = new MessageChainBuilder();
+
+        //Start process.
+        if (!Objects.equals(arrCommand[0], CommandPrefix)) {
+            return;
+        }
+        //Judge if the plugin is enabled.
+        if (!Enabled) {
+            SenderContact.sendMessage("当前图片插件未启用");
+            return;
+        }
+        FriendID = Friend;
+        Log.WriteLog(Log.Level.Verbose,
+                "Received friend command from: " + "\n" +
+                        "Friend: " + FriendID + "\n" +
+                        "Content: " + Arrays.toString(arrCommand),
+                Log.Module.PluginMain,
+                PluginName);
+
+
+        //Version 0.1.0 add:
+        //Reason: After being banned for many times, this function is banned forever for others.
+        if (FriendID != RongXiaoliBot.Owner) {
+            return;
+        }
+
+        //Lock.
+        if (isProcessing) {
+            SenderContact.sendMessage("其他消息正在处理，请稍后");
+            return;
+        }
+        isProcessing = true;
+        if (FriendID != RongXiaoliBot.Owner) {
+            FreezeTime = 90;
+            RemainingTime = CoolingObjectList.Add(FriendID, FreezeTime);
+            if (RemainingTime != -1) {
+                SenderContact.sendMessage("冷却还剩" + RemainingTime +"秒，请耐心等待");
+                isProcessing = false;
+                return;
+            }
+        }
+
+
+        //Process tags.
+        Keywords = null;
+        if (arrCommand.length >= 2) {
+            Keywords = new String[arrCommand.length - 1];
+            for (int num = 0; num<= Keywords.length - 1; num++
+            ) {
+                Keywords[num]=arrCommand[num+1];
+            }
+            Log.WriteLog(Log.Level.Verbose,
+                    "Command received (raw): " + Arrays.toString(arrCommand),
+                    Log.Module.PluginMain,
+                    PluginName);
+        }
+
+        //Construct API Request.
+        HttpGet APIHttpGet = new HttpGet();
+        APIHttpGet.targetUrl = ApiUrlString;
+        if (Keywords != null) {
+            for (String tag :
+                    Keywords) {
+                APIHttpGet.Par.Append("tag", tag);
+            }
+        }
+        APIHttpGet.Par.Append("size", "regular");
+        try {
+            ApiReturnString = APIHttpGet.GET(PluginName);
+            Log.WriteLog(Log.Level.Verbose,
+                    "API connect succeeded. ",
+                    Log.Module.PluginMain,
+                    PluginName);
+        } catch (MalformedURLException MUE) {
+            SenderContact.sendMessage("抱歉，URL组装失败，请更换关键词");
+            isProcessing = false;
+        } catch (FileNotFoundException FNFE) {
+            SenderContact.sendMessage("服务器文件访问失败");
+            isProcessing = false;
+        } catch (SocketTimeoutException STE) {
+            SenderContact.sendMessage("服务器连接超时，请稍后重试");
+            Log.Exception(STE, "Connecting to URL: " + APIHttpGet.getFinalURL(), Log.Module.Network, PluginName);
+            isProcessing = false;
+        } catch (UnsupportedEncodingException UEE) {
+            SenderContact.sendMessage("URL编码失败，请更换关键词");
+            isProcessing = false;
+        } catch (IOException IOE) {
+            SenderContact.sendMessage("数据流处理失败，请联系主人维修，并提供错误发生时间");
+            isProcessing = false;
+        }
+
+        //JSON resolve.
+        if (Objects.equals(ApiReturnString, "")) {
+            SenderContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
+            Log.WriteLog(Log.Level.Warning,
+                    "API returned empty string. ",
+                    Log.Module.PluginMain,
+                    PluginName);
+            isProcessing = false;
+            return;
+        }
+        if (Objects.equals(ApiReturnString, "{\"error\":\"\",\"data\":[]}")) {
+            SenderContact.sendMessage("找不到相关图片，换一个关键词试试");
+            Log.WriteLog(Log.Level.Info,
+                    "Picture not found. ",
+                    Log.Module.PluginMain,
+                    PluginName);
+            isProcessing = false;
+            return;
+        }
+        if (!JSON.isValid(ApiReturnString)){
+            SenderContact.sendMessage("错误：JSON未能正确转换");
+            Log.WriteLog(Log.Level.Warning,
+                    "JSON cannot be resolved. ",
+                    Log.Module.PluginMain,
+                    PluginName);
+            Log.WriteLog(Log.Level.Verbose,
+                    "JSON: " + ApiReturnString,
+                    Log.Module.PluginMain,
+                    PluginName);
+            isProcessing = false;
+            return;
+        }
+        LoliconAPIRespond APIRespond = JSON.parseObject(ApiReturnString, LoliconAPIRespond.class);
+        LoliconAPIRespond.Data PictData = APIRespond.getData().get(0);
+        PictureUrlString = PictData.getUrls().getOriginal();
+        if (PictureUrlString == null) {
+            PictureUrlString = PictData.getUrls().getRegular();
+        }
+        if (PictureUrlString == null) {
+            SenderContact.sendMessage("图片链接获取失败，请联系主人维修");
+            isProcessing = false;
+            return;
+        }
+
+        //Download picture.
+        String[] UrlSplit = PictureUrlString.split("/");
+        HttpDownload PictureDownload = new HttpDownload();
+        PictureDownload.targetUrl = PictureUrlString;
+        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+        PictureDownload.localFilePath = PictureSavingPath;
+        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+        PictureLocalFile = new File(PictureFilePath);
+        SenderContact.sendMessage("图片加载中");
+        if (PictureLocalFile.exists()) {
+            Log.WriteLog(Log.Level.Verbose,
+                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
+                    Log.Module.PluginMain,
+                    PluginName);
+        } else {
+            try {
+                PictureDownload.Download(PluginName);
+            } catch (MalformedURLException MUE) {
+                SenderContact.sendMessage("API返回URL错误，请重试");
+                isProcessing = false;
+            } catch (ConnectException CE) {
+                SenderContact.sendMessage("连接超时，请重试");
+            } catch (FileNotFoundException FNFE) {
+                SenderContact.sendMessage("API返回异常，请重试");
+                isProcessing = false;
+            } catch (IllegalArgumentException IAE) {
+                SenderContact.sendMessage("未知的参数错误，请联系主人维修");
+                isProcessing = false;
+            } catch (ClosedChannelException CCE) {
+                SenderContact.sendMessage("连结终止，请重试");
+                isProcessing = false;
+            } catch (IOException IOE) {
+                if (IOE.getMessage().contains("timed out")) {
+                    SenderContact.sendMessage("连接超时，请重试");
+                    isProcessing = false;
+                    return;
+                }
+                SenderContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
+                isProcessing = false;
+            }
+        }
+
+        //Send message.
+        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
+        Log.WriteLog(Log.Level.Verbose,
+                "Using file: " + PictureFilePath,
+                Log.Module.PluginMain,
+                PluginName);
+        isProcessing = false;
+        PictureAuthor = PictData.getAuthor();
+        PicturePid = PictData.getPid();
+        //PictureTags = PictData.getTags().toString();
+        PictureTitle = PictData.getTitle();
+        PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
+        PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
+        PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
+        //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
+        PictureInfoMessage.append("链接: ").append(PictureUrlString);
+        PictureMessage.append(image);
+        SenderContact.sendMessage(PictureInfoMessage.build());
+        SenderContact.sendMessage(PictureMessage.build());
+        Log.WriteLog(Log.Level.Debug,
+                "Process completed. ",
+                Log.Module.PluginMain,
+                PluginName);
+        isProcessing = false;
+    }
+
+    /**
+     * Module init.
+     */
     public static void Init() {
         CThread.start();
         Log.WriteLog(Log.Level.Info,
