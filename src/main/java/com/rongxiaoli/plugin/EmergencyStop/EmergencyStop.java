@@ -12,25 +12,25 @@ public class EmergencyStop {
                 return;
             }
             //Running.
-            if (Objects.equals(arrCommand[0], "stop") && arrCommand.length == 1) {
+            if (Objects.equals(arrCommand[0], "/stop") && arrCommand.length == 1) {
                 //Received stop command.
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     //Owner command.
                     SenderContact.sendMessage("收到紧急停止消息，正在停止");
                     RongXiaoliBot.isPluginRunning = false;
                 }
-            } else if (Objects.equals(arrCommand[0], "start")) {
+            } else if (Objects.equals(arrCommand[0], "/start")) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     SenderContact.sendMessage("插件正在运行");
                 }
             }
         } else {
             //Not running.
-            if (Objects.equals(arrCommand[0], "stop") && arrCommand.length == 1) {
+            if (Objects.equals(arrCommand[0], "/stop") && arrCommand.length == 1) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     SenderContact.sendMessage("插件已停止");
                 }
-            } else if (Objects.equals(arrCommand[0], "start")) {
+            } else if (Objects.equals(arrCommand[0], "/start")) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     RongXiaoliBot.isPluginRunning = true;
                     SenderContact.sendMessage("插件已重新启用");

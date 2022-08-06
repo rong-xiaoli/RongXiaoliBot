@@ -11,9 +11,18 @@ public class PluginListener extends SimpleListenerHost {
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
         exception.printStackTrace();
     }
+//    @Deprecated
+//    @EventHandler
+//    public void onMessage(MessageEvent e) {
+//        MessageProcessor.MessageProcess(e.getMessage().contentToString(),e);
+//    }
     @EventHandler
-    public void onMessage(MessageEvent e) {
-        MessageProcessor.MessageProcess(e.getMessage().contentToString(),e);
+    public void onFriendMessage(FriendMessageEvent e) {
+        MessageProcessor.FriendMessageProcess(e.getMessage().contentToString(), e);
+    }
+    @EventHandler
+    public void onGroupMessage(GroupMessageEvent e) {
+        MessageProcessor.GroupMessageProcess(e.getMessage().contentToString(), e);
     }
     @EventHandler
     public void onFriendAddRequest(NewFriendRequestEvent e) {

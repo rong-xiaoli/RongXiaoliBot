@@ -2,12 +2,14 @@ package com.rongxiaoli;
 
 import com.rongxiaoli.plugin.AutoAccept.AutoAcceptPlugin;
 import com.rongxiaoli.plugin.Broadcast.Broadcast;
+import com.rongxiaoli.plugin.DailySign.DailySign;
 import com.rongxiaoli.plugin.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.plugin.BotCommand.BotCommand;
 import com.rongxiaoli.plugin.Picture.PicturePlugin;
 import net.mamoe.mirai.event.events.*;
 
 public class MessageProcessor {
+    @Deprecated
     public static void MessageProcess(String originalMessage, MessageEvent e) {
         //Variables initiate.
         String[] arrCommand;
@@ -24,6 +26,66 @@ public class MessageProcessor {
         //Second step.
         Broadcast.Main(arrCommand, e.getSubject());
         PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSender().getId(),e.getSubject());
+    }
+
+    /**
+     * Invoke when a friend message is sent.
+     * @param originalMessage Original message.
+     * @param e FriendMessageEvent.
+     */
+    public static void FriendMessageProcess(String originalMessage, FriendMessageEvent e) {
+        //Variables initiate.
+        String[] arrCommand;
+        //Start processing.
+        arrCommand = originalMessage.split(" ");
+        //Invoke plugin main methods.
+        //First step.
+        EmergencyStop.Main(arrCommand, e.getSubject());
+
+        BotCommand.Main(arrCommand, e.getSubject());
+        //Judge if the plugin is running or not.
+        if (!RongXiaoliBot.isPluginRunning) {
+            return;
+        }
+        //Second step.
+        //Plugin name: broadcast.
+        Broadcast.Main(arrCommand, e.getSubject());
+
+        //Plugin name: dailysign.
+        DailySign.Main(arrCommand,e.getSubject().getId(),0,e.getSubject());
+
+        //Plugin name: setu.
+        PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
+    }
+
+    /**
+     * Invoke when a group message is sent.
+     * @param originalMessage Original message.
+     * @param e GroupMessageEvent.
+     */
+    public static void GroupMessageProcess(String originalMessage, GroupMessageEvent e) {
+        //Variables initiate.
+        String[] arrCommand;
+        //Start processing.
+        arrCommand = originalMessage.split(" ");
+        //Invoke plugin main methods.
+        //First step.
+        EmergencyStop.Main(arrCommand, e.getSubject());
+
+        BotCommand.Main(arrCommand, e.getSubject());
+        //Judge if the plugin is running or not.
+        if (!RongXiaoliBot.isPluginRunning) {
+            return;
+        }
+        //Second step.
+
+        //Version 0.1.0 removed:
+        //Reason: After being banned for many times, this function is banned forever for others.
+        //Plugin name: setu.
+        //PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSender().getId(),e.getSubject());
+
+        //Plugin name: dailysign.
+        DailySign.Main(arrCommand, e.getSubject().getId(), e.getSender().getId(),e.getSubject());
     }
 
     /**

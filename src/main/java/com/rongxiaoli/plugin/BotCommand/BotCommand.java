@@ -10,9 +10,8 @@ import java.util.Objects;
 
 public class BotCommand {
     public static String PluginName = "BotCommand";
-    public static String CommandPrefix = "管理";
     public static void Main(String[] arrCommand, Contact SenderContact) {
-        //Judge if sender is the owner.
+        //Judge if message is 0 width.
         if (arrCommand.length == 0) {
             return;
         }
@@ -26,12 +25,15 @@ public class BotCommand {
                     return;
                 }
                 Management.Process(arrCommand, SenderContact);
+                //End.
             } else if (Objects.equals(arrCommand[0], Help.CommandPrefix)) {
                 //Help message.
                 Help.Process(arrCommand,SenderContact);
+                //End.
             } else if (Objects.equals(arrCommand[0], Status.CommandPrefix)) {
                 //Status.
                 Status.Process(arrCommand, SenderContact);
+                //End.
             }
         }
     }
