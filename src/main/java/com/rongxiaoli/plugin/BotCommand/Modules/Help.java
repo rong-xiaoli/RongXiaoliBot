@@ -1,5 +1,6 @@
 package com.rongxiaoli.plugin.BotCommand.Modules;
 
+import com.rongxiaoli.plugin.DailySign.DailySign;
 import com.rongxiaoli.plugin.Picture.PicturePlugin;
 import net.mamoe.mirai.contact.Contact;
 
@@ -16,8 +17,10 @@ public class Help {
         if (arrCommand.length == 1) {
             HelpMessage.append("容小狸Bot帮助: \n");
             HelpMessage.append(HelpContent + "\n");
-            HelpMessage.append(Status.HelpContent + "\n");
+            HelpMessage.append(DailySign.HelpContent + "\n");
             HelpMessage.append(PicturePlugin.HelpContent + "\n");
+            HelpMessage.append(Status.HelpContent + "\n");
+
             SenderContact.sendMessage(HelpMessage.toString());
         } else if (arrCommand.length == 2) {
             if (arrCommand[1] == Status.CommandPrefix) {

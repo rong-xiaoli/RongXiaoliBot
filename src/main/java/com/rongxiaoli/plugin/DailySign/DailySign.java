@@ -19,6 +19,8 @@ public class DailySign {
     private static JSONFile SignInDataJSONFile;
 
     public static String PluginName = "DailySign";
+    public static String HelpContent = "Rsign\n" +
+            "签到";
     public static boolean Enabled = true;
     public static void Main(String[] arrCommand, long QQID, long GroupID, Contact SenderContact) {
         //Judge if command is 0-width.
