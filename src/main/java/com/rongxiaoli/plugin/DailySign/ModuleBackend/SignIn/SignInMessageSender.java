@@ -16,12 +16,10 @@ import java.util.Random;
 public class SignInMessageSender {
     /**
      * Send the string to the user.
-     * @param QQID QQID.
      * @param SenderContact Sender contact.
      * @param isNewUser True if the user is new user.
-     * @param Coin Coin.
      */
-    public static void Friend(long QQID, Contact SenderContact, boolean isNewUser, long Coin) {
+    public static void Friend(Contact SenderContact, boolean isNewUser) {
         //Variables declaration.
         MessageChainBuilder builder = new MessageChainBuilder();
         GregorianCalendar PresentCalendar = new GregorianCalendar();
@@ -34,11 +32,11 @@ public class SignInMessageSender {
         int Minute = PresentCalendar.get(Calendar.MINUTE);
         int Second = PresentCalendar.get(Calendar.SECOND);
         int Millisecond = PresentCalendar.get(Calendar.MILLISECOND);
-        builder.append(StringResource.FriendString(Year ,Month ,Day ,Week ,Hour ,Minute ,Second ,Millisecond ,isNewUser ,Coin ,QQID));
-        SenderContact.sendMessage(builder.toString());
+        builder.append(StringResource.FriendString(Year ,Month ,Day ,Week ,Hour ,Minute ,Second ,Millisecond ,isNewUser));
+        SenderContact.sendMessage(builder.build());
     }
 
-    public static void Group(long QQID, long GroupID, Contact SenderContact, boolean isNewUser, long Coin, int Position) {
+    public static void Group(long QQID, long GroupID, Contact SenderContact, boolean isNewUser, int Position) {
         //Variables declaration.
         MessageChainBuilder builder = new MessageChainBuilder();
         GregorianCalendar PresentCalendar = new GregorianCalendar();
@@ -51,8 +49,8 @@ public class SignInMessageSender {
         int Minute = PresentCalendar.get(Calendar.MINUTE);
         int Second = PresentCalendar.get(Calendar.SECOND);
         int Millisecond = PresentCalendar.get(Calendar.MILLISECOND);
-        builder.append(StringResource.GroupString(Year ,Month ,Day ,Week ,Hour ,Minute ,Second ,Millisecond ,isNewUser ,Coin ,QQID, GroupID, Position));
-        SenderContact.sendMessage(builder.toString());
+        builder.append(StringResource.GroupString(Year ,Month ,Day ,Week ,Hour ,Minute ,Second ,Millisecond ,isNewUser , QQID, GroupID, Position));
+        SenderContact.sendMessage(builder.build());
     }
 
     public static class StringResource {
@@ -250,7 +248,7 @@ public class SignInMessageSender {
                     WeekBasedString = "今天，是疯狂星期四啊！v我50！！";
                     break;
                 case FRIDAY:
-                    WeekBasedString = "TGIF！周末要来啦！";
+                    WeekBasedString = "周末要来啦！";
                     break;
                 case SATURDAY:
                     WeekBasedString = "周末开始了呢~宅在家里做什么好呢~";
@@ -415,21 +413,17 @@ public class SignInMessageSender {
          * @param Second Second.
          * @param Millisecond Millisecond.
          * @param isNewUser true if the user is a new user.
-         * @param Coin Coin.
-         * @param QQID QQID.
          * @return Return a string.
          */
-        public static String FriendString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond, boolean isNewUser, long Coin, long QQID) {
+        public static String FriendString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond, boolean isNewUser) {
             StringBuilder OutputBuilder = new StringBuilder();
             OutputBuilder.append("-=-=-=-=每日签到=-=-=-=-\n");
             if (isNewUser) {
                 OutputBuilder.append("你好啊，新人！\n");
             }
-            OutputBuilder.append("QQID：" + QQID + "\n");
             OutputBuilder.append("今天是：" + Year + "年" + Month + "月" + Day + "日" + ",\n");
             OutputBuilder.append(Week.getDisplayName(TextStyle.FULL,Locale.PRC) + "\n");
             OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second);
-            OutputBuilder.append("您有金币：" + Coin + "\n");
             OutputBuilder.append(GetRandomString(Year, Month, Day, Week, Hour, Minute, Second, Millisecond) + "\n");
             OutputBuilder.append("-=-=-=-=-=-=-=-=-=-=-=-");
             return OutputBuilder.toString();
@@ -446,18 +440,16 @@ public class SignInMessageSender {
          * @param Second Second.
          * @param Millisecond Millisecond.
          * @param isNewUser true if the user is a new user.
-         * @param Coin Coin.
          * @param QQID QQID.
          * @param GroupID Group ID.
          * @return Return a string.
          */
-        public static String GroupString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond, boolean isNewUser, long Coin, long GroupID, long QQID, int Position) {
+        public static String GroupString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond, boolean isNewUser, long GroupID, long QQID, int Position) {
             StringBuilder OutputBuilder = new StringBuilder();
             OutputBuilder.append("-=-=-=-=每日签到=-=-=-=-\n");
             if (isNewUser) {
                 OutputBuilder.append("你好啊，新人！\n");
             }
-            OutputBuilder.append("QQID：" + QQID + "\n");
             OutputBuilder.append("您今天是第" + Position + "位签到者");
             if (Position == 1) {
                 OutputBuilder.append("，来得真早！\n");
@@ -466,8 +458,7 @@ public class SignInMessageSender {
             }
             OutputBuilder.append("今天是：" + Year + "年" + Month + "月" + Day + "日" + ",\n");
             OutputBuilder.append(Week.getDisplayName(TextStyle.FULL,Locale.PRC) + "\n");
-            OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second);
-            OutputBuilder.append("您有金币：" + Coin + "\n");
+            OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second + "\n");
             OutputBuilder.append(GetRandomString(Year, Month, Day, Week, Hour, Minute, Second, Millisecond) + "\n");
             OutputBuilder.append("-=-=-=-=-=-=-=-=-=-=-=-");
             return OutputBuilder.toString();

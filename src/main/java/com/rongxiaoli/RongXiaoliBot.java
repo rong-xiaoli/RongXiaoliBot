@@ -75,6 +75,7 @@ public final class RongXiaoliBot extends JavaPlugin {
                 PluginName);
 
         DailySign.Shutdown();
+
         Log.WriteLog(Log.Level.Debug,
                 "DailySign Plugin shutting down. ",
                 Log.Module.PluginMain,

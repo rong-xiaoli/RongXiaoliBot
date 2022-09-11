@@ -121,8 +121,8 @@ public class HttpGet {
         try {
             urlHandle = new URL(encode(FinalUrl));
             httpConn = (HttpURLConnection) urlHandle.openConnection();
-            httpConn.setConnectTimeout(30000);
-            httpConn.setReadTimeout(100000);
+            httpConn.setConnectTimeout(300000);
+            httpConn.setReadTimeout(1000000);
             httpConn.setRequestProperty("Application", "application/json");
             httpConn.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
             isDisconnected = false;
@@ -145,6 +145,17 @@ public class HttpGet {
                         "Unexpected code received: " + httpConn.getResponseCode(),
                         Log.Module.Network,
                         PluginName);
+//                inStream = httpConn.getInputStream();
+//                bufferedReader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
+//                String line;
+//                while ((line = bufferedReader.readLine()) != null) {
+//                    Output.append(line);
+//                    Log.WriteLog(Log.Level.Verbose,
+//                            "Received data: "+ "\n" +
+//                                    line,
+//                            Log.Module.Network,
+//                            PluginName);
+//                }
             }
         } catch (MalformedURLException MUE) {
             Log.Exception(MUE, "URL incorrect. URL: " + FinalUrl, Log.Module.Network,PluginName);
