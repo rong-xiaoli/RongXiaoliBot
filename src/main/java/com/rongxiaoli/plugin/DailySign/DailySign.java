@@ -17,6 +17,8 @@ public class DailySign {
     public static Data SignList = new Data();
     public static DateChecker DChecker = new DateChecker();
     private static JSONFile SignInDataJSONFile;
+    public static final String HelpContent = "Rsign\n" +
+            "签到\n";
 
     public static String PluginName = "DailySign";
     public static String HelpContent = "Rsign\n" +

@@ -20,16 +20,12 @@ public class Help {
             HelpMessage.append(DailySign.HelpContent + "\n");
             HelpMessage.append(PicturePlugin.HelpContent + "\n");
             HelpMessage.append(Status.HelpContent + "\n");
-
             SenderContact.sendMessage(HelpMessage.toString());
         } else if (arrCommand.length == 2) {
-            if (arrCommand[1] == Status.CommandPrefix) {
-                SenderContact.sendMessage(Status.HelpContent);
-            }
-            if (arrCommand[1] == PicturePlugin.CommandPrefix) {
-                SenderContact.sendMessage(PicturePlugin.HelpContent);
-            }
             switch (arrCommand[1]) {
+                case "RSign":
+                    SenderContact.sendMessage(DailySign.HelpContent);
+                    break;
                 case "setu":
                     SenderContact.sendMessage(PicturePlugin.HelpContent);
                     break;
