@@ -14,6 +14,7 @@ public class Log {
     }
     public enum Module {
         Network,
+        Data,
         Log,
         File,
         Multithreading,
