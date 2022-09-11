@@ -16,9 +16,18 @@ public class JSONFile {
         JSONFileHandler = new File(FilePath, FileName);
         //Try creating file path.
         JSONFileHandler.getParentFile().mkdirs();
+        if (!JSONFileHandler.exists()) {
+            try {
+                JSONFileHandler.createNewFile();
+            } catch (IOException e) {
+                Log.Exception(e,
+                        "",
+                        Log.Module.File,
+                        PluginName);
+            }
+        }
 
         JString = new StringBuilder();
-
         this.PluginName = pluginName;
     }
 
@@ -43,39 +52,13 @@ public class JSONFile {
     }
 
     public void readFile() {
-        //Declare variables.
-        BufferedReader reader;
         try {
-            //Start reading file.
-            reader = new BufferedReader(new FileReader(JSONFileHandler));
-            while (reader.ready()) {
-                JString.append(reader.readLine());
+            BufferedReader reader = new BufferedReader(new FileReader(JSONFileHandler));
+            String buf;
+            while ((buf = reader.readLine()) != null) {
+                JString.append(buf);
             }
-            reader.close();
-            //End reading.
-
-        } catch (FileNotFoundException e) {
-            Log.WriteLog(Log.Level.Warning,
-                    "JSON file" + JSONFileHandler.getAbsolutePath() + "not found.",
-                    Log.Module.File,
-                    PluginName);
-            try {
-                JSONFileHandler.createNewFile();
-            } catch (IOException ex) {
-                Log.WriteLog(Log.Level.Error,
-                        "Cannot create file: " + JSONFileHandler.getAbsolutePath(),
-                        Log.Module.File,
-                        PluginName);
-            }
-            Log.WriteLog(Log.Level.Verbose,
-                    "JSON file" + JSONFileHandler.getAbsolutePath() + "created. ",
-                    Log.Module.File,
-                    PluginName);
         } catch (IOException e) {
-            Log.WriteLog(Log.Level.Error,
-                    "Unexpected IOException occurred! ",
-                    Log.Module.File,
-                    PluginName);
             Log.Exception(e,
                     "",
                     Log.Module.File,
@@ -86,7 +69,8 @@ public class JSONFile {
     public void writeFile() {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(JSONFileHandler));
-            writer.write(JString.toString(), 0, JString.length());
+            writer.write(JString.toString());
+            writer.flush();
         } catch (IOException e) {
             Log.Exception(e,
                     "",

@@ -9,24 +9,6 @@ import com.rongxiaoli.plugin.Picture.PicturePlugin;
 import net.mamoe.mirai.event.events.*;
 
 public class MessageProcessor {
-    @Deprecated
-    public static void MessageProcess(String originalMessage, MessageEvent e) {
-        //Variables initiate.
-        String[] arrCommand;
-        //Start processing.
-        arrCommand = originalMessage.split(" ");
-        //Invoke plugin main methods.
-        //First step.
-        EmergencyStop.Main(arrCommand, e.getSubject());
-        BotCommand.Main(arrCommand, e.getSubject());
-        //Judge if the plugin is running or not.
-        if (!RongXiaoliBot.isPluginRunning) {
-            return;
-        }
-        //Second step.
-        Broadcast.Main(arrCommand, e.getSubject());
-        PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSender().getId(),e.getSubject());
-    }
 
     /**
      * Invoke when a friend message is sent.
@@ -47,15 +29,19 @@ public class MessageProcessor {
         if (!RongXiaoliBot.isPluginRunning) {
             return;
         }
+
         //Second step.
         //Plugin name: broadcast.
         Broadcast.Main(arrCommand, e.getSubject());
 
-        //Plugin name: dailysign.
-        DailySign.Main(arrCommand,e.getSubject().getId(),0,e.getSubject());
+        //Version 0.1.0 removed:
+        //Reason: After being banned for many times, this function is banned forever for others.
 
         //Plugin name: setu.
-        PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
+        //PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
+
+        //Plugin name: dailysign.
+        DailySign.Main(arrCommand,e.getSubject().getId(),0,e.getSubject());
     }
 
     /**
@@ -81,11 +67,12 @@ public class MessageProcessor {
 
         //Version 0.1.0 removed:
         //Reason: After being banned for many times, this function is banned forever for others.
+
         //Plugin name: setu.
-        //PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSender().getId(),e.getSubject());
+        //PicturePlugin.Main(arrCommand, e.getSender().getId(),e.getSubject().getId(),e.getSubject());
 
         //Plugin name: dailysign.
-        DailySign.Main(arrCommand, e.getSubject().getId(), e.getSender().getId(),e.getSubject());
+        DailySign.Main(arrCommand, e.getSender().getId(), e.getSubject().getId(),e.getSubject());
     }
 
     /**

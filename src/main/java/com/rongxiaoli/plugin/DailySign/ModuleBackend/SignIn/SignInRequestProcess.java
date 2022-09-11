@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class SignInRequestProcess {
-    public static String CommandPrefix = "/sign";
+    public static String CommandPrefix = "Rsign";
     /**
      * Plugin main method.
      * @param arrCommand Command array.
@@ -27,33 +27,38 @@ public class SignInRequestProcess {
         if (!Objects.equals(arrCommand[0], CommandPrefix)) {
             return;
         }
-
         //Define variables.
         boolean isExist = false;
-        long coin = 0;
 
         //Judge if sender is from a group.
         if (groupID == 0) {
+            //Friend sign in request.
             Log.WriteLog(Log.Level.Debug,
                     "Friend Sign request:" + qqID,
                     Log.Module.PluginMain,
                     DailySign.PluginName);
         } else {
+            //Group sign in request.
             Log.WriteLog(Log.Level.Debug,
                     "Group: " + groupID + " (Member" + qqID + "): Sign request. ",
                     Log.Module.PluginMain,
                     DailySign.PluginName);
         }
-        for (SignObjectList.FriendSignObject SingleObject :
-                DailySign.SignList.FriendSignList) {
-            if (SingleObject.QQID == qqID) {
-                //ID exists.
-                SingleObject.Coin += 1;
-                coin = SingleObject.Coin;
-                SingleObject.LastSignTime.Day = LocalDate.now().getDayOfMonth();
-                SingleObject.LastSignTime.Month = LocalDate.now().getMonthValue();
-                SingleObject.LastSignTime.Year = LocalDate.now().getYear();
-                isExist = true;
+        if (DailySign.SignList.FriendSignList != null) {
+            for (SignObjectList.FriendSignObject SingleObject :
+                    DailySign.SignList.FriendSignList) {
+                if (SingleObject.QQID == qqID) {
+                    //ID exists.
+                    if (SingleObject.LastSignTime.Day != LocalDate.now().getDayOfMonth()) {
+                        SingleObject.LastSignTime.Day = LocalDate.now().getDayOfMonth();
+                        SingleObject.LastSignTime.Month = LocalDate.now().getMonthValue();
+                        SingleObject.LastSignTime.Year = LocalDate.now().getYear();
+                        isExist = true;
+                    } else {
+                        SenderContact.sendMessage("已经签到过了哦");
+                        return;
+                    }
+                }
             }
         }
         if (!isExist) {
@@ -62,25 +67,25 @@ public class SignInRequestProcess {
             ObjectAdding.LastSignTime.Month = LocalDate.now().getMonthValue();
             ObjectAdding.LastSignTime.Year = LocalDate.now().getYear();
             ObjectAdding.QQID = qqID;
-            ObjectAdding.Coin = 1;
             DailySign.SignList.FriendSignList.add(ObjectAdding);
-            coin = ObjectAdding.Coin;
         }
         if (groupID == 0) {
             //Friend.
-            SignInMessageSender.Friend(qqID, SenderContact, isExist, coin);
+            SignInMessageSender.Friend(SenderContact, isExist);
         } else {
             for (SignObjectList.GroupSignObject SingleGroupObject :
                     DailySign.SignList.GroupSignList) {
                 if (SingleGroupObject.GroupID == groupID) {
-                    SignInMessageSender.Group(qqID, groupID, SenderContact, isExist, coin, SingleGroupObject.Position);
+                    SignInMessageSender.Group(qqID, groupID, SenderContact, isExist, SingleGroupObject.Position);
                     return;
                 }
             }
             SignObjectList.GroupSignObject ObjectAdding = new SignObjectList.GroupSignObject();
-            ObjectAdding.Position = 2;
+            ObjectAdding.Position = 1;
             ObjectAdding.GroupID = groupID;
             DailySign.SignList.GroupSignList.add(ObjectAdding);
+
+            SignInMessageSender.Group(qqID,groupID,SenderContact,isExist, ObjectAdding.Position);
         }
     }
     //Process end.

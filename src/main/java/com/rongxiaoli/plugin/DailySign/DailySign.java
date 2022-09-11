@@ -4,7 +4,7 @@ import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.JSONFile;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.TimerExecute;
-import com.rongxiaoli.plugin.DailySign.ModuleBackend.CustomString.CustomStringList;
+import com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn.Data;
 import com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn.SignObjectList;
 import com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn.SignInRequestProcess;
 import net.mamoe.mirai.contact.Contact;
@@ -14,11 +14,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class DailySign {
-    public static SignObjectList SignList = new SignObjectList();
-    public static CustomStringList StringList = new CustomStringList();
+    public static Data SignList = new Data();
     public static DateChecker DChecker = new DateChecker();
     private static JSONFile SignInDataJSONFile;
-    private static JSONFile CustomStringDataJSONFile;
+    public static final String HelpContent = "Rsign\n" +
+            "签到\n";
 
     public static String PluginName = "DailySign";
     public static boolean Enabled = true;
@@ -30,7 +30,6 @@ public class DailySign {
 
         //Start processing.
         SignInRequestProcess.Process(arrCommand,QQID,GroupID,SenderContact);
-//        CustomStringOperationRequestProcess.Process(arrCommand, QQID, GroupID, SenderContact);
     }
     public static class DateChecker extends TimerExecute {
         public static int Month;
@@ -56,6 +55,9 @@ public class DailySign {
                 Month = GC.get(Calendar.MONTH);
                 Day = GC.get(Calendar.DAY_OF_MONTH);
             }
+            SignInDataJSONFile.JObject = SignList;
+            SignInDataJSONFile = new JSONFile(PluginName, RongXiaoliBot.DataPath.toString(),"/DailySign/SignData.json");
+            SignInDataJSONFile.writeFile();
         }
     }
 
@@ -63,17 +65,12 @@ public class DailySign {
      * Module init func.
      */
     public static void Init() {
-        SignInDataJSONFile = new JSONFile(PluginName, RongXiaoliBot.ConfigPath.toString(),"/DailySign/SignData.json");
-        SignInDataJSONFile.JObject = new SignObjectList();
+        SignInDataJSONFile = new JSONFile(PluginName, RongXiaoliBot.DataPath.toString(),"/DailySign/SignData.json");
+        SignInDataJSONFile.JObject = new Data();
         SignInDataJSONFile.readFile();
         SignInDataJSONFile.JObject = SignInDataJSONFile.toObject();
-        DailySign.SignList = (SignObjectList) SignInDataJSONFile.JObject;
+        DailySign.SignList = (Data) SignInDataJSONFile.JObject;
 
-        CustomStringDataJSONFile = new JSONFile(PluginName, RongXiaoliBot.ConfigPath.toString(),"/DailySign/CustomStringData.json");
-        CustomStringDataJSONFile.JObject = new CustomStringList();
-        CustomStringDataJSONFile.readFile();
-        CustomStringDataJSONFile.JObject = CustomStringDataJSONFile.toObject();
-        StringList = (CustomStringList) CustomStringDataJSONFile.JObject;
         Log.WriteLog(Log.Level.Verbose,
                 "DailySign JSON file readed. ",
                 Log.Module.PluginMain,
@@ -84,7 +81,15 @@ public class DailySign {
                 "DailySign DateChecker ready. ",
                 Log.Module.PluginMain,
                 PluginName);
-        Log.WriteLog(Log.Level.Debug,
+
+        if (DailySign.SignList == null) {
+            Log.WriteLog(Log.Level.Warning,
+                    "SignList is null. ",
+                    Log.Module.PluginMain,
+                    DailySign.PluginName);
+            SignList = new Data();
+        }
+        Log.WriteLog(Log.Level.Info,
                 "DailySign plugin initiated. ",
                 Log.Module.PluginMain,
                 PluginName);
@@ -95,14 +100,10 @@ public class DailySign {
      */
     public static void Shutdown() {
         SignInDataJSONFile.JString = null;
+        SignInDataJSONFile.JObject = SignList;
         SignInDataJSONFile.JString = new StringBuilder();
-        SignInDataJSONFile.JString.append(SignInDataJSONFile.toString());
+        SignInDataJSONFile.JString.append(SignInDataJSONFile);
         SignInDataJSONFile.writeFile();
-
-        CustomStringDataJSONFile.JString = null;
-        CustomStringDataJSONFile.JString = new StringBuilder();
-        CustomStringDataJSONFile.JString.append(CustomStringDataJSONFile.toString());
-        CustomStringDataJSONFile.writeFile();
         Log.WriteLog(Log.Level.Debug,
                 "DailySign JSONData saved! ",
                 Log.Module.PluginMain,

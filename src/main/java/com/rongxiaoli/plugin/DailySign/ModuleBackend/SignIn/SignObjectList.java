@@ -1,35 +1,27 @@
 package com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn;
 
-import com.rongxiaoli.plugin.DailySign.ModuleBackend.CustomString.CustomStringList;
-
-import java.util.concurrent.CopyOnWriteArrayList;
-
-//Todo: Complete this class.
+/**
+ * This class is for typedef.
+ */
 public class SignObjectList {
-    public CopyOnWriteArrayList<FriendSignObject> FriendSignList;
-    public CopyOnWriteArrayList<GroupSignObject> GroupSignList;
 
-    public static class SignObjectOperation {
-    }
     /**
      * Friend sign object.
      */
     public static class FriendSignObject {
-        public long QQID;
+        public long QQID = 0;
         public static class SignTime {
-            public int Year;
-            public int Month;
-            public int Day;
+            public int Year = 0;
+            public int Month = 0;
+            public int Day = 0;
         }
-        public SignTime LastSignTime;
-        public long Coin;
+        public SignTime LastSignTime = new SignTime();
     }
     /**
      * Group member sign object.
      */
     public static class GroupSignObject {
-        public int Position;
-        public long GroupID;
-        public CustomStringList StringList;
+        public int Position = 0;
+        public long GroupID = 0;
     }
 }
