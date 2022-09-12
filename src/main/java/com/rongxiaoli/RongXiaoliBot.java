@@ -37,11 +37,13 @@ public final class RongXiaoliBot extends JavaPlugin {
         ConfigPath = getConfigFolderPath();
 
         //Plugin init.
-        PicturePlugin.Init();
-        Log.WriteLog(Log.Level.Debug,
-                "setu Plugin initiated. ",
-                Log.Module.PluginMain,
-                PluginName);
+        //Version 0.1.0 removed:
+        //Reason: After being banned for many times, this function is banned forever for others.
+//        PicturePlugin.Init();
+//        Log.WriteLog(Log.Level.Debug,
+//                "setu Plugin initiated. ",
+//                Log.Module.PluginMain,
+//                PluginName);
 
         DailySign.Init();
         Log.WriteLog(Log.Level.Debug,
@@ -67,12 +69,14 @@ public final class RongXiaoliBot extends JavaPlugin {
                 PluginName);
 
         //Disabling plugins.
-        PicturePlugin.isRunning = false;
-        PicturePlugin.CThread.interrupt();
-        Log.WriteLog(Log.Level.Debug,
-                "setu Plugin shutting down. ",
-                Log.Module.PluginMain,
-                PluginName);
+        //Version 0.1.0 removed:
+        //Reason: After being banned for many times, this function is banned forever for others.
+//        PicturePlugin.isRunning = false;
+//        PicturePlugin.CThread.interrupt();
+//        Log.WriteLog(Log.Level.Debug,
+//                "setu Plugin shutting down. ",
+//                Log.Module.PluginMain,
+//                PluginName);
 
         DailySign.Shutdown();
 

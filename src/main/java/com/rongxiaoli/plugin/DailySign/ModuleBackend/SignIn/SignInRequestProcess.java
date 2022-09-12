@@ -3,6 +3,7 @@ package com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.plugin.DailySign.DailySign;
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -29,6 +30,9 @@ public class SignInRequestProcess {
         }
         //Define variables.
         boolean isExist = false;
+        boolean isGroupExist = false;
+
+        int Position = 0;
 
         //Judge if sender is from a group.
         if (groupID == 0) {
@@ -55,6 +59,7 @@ public class SignInRequestProcess {
                         SingleObject.LastSignTime.Year = LocalDate.now().getYear();
                         isExist = true;
                     } else {
+                        MessageChainBuilder b = new MessageChainBuilder();
                         SenderContact.sendMessage("已经签到过了哦");
                         return;
                     }
@@ -76,16 +81,20 @@ public class SignInRequestProcess {
             for (SignObjectList.GroupSignObject SingleGroupObject :
                     DailySign.SignList.GroupSignList) {
                 if (SingleGroupObject.GroupID == groupID) {
+                    isGroupExist = true;
                     SignInMessageSender.Group(qqID, groupID, SenderContact, isExist, SingleGroupObject.Position);
+                    SingleGroupObject.Position++;
                     return;
                 }
             }
-            SignObjectList.GroupSignObject ObjectAdding = new SignObjectList.GroupSignObject();
-            ObjectAdding.Position = 1;
-            ObjectAdding.GroupID = groupID;
-            DailySign.SignList.GroupSignList.add(ObjectAdding);
-
-            SignInMessageSender.Group(qqID,groupID,SenderContact,isExist, ObjectAdding.Position);
+            if (!isGroupExist) {
+                SignObjectList.GroupSignObject ObjectAdding = new SignObjectList.GroupSignObject();
+                ObjectAdding.Position = 1;
+                ObjectAdding.GroupID = groupID;
+                DailySign.SignList.GroupSignList.add(ObjectAdding);
+                Position = ObjectAdding.Position;
+                SignInMessageSender.Group(qqID,groupID,SenderContact,isExist, ObjectAdding.Position);
+            }
         }
     }
     //Process end.

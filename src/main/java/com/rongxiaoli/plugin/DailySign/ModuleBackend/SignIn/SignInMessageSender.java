@@ -325,7 +325,7 @@ public class SignInMessageSender {
                     HourBasedString = "摸鱼摸鱼~";
                     break;
                 case 17:
-                    HourBasedString = "朝九晚五的同志们~下班咯~";
+                    HourBasedString = "朝九晚五的同志们，下班咯~";
                     break;
                 case 18:
                     HourBasedString = "晚饭吃啥好呢~";
@@ -341,7 +341,7 @@ public class SignInMessageSender {
                     HourBasedString = "洗洗睡吧~";
                     break;
                 case 23:
-                    HourBasedString = "夜深了，要陪你睡一会儿吗？";
+                    HourBasedString = "夜深了，要陪你睡觉吗？";
                     break;
                 default:
                     HourBasedString = "美好的一天~";
@@ -417,7 +417,7 @@ public class SignInMessageSender {
          */
         public static String FriendString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond, boolean isNewUser) {
             StringBuilder OutputBuilder = new StringBuilder();
-            OutputBuilder.append("-=-=-=-=每日签到=-=-=-=-\n");
+            OutputBuilder.append("每日签到\n");
             if (isNewUser) {
                 OutputBuilder.append("你好啊，新人！\n");
             }
@@ -425,7 +425,6 @@ public class SignInMessageSender {
             OutputBuilder.append(Week.getDisplayName(TextStyle.FULL,Locale.PRC) + "\n");
             OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second);
             OutputBuilder.append(GetRandomString(Year, Month, Day, Week, Hour, Minute, Second, Millisecond) + "\n");
-            OutputBuilder.append("-=-=-=-=-=-=-=-=-=-=-=-");
             return OutputBuilder.toString();
         }
 
@@ -446,7 +445,7 @@ public class SignInMessageSender {
          */
         public static String GroupString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond, boolean isNewUser, long GroupID, long QQID, int Position) {
             StringBuilder OutputBuilder = new StringBuilder();
-            OutputBuilder.append("-=-=-=-=每日签到=-=-=-=-\n");
+            OutputBuilder.append("每日签到\n");
             if (isNewUser) {
                 OutputBuilder.append("你好啊，新人！\n");
             }
@@ -460,7 +459,6 @@ public class SignInMessageSender {
             OutputBuilder.append(Week.getDisplayName(TextStyle.FULL,Locale.PRC) + "\n");
             OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second + "\n");
             OutputBuilder.append(GetRandomString(Year, Month, Day, Week, Hour, Minute, Second, Millisecond) + "\n");
-            OutputBuilder.append("-=-=-=-=-=-=-=-=-=-=-=-");
             return OutputBuilder.toString();
         }
     }
