@@ -1,5 +1,6 @@
 package com.rongxiaoli.plugin.BotCommand.Modules;
 
+import com.rongxiaoli.plugin.DailySign.DailySign;
 import com.rongxiaoli.plugin.Picture.PicturePlugin;
 import net.mamoe.mirai.contact.Contact;
 
@@ -14,6 +15,12 @@ public class Status {
             Message.append(PicturePlugin.PluginName + ":" + "运作中");
         } else {
             Message.append(PicturePlugin.PluginName + ":" + "已关闭");
+        }
+
+        if (DailySign.Enabled) {
+            Message.append(DailySign.PluginName + ":" + "运作中");
+        } else {
+            Message.append(DailySign.PluginName + ":" + "已关闭");
         }
 
         SenderContact.sendMessage(Message.toString());

@@ -1,10 +1,8 @@
 package com.rongxiaoli.backend;
 
-import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 
 public class Log {
-    private static MiraiLogger logger;
     public enum Level {
         Verbose,
         Debug,
@@ -20,30 +18,29 @@ public class Log {
         Multithreading,
         PluginMain,
     }
-    public static void Init(MiraiLogger l) {
-        logger=l;
+    public static void Init() {
     }
     public static void WriteLog(@NotNull Level level, String msg, Module module, String PluginName) {
         switch (level) {
             case Verbose:
-                logger.verbose(PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: VER "+PluginName+"."+module+": "+msg);
                 break;
             case Debug:
-                logger.debug(PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: DBG "+PluginName+"."+module+": "+msg);
                 break;
             case Info:
-                logger.info(PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: INF "+PluginName+"."+module+": "+msg);
                 break;
             case Warning:
-                logger.warning(PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: WRN "+PluginName+"."+module+": "+msg);
                 break;
             case Error:
-                logger.error(PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: ERR "+PluginName+"."+module+": "+msg);
                 break;
         }
     }
     public static void Exception(Exception e, String eInfo, Module module, String PluginName) {
-        logger.error("Exception occurred! " + "\n" +
+        System.out.println("RongXiaoliBot Logger: ERR Exception occurred! " + "\n" +
                 e +
                 "Extra info: " + eInfo + "\n" +
                 "In module: " + module + "\n" +

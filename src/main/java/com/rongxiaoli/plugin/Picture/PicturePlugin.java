@@ -5,6 +5,7 @@ import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.Network.HttpDownload;
 import com.rongxiaoli.backend.Network.HttpGet;
+import com.rongxiaoli.backend.Network.HttpsGet;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
@@ -18,6 +19,7 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedChannelException;
+import java.security.KeyManagementException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -26,7 +28,7 @@ public class PicturePlugin {
     /**
      * Is plugin enabled.
      */
-    public static boolean Enabled = true;
+    public static boolean Enabled = false;
     /**
      * Plugin name.
      */
@@ -35,10 +37,10 @@ public class PicturePlugin {
      * The prefix of the plugin.
      */
     public static String CommandPrefix = "setu";
-
+    public static String PictureProxy = "i.pixiv.re";
     public static String HelpContent =
             "setu [Keyword] [Keyword] ...\n" +
-            "(API返回301，以及另一些特殊原因，该插件已弃用)\n" +
+            //"(API返回301，以及另一些特殊原因，该插件已弃用)\n" +
             "获取一张涩图\n" +
             "参数: \n" +
             "Keyword: 要查询的关键字";
@@ -69,7 +71,7 @@ public class PicturePlugin {
 
         //Declare variables.
         String[] Keywords;
-        String ApiUrlString = "http://api.lolicon.app/setu/v2";
+        String ApiUrlString = "https://api.lolicon.app/setu/v2";
         String ApiReturnString = null;
         String PictureAuthor;
         String PictureFilePath;
@@ -104,9 +106,9 @@ public class PicturePlugin {
         GroupID = Group;
         Log.WriteLog(Log.Level.Verbose,
                 "Received group command from: " + "\n" +
-                "Group: " + GroupID + "\n" +
-                "Member: " + FriendID + "\n" +
-                "Content: " + Arrays.toString(arrCommand),
+                        "Group: " + GroupID + "\n" +
+                        "Member: " + FriendID + "\n" +
+                        "Content: " + Arrays.toString(arrCommand),
                 Log.Module.PluginMain,
                 PluginName);
 
@@ -115,25 +117,23 @@ public class PicturePlugin {
             SenderContact.sendMessage("其他消息正在处理，请稍后");
             return;
         }
-        isProcessing = true;
         if (FriendID != RongXiaoliBot.Owner) {
             FreezeTime = 60;
             RemainingTime = CoolingObjectList.Add(FriendID, FreezeTime);
             if (RemainingTime != -1) {
-                SenderContact.sendMessage("冷却还剩" + RemainingTime +"秒，请耐心等待");
-                isProcessing = false;
+                SenderContact.sendMessage("冷却还剩" + RemainingTime + "秒，请耐心等待");
                 return;
             }
         }
-
+        isProcessing = true;
 
         //Process tags.
         Keywords = null;
         if (arrCommand.length >= 2) {
             Keywords = new String[arrCommand.length - 1];
-            for (int num = 0; num<= Keywords.length - 1; num++
+            for (int num = 0; num <= Keywords.length - 1; num++
             ) {
-                Keywords[num]=arrCommand[num+1];
+                Keywords[num] = arrCommand[num + 1];
             }
             Log.WriteLog(Log.Level.Verbose,
                     "Command received (raw): " + Arrays.toString(arrCommand),
@@ -142,37 +142,38 @@ public class PicturePlugin {
         }
 
         //Construct API Request.
-        HttpGet APIHttpGet = new HttpGet();
-        APIHttpGet.targetUrl = ApiUrlString;
+        HttpsGet APIHttpsGet = new HttpsGet();
+        APIHttpsGet.targetUrl = ApiUrlString;
         if (Keywords != null) {
             for (String tag :
                     Keywords) {
-                APIHttpGet.Par.Append("tag", tag);
+                APIHttpsGet.Par.Append("tag", tag);
             }
         }
-        APIHttpGet.Par.Append("size", "regular");
+        APIHttpsGet.Par.Append("size", "regular");
+        APIHttpsGet.Par.Append("proxy",PictureProxy);
         try {
-            ApiReturnString = APIHttpGet.GET(PluginName);
+            ApiReturnString = APIHttpsGet.GET(PluginName);
             Log.WriteLog(Log.Level.Verbose,
                     "API connect succeeded. ",
                     Log.Module.PluginMain,
                     PluginName);
-        } catch (MalformedURLException MUE) {
-            SenderContact.sendMessage("抱歉，URL组装失败，请更换关键词");
+        } catch (ConnectException CE) {
+            SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
             isProcessing = false;
-        } catch (FileNotFoundException FNFE) {
-            SenderContact.sendMessage("服务器文件访问失败");
-            isProcessing = false;
-        } catch (SocketTimeoutException STE) {
-            SenderContact.sendMessage("服务器连接超时，请稍后重试");
-            Log.Exception(STE, "Connecting to URL: " + APIHttpGet.getFinalURL(), Log.Module.Network, PluginName);
-            isProcessing = false;
-        } catch (UnsupportedEncodingException UEE) {
-            SenderContact.sendMessage("URL编码失败，请更换关键词");
-            isProcessing = false;
+            return;
         } catch (IOException IOE) {
-            SenderContact.sendMessage("数据流处理失败，请联系主人维修，并提供错误发生时间");
+            SenderContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
             isProcessing = false;
+            return;
+        } catch (KeyManagementException KME) {
+            SenderContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
+            isProcessing = false;
+            return;
+        } catch (Exception e) {
+            SenderContact.sendMessage("API获取失败，多次失败请联系主人维修");
+            isProcessing = false;
+            return;
         }
 
         //JSON resolve.
@@ -227,7 +228,7 @@ public class PicturePlugin {
         PictureDownload.localFilePath = PictureSavingPath;
         PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
         PictureLocalFile = new File(PictureFilePath);
-        SenderContact.sendMessage("图片加载中");
+        SenderContact.sendMessage("图片获取中");
         if (PictureLocalFile.exists()) {
             Log.WriteLog(Log.Level.Verbose,
                     "File: " + PictureLocalFile + " exists. Using local file instead. ",
@@ -272,14 +273,14 @@ public class PicturePlugin {
         PicturePid = PictData.getPid();
         //PictureTags = PictData.getTags().toString();
         PictureTitle = PictData.getTitle();
-        PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
+        //PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
         PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
         PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
         //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
         PictureInfoMessage.append("链接: ").append(PictureUrlString);
-        PictureMessage.append(image);
+        //PictureMessage.append(image);
         SenderContact.sendMessage(PictureInfoMessage.build());
-        SenderContact.sendMessage(PictureMessage.build());
+        //SenderContact.sendMessage(PictureMessage.build());
         Log.WriteLog(Log.Level.Debug,
                 "Process completed. ",
                 Log.Module.PluginMain,
@@ -301,7 +302,7 @@ public class PicturePlugin {
 
         //Declare variables.
         String[] Keywords;
-        String ApiUrlString = "http://api.lolicon.app/setu/v2";
+        String ApiUrlString = "https://api.lolicon.app/setu/v2";
         String ApiReturnString = null;
         String PictureAuthor;
         String PictureFilePath;
@@ -378,37 +379,34 @@ public class PicturePlugin {
         }
 
         //Construct API Request.
-        HttpGet APIHttpGet = new HttpGet();
-        APIHttpGet.targetUrl = ApiUrlString;
+        HttpsGet APIHttpsGet = new HttpsGet();
+        APIHttpsGet.targetUrl = ApiUrlString;
         if (Keywords != null) {
             for (String tag :
                     Keywords) {
-                APIHttpGet.Par.Append("tag", tag);
+                APIHttpsGet.Par.Append("tag", tag);
             }
         }
-        APIHttpGet.Par.Append("size", "regular");
+        APIHttpsGet.Par.Append("size", "regular");
+        APIHttpsGet.Par.Append("proxy",PictureProxy);
         try {
-            ApiReturnString = APIHttpGet.GET(PluginName);
+            ApiReturnString = APIHttpsGet.GET(PluginName);
             Log.WriteLog(Log.Level.Verbose,
                     "API connect succeeded. ",
                     Log.Module.PluginMain,
                     PluginName);
-        } catch (MalformedURLException MUE) {
-            SenderContact.sendMessage("抱歉，URL组装失败，请更换关键词");
-            isProcessing = false;
-        } catch (FileNotFoundException FNFE) {
-            SenderContact.sendMessage("服务器文件访问失败");
-            isProcessing = false;
-        } catch (SocketTimeoutException STE) {
-            SenderContact.sendMessage("服务器连接超时，请稍后重试");
-            Log.Exception(STE, "Connecting to URL: " + APIHttpGet.getFinalURL(), Log.Module.Network, PluginName);
-            isProcessing = false;
-        } catch (UnsupportedEncodingException UEE) {
-            SenderContact.sendMessage("URL编码失败，请更换关键词");
-            isProcessing = false;
+        } catch (ConnectException CE) {
+            SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
+            return;
         } catch (IOException IOE) {
-            SenderContact.sendMessage("数据流处理失败，请联系主人维修，并提供错误发生时间");
-            isProcessing = false;
+            SenderContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
+            return;
+        } catch (KeyManagementException KME) {
+            SenderContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
+            return;
+        } catch (Exception e) {
+            SenderContact.sendMessage("API获取失败，多次失败请联系主人维修");
+            return;
         }
 
         //JSON resolve.
@@ -528,6 +526,7 @@ public class PicturePlugin {
      */
     public static void Init() {
         CThread.start();
+        Enabled = true;
         Log.WriteLog(Log.Level.Info,
                 "Plugin initiated! ",
                 Log.Module.PluginMain,
@@ -586,6 +585,7 @@ public class PicturePlugin {
      * Cooling thread.
      */
     public static class CoolingThread extends Thread{
+        private final boolean DebugMode = false;
         private int DebugTimer = 0;
         @Override
         public void run() {
@@ -596,16 +596,18 @@ public class PicturePlugin {
                     if (DebugTimer >= 60) {
                         DebugTimer = 0;
                         if (Enabled){
-                            Log.WriteLog(Log.Level.Verbose,
-                                    "CoolingObject List: ",
-                                    Log.Module.Multithreading,
-                                    PluginName);
-                            for (CoolingObject SingleObject :
-                                    CoolingObjectList.CoolingObjectList) {
+                            if (DebugMode) {
                                 Log.WriteLog(Log.Level.Verbose,
-                                        "ID: " + SingleObject.FriendID,
+                                        "CoolingObject List: ",
                                         Log.Module.Multithreading,
                                         PluginName);
+                                for (CoolingObject SingleObject :
+                                        CoolingObjectList.CoolingObjectList) {
+                                    Log.WriteLog(Log.Level.Verbose,
+                                            "ID: " + SingleObject.FriendID,
+                                            Log.Module.Multithreading,
+                                            PluginName);
+                                }
                             }
                         }
                     }

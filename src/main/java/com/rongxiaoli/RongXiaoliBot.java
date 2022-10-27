@@ -17,7 +17,7 @@ public final class RongXiaoliBot extends JavaPlugin {
     public static Path DataPath;
     public static Path ConfigPath;
     private RongXiaoliBot() {
-        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.1")
+        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.2")
                 .name("RongXiaoli Bot")
                 .author("RongXiaoli")
                 .build());
@@ -27,7 +27,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Initiate all parts.
         getLogger().info("Plugin initiating. ");
         //Logger init.
-        Log.Init(getLogger());
+        Log.Init();
         Log.WriteLog(Log.Level.Debug,
                 "Log module initiated. ",
                 Log.Module.Log,
@@ -37,6 +37,8 @@ public final class RongXiaoliBot extends JavaPlugin {
         ConfigPath = getConfigFolderPath();
 
         //Plugin init.
+        //Version 0.1.0 removed:
+        //Reason: After being banned for many times, this function is banned forever for others.
         PicturePlugin.Init();
         Log.WriteLog(Log.Level.Debug,
                 "setu Plugin initiated. ",
@@ -67,6 +69,8 @@ public final class RongXiaoliBot extends JavaPlugin {
                 PluginName);
 
         //Disabling plugins.
+        //Version 0.1.0 removed:
+        //Reason: After being banned for many times, this function is banned forever for others.
         PicturePlugin.isRunning = false;
         PicturePlugin.CThread.interrupt();
         Log.WriteLog(Log.Level.Debug,

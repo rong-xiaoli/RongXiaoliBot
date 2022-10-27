@@ -17,9 +17,11 @@ public class DailySign {
     public static Data SignList = new Data();
     public static DateChecker DChecker = new DateChecker();
     private static JSONFile SignInDataJSONFile;
+    public static final String HelpContent = "Rsign\n" +
+            "签到";
 
     public static String PluginName = "DailySign";
-    public static boolean Enabled = true;
+    public static boolean Enabled = false;
     public static void Main(String[] arrCommand, long QQID, long GroupID, Contact SenderContact) {
         //Judge if command is 0-width.
         if (arrCommand.length == 0) {
@@ -91,6 +93,7 @@ public class DailySign {
                 "DailySign plugin initiated. ",
                 Log.Module.PluginMain,
                 PluginName);
+        Enabled = true;
     }
 
     /**

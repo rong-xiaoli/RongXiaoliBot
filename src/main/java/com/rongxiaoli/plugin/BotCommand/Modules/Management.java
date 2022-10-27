@@ -56,6 +56,7 @@ public class Management {
             case "启用":
                 if (arrCommand.length <= 2) {
                     SenderContact.sendMessage("请输入启用的插件名");
+                    return;
                 }
                 Log.WriteLog(Log.Level.Info,
                         "Plugin enable request, plugin name: " + arrCommand[2],

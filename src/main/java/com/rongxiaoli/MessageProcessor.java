@@ -36,9 +36,8 @@ public class MessageProcessor {
 
         //Version 0.1.0 removed:
         //Reason: After being banned for many times, this function is banned forever for others.
-
         //Plugin name: setu.
-        //PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
+        PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
 
         //Plugin name: dailysign.
         DailySign.Main(arrCommand,e.getSubject().getId(),0,e.getSubject());
@@ -67,9 +66,8 @@ public class MessageProcessor {
 
         //Version 0.1.0 removed:
         //Reason: After being banned for many times, this function is banned forever for others.
-
         //Plugin name: setu.
-        //PicturePlugin.Main(arrCommand, e.getSender().getId(),e.getSubject().getId(),e.getSubject());
+        PicturePlugin.Main(arrCommand, e.getSender().getId(),e.getSubject().getId(),e.getSubject());
 
         //Plugin name: dailysign.
         DailySign.Main(arrCommand, e.getSender().getId(), e.getSubject().getId(),e.getSubject());
