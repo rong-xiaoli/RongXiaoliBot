@@ -17,7 +17,7 @@ public final class RongXiaoliBot extends JavaPlugin {
     public static Path DataPath;
     public static Path ConfigPath;
     private RongXiaoliBot() {
-        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.1")
+        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.2")
                 .name("RongXiaoli Bot")
                 .author("RongXiaoli")
                 .build());
@@ -27,7 +27,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Initiate all parts.
         getLogger().info("Plugin initiating. ");
         //Logger init.
-        Log.Init(getLogger());
+        Log.Init();
         Log.WriteLog(Log.Level.Debug,
                 "Log module initiated. ",
                 Log.Module.Log,
@@ -39,11 +39,11 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Plugin init.
         //Version 0.1.0 removed:
         //Reason: After being banned for many times, this function is banned forever for others.
-//        PicturePlugin.Init();
-//        Log.WriteLog(Log.Level.Debug,
-//                "setu Plugin initiated. ",
-//                Log.Module.PluginMain,
-//                PluginName);
+        PicturePlugin.Init();
+        Log.WriteLog(Log.Level.Debug,
+                "setu Plugin initiated. ",
+                Log.Module.PluginMain,
+                PluginName);
 
         DailySign.Init();
         Log.WriteLog(Log.Level.Debug,
@@ -71,12 +71,12 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Disabling plugins.
         //Version 0.1.0 removed:
         //Reason: After being banned for many times, this function is banned forever for others.
-//        PicturePlugin.isRunning = false;
-//        PicturePlugin.CThread.interrupt();
-//        Log.WriteLog(Log.Level.Debug,
-//                "setu Plugin shutting down. ",
-//                Log.Module.PluginMain,
-//                PluginName);
+        PicturePlugin.isRunning = false;
+        PicturePlugin.CThread.interrupt();
+        Log.WriteLog(Log.Level.Debug,
+                "setu Plugin shutting down. ",
+                Log.Module.PluginMain,
+                PluginName);
 
         DailySign.Shutdown();
 
