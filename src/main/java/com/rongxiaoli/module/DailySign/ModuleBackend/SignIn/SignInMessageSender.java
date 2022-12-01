@@ -1,7 +1,7 @@
-package com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn;
+package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.plugin.DailySign.DailySign;
+import com.rongxiaoli.module.DailySign.DailySign;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -229,7 +229,7 @@ public class SignInMessageSender {
                     MonthBasedString = "美好的一天~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Month = " + Month,
-                            Log.Module.PluginMain,
+                            Log.LogClass.ModuleMain,
                             DailySign.PluginName);
                     break;
             }
@@ -260,7 +260,7 @@ public class SignInMessageSender {
                     WeekBasedString = "美好的一天~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Week = " + Week,
-                            Log.Module.PluginMain,
+                            Log.LogClass.ModuleMain,
                             DailySign.PluginName);
                     break;
             }
@@ -347,7 +347,7 @@ public class SignInMessageSender {
                     HourBasedString = "美好的一天~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Hour = " + Hour,
-                            Log.Module.PluginMain,
+                            Log.LogClass.ModuleMain,
                             DailySign.PluginName);
                     break;
             }
@@ -375,7 +375,7 @@ public class SignInMessageSender {
                     OtherString = "C#是世界上最美的语言~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: (nextInt(6))",
-                            Log.Module.PluginMain,
+                            Log.LogClass.ModuleMain,
                             DailySign.PluginName);
                     break;
             }

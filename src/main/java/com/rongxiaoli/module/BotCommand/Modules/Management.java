@@ -1,12 +1,12 @@
-package com.rongxiaoli.plugin.BotCommand.Modules;
+package com.rongxiaoli.module.BotCommand.Modules;
 
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.plugin.AutoAccept.AutoAcceptPlugin;
-import com.rongxiaoli.plugin.BotCommand.BotCommand;
-import com.rongxiaoli.plugin.Broadcast.Broadcast;
-import com.rongxiaoli.plugin.DailySign.DailySign;
-import com.rongxiaoli.plugin.Picture.PicturePlugin;
+import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
+import com.rongxiaoli.module.BotCommand.BotCommand;
+import com.rongxiaoli.module.Broadcast.Broadcast;
+import com.rongxiaoli.module.DailySign.DailySign;
+import com.rongxiaoli.module.Picture.PicturePlugin;
 import net.mamoe.mirai.contact.Contact;
 
 public class Management {
@@ -28,19 +28,19 @@ public class Management {
                 }
                 Log.WriteLog(Log.Level.Info,
                         "Plugin disable request, plugin name: " + arrCommand[2],
-                        Log.Module.PluginMain,
+                        Log.LogClass.ModuleMain,
                         BotCommand.PluginName);
                 switch (arrCommand[2]) {
                     case "setu":
-                        PicturePlugin.Enabled = false;
+                        PicturePlugin.IsEnabled = false;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已禁用");
                         break;
                     case "broadcast":
-                        Broadcast.Enabled = false;
+                        Broadcast.IsEnabled = false;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已禁用");
                         break;
                     case "autoaccept":
-                        AutoAcceptPlugin.Enabled = false;
+                        AutoAcceptPlugin.IsEnabled = false;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已禁用");
                         break;
                     case "dailysign" :
@@ -60,19 +60,19 @@ public class Management {
                 }
                 Log.WriteLog(Log.Level.Info,
                         "Plugin enable request, plugin name: " + arrCommand[2],
-                        Log.Module.PluginMain,
+                        Log.LogClass.ModuleMain,
                         BotCommand.PluginName);
                 switch (arrCommand[2]) {
                     case "setu":
-                        PicturePlugin.Enabled = true;
+                        PicturePlugin.IsEnabled = true;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已启用");
                         break;
                     case "broadcast" :
-                        Broadcast.Enabled = true;
+                        Broadcast.IsEnabled = true;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已启用");
                         break;
                     case "autoaccept":
-                        AutoAcceptPlugin.Enabled = true;
+                        AutoAcceptPlugin.IsEnabled = true;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已启用");
                         break;
                     case "dailysign" :

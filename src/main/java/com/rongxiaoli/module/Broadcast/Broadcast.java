@@ -1,5 +1,6 @@
-package com.rongxiaoli.plugin.Broadcast;
+package com.rongxiaoli.module.Broadcast;
 
+import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
@@ -10,25 +11,26 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 
-public class Broadcast {
+public class Broadcast extends Module {
     public static String PluginName = "Broadcast";
 
-    public static boolean Enabled = true;
-    public static void Main(String[] arrCommand, Contact SenderContact) {
+    public static boolean IsEnabled = true;
+    public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
         if (arrCommand.length == 0) {
             return;
         }
         StringBuilder BroadcastMessageBuilder;
         if (SenderContact.getId() == RongXiaoliBot.Owner) {
             if (Objects.equals(arrCommand[0], "广播")) {
-                if (!Enabled) {
+                if (!IsEnabled) {
                     SenderContact.sendMessage("功能未启用");
                     return;
                 }
                 Log.WriteLog(Log.Level.Info,
                         "Received broadcast message from bot owner:" + RongXiaoliBot.Owner + Arrays.toString(arrCommand),
-                        Log.Module.PluginMain,
+                        Log.LogClass.ModuleMain,
                         PluginName);
                 //Process.
                 BroadcastMessageBuilder = new StringBuilder();
@@ -40,23 +42,51 @@ public class Broadcast {
                 BroadcastMessage.append(BroadcastMessageBuilder.toString());
                 ContactList<Friend> FriendsList = SenderContact.getBot().getFriends();
                 ContactList<Group> GroupList = SenderContact.getBot().getGroups();
+                Random ran = new Random();
                 for (Friend SingleFriend :
                         FriendsList) {
                     SingleFriend.sendMessage(BroadcastMessage.build());
                     Log.WriteLog(Log.Level.Verbose,
                             "Send to Friend: " + SingleFriend.getId(),
-                            Log.Module.PluginMain,
+                            Log.LogClass.ModuleMain,
                             PluginName);
+                    try {
+                        Thread.sleep(ran.nextInt(100,3000));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 for (Group SingleGroup :
                         GroupList) {
                     SingleGroup.sendMessage(BroadcastMessage.build());
                     Log.WriteLog(Log.Level.Verbose,
                             "Send to Group: " + SingleGroup.getId(),
-                            Log.Module.PluginMain,
+                            Log.LogClass.ModuleMain,
                             PluginName);
+                    try {
+                        Thread.sleep(ran.nextInt(100,3000));
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
+    }
+
+    public void Init() {
+        Log.WriteLog(Log.Level.Debug, "Broadcast module initiated. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void Shutdown() {
+        IsEnabled = false;
+        Log.WriteLog(Log.Level.Debug, "Broadcast module stopped. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+        return;
+    }
+
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+        return;
     }
 }

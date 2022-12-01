@@ -1,7 +1,7 @@
-package com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn;
+package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.plugin.DailySign.DailySign;
+import com.rongxiaoli.module.DailySign.DailySign;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -39,13 +39,13 @@ public class SignInRequestProcess {
             //Friend sign in request.
             Log.WriteLog(Log.Level.Debug,
                     "Friend Sign request:" + qqID,
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     DailySign.PluginName);
         } else {
             //Group sign in request.
             Log.WriteLog(Log.Level.Debug,
                     "Group: " + groupID + " (Member" + qqID + "): Sign request. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     DailySign.PluginName);
         }
         if (DailySign.SignList.FriendSignList != null) {

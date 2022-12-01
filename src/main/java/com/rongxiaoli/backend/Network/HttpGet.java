@@ -137,13 +137,13 @@ public class HttpGet {
                     Log.WriteLog(Log.Level.Verbose,
                             "Received data: "+ "\n" +
                             line,
-                            Log.Module.Network,
+                            Log.LogClass.Network,
                             PluginName);
                 }
             } else {
                 Log.WriteLog(Log.Level.Warning,
                         "Unexpected code received: " + httpConn.getResponseCode(),
-                        Log.Module.Network,
+                        Log.LogClass.Network,
                         PluginName);
 //                inStream = httpConn.getInputStream();
 //                bufferedReader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
@@ -158,16 +158,16 @@ public class HttpGet {
 //                }
             }
         } catch (MalformedURLException MUE) {
-            Log.Exception(MUE, "URL incorrect. URL: " + FinalUrl, Log.Module.Network,PluginName);
+            Log.Exception(MUE, "URL incorrect. URL: " + FinalUrl, Log.LogClass.Network,PluginName);
             throw MUE;
         } catch (FileNotFoundException FNFE) {
-            Log.Exception(FNFE, "Server file not found. ", Log.Module.Network, PluginName);
+            Log.Exception(FNFE, "Server file not found. ", Log.LogClass.Network, PluginName);
             throw FNFE;
         } catch (UnsupportedEncodingException UEE) {
-            Log.Exception(UEE, "Unsupported encoding. ", Log.Module.Network, PluginName);
+            Log.Exception(UEE, "Unsupported encoding. ", Log.LogClass.Network, PluginName);
             throw UEE;
         } catch (IOException IOE) {
-            Log.Exception(IOE, "IOException. ", Log.Module.Network, PluginName);
+            Log.Exception(IOE, "IOException. ", Log.LogClass.Network, PluginName);
             throw IOE;
         } finally {
             try {
@@ -177,7 +177,7 @@ public class HttpGet {
                     inStream.close();
                 }
             } catch (IOException IOE) {
-                Log.Exception(IOE, "Unexpected IO operation after close. ", Log.Module.Network, PluginName);
+                Log.Exception(IOE, "Unexpected IO operation after close. ", Log.LogClass.Network, PluginName);
             }
             httpConn.disconnect();
             isDisconnected = true;

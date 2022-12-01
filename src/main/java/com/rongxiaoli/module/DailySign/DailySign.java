@@ -1,19 +1,20 @@
-package com.rongxiaoli.plugin.DailySign;
+package com.rongxiaoli.module.DailySign;
 
+import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.JSONFile;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.TimerExecute;
-import com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn.Data;
-import com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn.SignObjectList;
-import com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn.SignInRequestProcess;
+import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.Data;
+import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignObjectList;
+import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInRequestProcess;
 import net.mamoe.mirai.contact.Contact;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class DailySign {
+public class DailySign extends Module {
     public static Data SignList = new Data();
     public static DateChecker DChecker = new DateChecker();
     private static JSONFile SignInDataJSONFile;
@@ -22,15 +23,6 @@ public class DailySign {
 
     public static String PluginName = "DailySign";
     public static boolean Enabled = false;
-    public static void Main(String[] arrCommand, long QQID, long GroupID, Contact SenderContact) {
-        //Judge if command is 0-width.
-        if (arrCommand.length == 0) {
-            return;
-        }
-
-        //Start processing.
-        SignInRequestProcess.Process(arrCommand,QQID,GroupID,SenderContact);
-    }
     public static class DateChecker extends TimerExecute {
         public static int Month;
         public static int Day;
@@ -64,7 +56,7 @@ public class DailySign {
     /**
      * Module init func.
      */
-    public static void Init() {
+    public void Init() {
         SignInDataJSONFile = new JSONFile(PluginName, RongXiaoliBot.DataPath.toString(),"/DailySign/SignData.json");
         SignInDataJSONFile.JObject = new Data();
         SignInDataJSONFile.readFile();
@@ -73,25 +65,25 @@ public class DailySign {
 
         Log.WriteLog(Log.Level.Verbose,
                 "DailySign JSON file readed. ",
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
 
         DChecker.run(null);
         Log.WriteLog(Log.Level.Verbose,
                 "DailySign DateChecker ready. ",
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
 
         if (DailySign.SignList == null) {
             Log.WriteLog(Log.Level.Warning,
                     "SignList is null. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     DailySign.PluginName);
             SignList = new Data();
         }
-        Log.WriteLog(Log.Level.Info,
+        Log.WriteLog(Log.Level.Debug,
                 "DailySign plugin initiated. ",
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
         Enabled = true;
     }
@@ -99,7 +91,7 @@ public class DailySign {
     /**
      * Module shutdown func.
      */
-    public static void Shutdown() {
+    public void Shutdown() {
         SignInDataJSONFile.JString = null;
         SignInDataJSONFile.JObject = SignList;
         SignInDataJSONFile.JString = new StringBuilder();
@@ -107,7 +99,27 @@ public class DailySign {
         SignInDataJSONFile.writeFile();
         Log.WriteLog(Log.Level.Debug,
                 "DailySign JSONData saved! ",
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
+    }
+
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+        //Judge if command is 0-width.
+        if (arrCommand.length == 0) {
+            return;
+        }
+
+        //Start processing.
+        SignInRequestProcess.Process(arrCommand,Friend,0,SenderContact);
+    }
+
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+        //Judge if command is 0-width.
+        if (arrCommand.length == 0) {
+            return;
+        }
+
+        //Start processing.
+        SignInRequestProcess.Process(arrCommand,Friend,Group,SenderContact);
     }
 }

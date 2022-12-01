@@ -1,7 +1,7 @@
-package com.rongxiaoli.plugin.BotCommand.Modules;
+package com.rongxiaoli.module.BotCommand.Modules;
 
-import com.rongxiaoli.plugin.DailySign.DailySign;
-import com.rongxiaoli.plugin.Picture.PicturePlugin;
+import com.rongxiaoli.module.DailySign.DailySign;
+import com.rongxiaoli.module.Picture.PicturePlugin;
 import net.mamoe.mirai.contact.Contact;
 
 public class Help {

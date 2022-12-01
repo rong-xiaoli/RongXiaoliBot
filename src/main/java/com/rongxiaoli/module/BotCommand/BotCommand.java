@@ -1,16 +1,18 @@
-package com.rongxiaoli.plugin.BotCommand;
+package com.rongxiaoli.module.BotCommand;
 
+import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
-import com.rongxiaoli.plugin.BotCommand.Modules.Help;
-import com.rongxiaoli.plugin.BotCommand.Modules.Management;
-import com.rongxiaoli.plugin.BotCommand.Modules.Status;
+import com.rongxiaoli.backend.Log;
+import com.rongxiaoli.module.BotCommand.Modules.Help;
+import com.rongxiaoli.module.BotCommand.Modules.Management;
+import com.rongxiaoli.module.BotCommand.Modules.Status;
 import net.mamoe.mirai.contact.Contact;
 
 import java.util.Objects;
 
-public class BotCommand {
+public class BotCommand extends Module {
     public static String PluginName = "BotCommand";
-    public static void Main(String[] arrCommand, Contact SenderContact) {
+    public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
         //Judge if message is 0 width.
         if (arrCommand.length == 0) {
             return;
@@ -36,5 +38,18 @@ public class BotCommand {
                 //End.
             }
         }
+    }
+
+    public void Init() {
+        Log.WriteLog(Log.Level.Debug, "BotCommand initiated. ", Log.LogClass.ModuleMain, PluginName);
+    }
+    public void Shutdown() {
+        Log.WriteLog(Log.Level.Debug, "BotCommand stopped. ", Log.LogClass.ModuleMain, PluginName);
+    }
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+        return;
+    }
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+        return;
     }
 }

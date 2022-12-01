@@ -1,11 +1,11 @@
 package com.rongxiaoli;
 
-import com.rongxiaoli.plugin.AutoAccept.AutoAcceptPlugin;
-import com.rongxiaoli.plugin.Broadcast.Broadcast;
-import com.rongxiaoli.plugin.DailySign.DailySign;
-import com.rongxiaoli.plugin.EmergencyStop.EmergencyStop;
-import com.rongxiaoli.plugin.BotCommand.BotCommand;
-import com.rongxiaoli.plugin.Picture.PicturePlugin;
+import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
+import com.rongxiaoli.module.Broadcast.Broadcast;
+import com.rongxiaoli.module.DailySign.DailySign;
+import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
+import com.rongxiaoli.module.BotCommand.BotCommand;
+import com.rongxiaoli.module.Picture.PicturePlugin;
 import net.mamoe.mirai.event.events.*;
 
 public class MessageProcessor {
@@ -22,25 +22,21 @@ public class MessageProcessor {
         arrCommand = originalMessage.split(" ");
         //Invoke plugin main methods.
         //First step.
-        EmergencyStop.Main(arrCommand, e.getSubject());
 
-        BotCommand.Main(arrCommand, e.getSubject());
+        EmergencyStop.UnregisteredFriendMain(arrCommand, e.getSubject());
+        Broadcast.UnregisteredFriendMain(arrCommand, e.getSubject());
+        BotCommand.UnregisteredFriendMain(arrCommand, e.getSubject());
+
         //Judge if the plugin is running or not.
-        if (!RongXiaoliBot.isPluginRunning) {
+        if (!RongXiaoliBot.IsEnabled) {
             return;
         }
 
         //Second step.
-        //Plugin name: broadcast.
-        Broadcast.Main(arrCommand, e.getSubject());
-
-        //Version 0.1.0 removed:
-        //Reason: After being banned for many times, this function is banned forever for others.
-        //Plugin name: setu.
-        PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
-
-        //Plugin name: dailysign.
-        DailySign.Main(arrCommand,e.getSubject().getId(),0,e.getSubject());
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            SingleModule.FriendMain(arrCommand,e.getSubject().getId(),e.getSender());
+        }
     }
 
     /**
@@ -54,23 +50,20 @@ public class MessageProcessor {
         //Start processing.
         arrCommand = originalMessage.split(" ");
         //Invoke plugin main methods.
-        //First step.
-        EmergencyStop.Main(arrCommand, e.getSubject());
+        //First step: unregistered modules.
 
-        BotCommand.Main(arrCommand, e.getSubject());
+        //None.
+
         //Judge if the plugin is running or not.
-        if (!RongXiaoliBot.isPluginRunning) {
+        if (!RongXiaoliBot.IsEnabled) {
             return;
         }
-        //Second step.
-
-        //Version 0.1.0 removed:
-        //Reason: After being banned for many times, this function is banned forever for others.
-        //Plugin name: setu.
-        PicturePlugin.Main(arrCommand, e.getSender().getId(),e.getSubject().getId(),e.getSubject());
-
-        //Plugin name: dailysign.
-        DailySign.Main(arrCommand, e.getSender().getId(), e.getSubject().getId(),e.getSubject());
+        //Second step: registered modules.
+        for (Module SingleModule:
+                RongXiaoliBot.BotModuleLoader.ModuleList
+             ) {
+            SingleModule.GroupMain(arrCommand, e.getSender().getId(), e.getSubject().getId(), e.getSubject());
+        }
     }
 
     /**
@@ -101,5 +94,9 @@ public class MessageProcessor {
      */
     public static void GroupAddProcess(BotJoinGroupEvent e) {
         AutoAcceptPlugin.Main(e);
+    }
+
+    public static void PokeProcess(NudgeEvent e){
+        //Todo: Add poke event.
     }
 }

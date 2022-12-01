@@ -1,7 +1,6 @@
 package com.rongxiaoli.backend.Network;
 
 import com.rongxiaoli.backend.Log;
-import com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,24 +38,24 @@ public class HttpDownload {
             fos.flush();
             Log.WriteLog(Log.Level.Debug,
                     "File downloaded: "+ localFilePath + localFileName,
-                    Log.Module.File,
+                    Log.LogClass.File,
                     PluginName);
             fos.close();
             isSuccess = true;
         } catch (MalformedURLException MUE) {
-            Log.Exception(MUE, "URL incorrect. ", Log.Module.Network, PluginName);
+            Log.Exception(MUE, "URL incorrect. ", Log.LogClass.Network, PluginName);
             throw MUE;
         } catch (FileNotFoundException FNFE) {
-            Log.Exception(FNFE, "Server file not found. ", Log.Module.Network, PluginName);
+            Log.Exception(FNFE, "Server file not found. ", Log.LogClass.Network, PluginName);
             throw FNFE;
         } catch (IllegalArgumentException IAE) {
-            Log.Exception(IAE, "Illegal parameters. ", Log.Module.Network, PluginName);
+            Log.Exception(IAE, "Illegal parameters. ", Log.LogClass.Network, PluginName);
             throw IAE;
         } catch (ClosedChannelException CCE) {
-            Log.Exception(CCE, "Channel closed. ", Log.Module.Network, PluginName);
+            Log.Exception(CCE, "Channel closed. ", Log.LogClass.Network, PluginName);
             throw CCE;
         } catch (IOException IOE) {
-            Log.Exception(IOE, "IOException occurred. ", Log.Module.Network, PluginName);
+            Log.Exception(IOE, "IOException occurred. ", Log.LogClass.Network, PluginName);
             throw IOE;
         }
     }

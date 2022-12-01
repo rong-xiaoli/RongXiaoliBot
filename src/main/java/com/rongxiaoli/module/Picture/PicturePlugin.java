@@ -1,10 +1,10 @@
-package com.rongxiaoli.plugin.Picture;
+package com.rongxiaoli.module.Picture;
 
 import com.alibaba.fastjson2.JSON;
+import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.Network.HttpDownload;
-import com.rongxiaoli.backend.Network.HttpGet;
 import com.rongxiaoli.backend.Network.HttpsGet;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.Image;
@@ -14,21 +14,20 @@ import net.mamoe.mirai.utils.ExternalResource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.nio.channels.ClosedChannelException;
 import java.security.KeyManagementException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-public class PicturePlugin {
+public class PicturePlugin extends Module {
 
     /**
      * Is plugin enabled.
      */
-    public static boolean Enabled = false;
+    public static boolean IsEnabled = false;
+    public static boolean DebugMode = false;
     /**
      * Plugin name.
      */
@@ -64,7 +63,7 @@ public class PicturePlugin {
      * @param Group Group ID.
      * @param SenderContact Contact of the sender.
      */
-    public static void Main(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
         if (arrCommand.length == 0) {
             return;
         }
@@ -98,7 +97,7 @@ public class PicturePlugin {
             return;
         }
         //Judge if the plugin is enabled.
-        if (!Enabled) {
+        if (!IsEnabled) {
             SenderContact.sendMessage("当前图片插件未启用");
             return;
         }
@@ -109,7 +108,7 @@ public class PicturePlugin {
                         "Group: " + GroupID + "\n" +
                         "Member: " + FriendID + "\n" +
                         "Content: " + Arrays.toString(arrCommand),
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
 
         //Lock.
@@ -137,7 +136,7 @@ public class PicturePlugin {
             }
             Log.WriteLog(Log.Level.Verbose,
                     "Command received (raw): " + Arrays.toString(arrCommand),
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         }
 
@@ -156,7 +155,7 @@ public class PicturePlugin {
             ApiReturnString = APIHttpsGet.GET(PluginName);
             Log.WriteLog(Log.Level.Verbose,
                     "API connect succeeded. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         } catch (ConnectException CE) {
             SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
@@ -181,7 +180,7 @@ public class PicturePlugin {
             SenderContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
             Log.WriteLog(Log.Level.Warning,
                     "API returned empty string. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
             return;
@@ -190,7 +189,7 @@ public class PicturePlugin {
             SenderContact.sendMessage("找不到相关图片，换一个关键词试试");
             Log.WriteLog(Log.Level.Info,
                     "Picture not found. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
             return;
@@ -199,11 +198,11 @@ public class PicturePlugin {
             SenderContact.sendMessage("错误：JSON未能正确转换");
             Log.WriteLog(Log.Level.Warning,
                     "JSON cannot be resolved. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             Log.WriteLog(Log.Level.Verbose,
                     "JSON: " + ApiReturnString,
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
             return;
@@ -232,7 +231,7 @@ public class PicturePlugin {
         if (PictureLocalFile.exists()) {
             Log.WriteLog(Log.Level.Verbose,
                     "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         } else {
             try {
@@ -266,7 +265,7 @@ public class PicturePlugin {
         Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
         Log.WriteLog(Log.Level.Verbose,
                 "Using file: " + PictureFilePath,
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
         isProcessing = false;
         PictureAuthor = PictData.getAuthor();
@@ -283,7 +282,7 @@ public class PicturePlugin {
         //SenderContact.sendMessage(PictureMessage.build());
         Log.WriteLog(Log.Level.Debug,
                 "Process completed. ",
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
         isProcessing = false;
     }
@@ -294,7 +293,7 @@ public class PicturePlugin {
      * @param Friend QQID.
      * @param SenderContact Contact of the sender.
      */
-    public static void Main(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
         //0-length array.
         if (arrCommand.length == 0) {
             return;
@@ -328,7 +327,7 @@ public class PicturePlugin {
             return;
         }
         //Judge if the plugin is enabled.
-        if (!Enabled) {
+        if (!IsEnabled) {
             SenderContact.sendMessage("当前图片插件未启用");
             return;
         }
@@ -337,7 +336,7 @@ public class PicturePlugin {
                 "Received friend command from: " + "\n" +
                         "Friend: " + FriendID + "\n" +
                         "Content: " + Arrays.toString(arrCommand),
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
 
 
@@ -374,7 +373,7 @@ public class PicturePlugin {
             }
             Log.WriteLog(Log.Level.Verbose,
                     "Command received (raw): " + Arrays.toString(arrCommand),
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         }
 
@@ -393,7 +392,7 @@ public class PicturePlugin {
             ApiReturnString = APIHttpsGet.GET(PluginName);
             Log.WriteLog(Log.Level.Verbose,
                     "API connect succeeded. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         } catch (ConnectException CE) {
             SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
@@ -414,7 +413,7 @@ public class PicturePlugin {
             SenderContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
             Log.WriteLog(Log.Level.Warning,
                     "API returned empty string. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
             return;
@@ -423,7 +422,7 @@ public class PicturePlugin {
             SenderContact.sendMessage("找不到相关图片，换一个关键词试试");
             Log.WriteLog(Log.Level.Info,
                     "Picture not found. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
             return;
@@ -432,11 +431,11 @@ public class PicturePlugin {
             SenderContact.sendMessage("错误：JSON未能正确转换");
             Log.WriteLog(Log.Level.Warning,
                     "JSON cannot be resolved. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             Log.WriteLog(Log.Level.Verbose,
                     "JSON: " + ApiReturnString,
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
             return;
@@ -465,7 +464,7 @@ public class PicturePlugin {
         if (PictureLocalFile.exists()) {
             Log.WriteLog(Log.Level.Verbose,
                     "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         } else {
             try {
@@ -499,7 +498,7 @@ public class PicturePlugin {
         Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
         Log.WriteLog(Log.Level.Verbose,
                 "Using file: " + PictureFilePath,
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
         isProcessing = false;
         PictureAuthor = PictData.getAuthor();
@@ -516,7 +515,7 @@ public class PicturePlugin {
         SenderContact.sendMessage(PictureMessage.build());
         Log.WriteLog(Log.Level.Debug,
                 "Process completed. ",
-                Log.Module.PluginMain,
+                Log.LogClass.ModuleMain,
                 PluginName);
         isProcessing = false;
     }
@@ -524,12 +523,21 @@ public class PicturePlugin {
     /**
      * Module init.
      */
-    public static void Init() {
+    public void Init() {
         CThread.start();
-        Enabled = true;
-        Log.WriteLog(Log.Level.Info,
-                "Plugin initiated! ",
-                Log.Module.PluginMain,
+        IsEnabled = true;
+        Log.WriteLog(Log.Level.Debug,
+                "setu initiated! ",
+                Log.LogClass.ModuleMain,
+                PluginName);
+    }
+
+    public void Shutdown() {
+        PicturePlugin.isRunning = false;
+        PicturePlugin.CThread.interrupt();
+        Log.WriteLog(Log.Level.Debug,
+                "setu Plugin shutting down. ",
+                Log.LogClass.ModuleMain,
                 PluginName);
     }
 
@@ -558,7 +566,7 @@ public class PicturePlugin {
                 if (SingleObj.RemainingTime <= 0) {
                     Log.WriteLog(Log.Level.Debug,
                             "CoolingObject removed: " + SingleObj.FriendID,
-                            Log.Module.Multithreading,
+                            Log.LogClass.Multithreading,
                             PluginName);
                     CoolingObjectList.remove(SingleObj);
                 }
@@ -574,7 +582,7 @@ public class PicturePlugin {
             }
             Log.WriteLog(Log.Level.Debug,
                     "CoolingObject added: " + Friend,
-                    Log.Module.Multithreading,
+                    Log.LogClass.Multithreading,
                     PluginName);
             CoolingObjectList.add(ObjAdding);
             return -1;
@@ -585,7 +593,6 @@ public class PicturePlugin {
      * Cooling thread.
      */
     public static class CoolingThread extends Thread{
-        private final boolean DebugMode = false;
         private int DebugTimer = 0;
         @Override
         public void run() {
@@ -595,17 +602,17 @@ public class PicturePlugin {
                     DebugTimer ++;
                     if (DebugTimer >= 60) {
                         DebugTimer = 0;
-                        if (Enabled){
+                        if (IsEnabled){
                             if (DebugMode) {
                                 Log.WriteLog(Log.Level.Verbose,
                                         "CoolingObject List: ",
-                                        Log.Module.Multithreading,
+                                        Log.LogClass.Multithreading,
                                         PluginName);
                                 for (CoolingObject SingleObject :
                                         CoolingObjectList.CoolingObjectList) {
                                     Log.WriteLog(Log.Level.Verbose,
                                             "ID: " + SingleObject.FriendID,
-                                            Log.Module.Multithreading,
+                                            Log.LogClass.Multithreading,
                                             PluginName);
                                 }
                             }
@@ -613,7 +620,7 @@ public class PicturePlugin {
                     }
                     CoolingObjectList.Tick();
                 } catch (InterruptedException e) {
-                    Log.Exception(e, "Cooling thread stopped. ", Log.Module.Multithreading, PluginName);
+                    Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, PluginName);
                 }
             }
         }

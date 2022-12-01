@@ -1,13 +1,18 @@
-package com.rongxiaoli.plugin.EmergencyStop;
+package com.rongxiaoli.module.EmergencyStop;
 
+import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
+import com.rongxiaoli.backend.Log;
+import jdk.tools.jmod.Main;
 import net.mamoe.mirai.contact.Contact;
 
 import java.util.Objects;
 
-public class EmergencyStop {
-    public static void Main(String[] arrCommand, Contact SenderContact) {
-        if (RongXiaoliBot.isPluginRunning) {
+public class EmergencyStop extends Module {
+    public String PluginName = "EmergencyStop";
+    public boolean IsEnabled = true;
+    public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact){
+        if (RongXiaoliBot.IsEnabled) {
             if (arrCommand.length == 0) {
                 return;
             }
@@ -17,7 +22,7 @@ public class EmergencyStop {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     //Owner command.
                     SenderContact.sendMessage("收到紧急停止消息，正在停止");
-                    RongXiaoliBot.isPluginRunning = false;
+                    RongXiaoliBot.IsEnabled = false;
                 }
             } else if (Objects.equals(arrCommand[0], "/start")) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
@@ -32,13 +37,28 @@ public class EmergencyStop {
                 }
             } else if (Objects.equals(arrCommand[0], "/start")) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
-                    RongXiaoliBot.isPluginRunning = true;
+                    RongXiaoliBot.IsEnabled = true;
                     SenderContact.sendMessage("插件已重新启用");
                 }
             } else {
                 SenderContact.sendMessage("很抱歉，当前插件因特殊原因已被紧急停止，请等待维护");
             }
         }
+    }
+    public void Init() {
+        Log.WriteLog(Log.Level.Debug,"Emergency stop module initiated. ", Log.LogClass.ModuleMain, PluginName);
+    }
 
+    public void Shutdown() {
+        Log.WriteLog(Log.Level.Debug, "EmergencyStop stopped. ", Log.LogClass.ModuleMain, PluginName);
+    }
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+        //Use unregistered main.
+        return;
+    }
+
+    @Override
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+        return;
     }
 }

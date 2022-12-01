@@ -1,4 +1,4 @@
-package com.rongxiaoli.plugin.DailySign.ModuleBackend.CustomString;
+package com.rongxiaoli.module.DailySign.ModuleBackend.CustomString;
 
 public class CustomStringList {
     /**

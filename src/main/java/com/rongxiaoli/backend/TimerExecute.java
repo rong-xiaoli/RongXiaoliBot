@@ -19,7 +19,7 @@ public abstract class TimerExecute {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    Log.Exception(e,"Timer interrupted.", Log.Module.Multithreading,PluginName);
+                    Log.Exception(e,"Timer interrupted.", Log.LogClass.Multithreading,PluginName);
                 }
             }
         }

@@ -1,6 +1,8 @@
-package com.rongxiaoli.plugin.AutoAccept;
+package com.rongxiaoli.module.AutoAccept;
 
+import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
 import net.mamoe.mirai.event.events.BotJoinGroupEvent;
@@ -8,18 +10,18 @@ import net.mamoe.mirai.event.events.FriendAddEvent;
 import net.mamoe.mirai.event.events.NewFriendRequestEvent;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
-public class AutoAcceptPlugin {
+public class AutoAcceptPlugin extends Module {
     public static String PluginName = "AutoAccept";
-    public static boolean Enabled = false;
+    public static boolean IsEnabled = false;
     public static void Main(NewFriendRequestEvent e) {
-        if (!Enabled) {
+        if (!IsEnabled) {
             if (e.getFromGroup() != null) {
                 e.getFromGroup().get(e.getFromId()).sendMessage("暂不支持添加好友");
             }
             e.reject(false);
             Log.WriteLog(Log.Level.Info,
                     "New friend request from: " + e.getFromId() +" rejected: Plugin disabled. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             return;
         }
@@ -30,7 +32,7 @@ public class AutoAcceptPlugin {
                 e.getBot().getFriends()) {
             Log.WriteLog(Log.Level.Verbose,
                     String.valueOf(SingleFriend.getId()),
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         }
         try {
@@ -38,7 +40,7 @@ public class AutoAcceptPlugin {
         } catch (InterruptedException IE) {
             Log.WriteLog(Log.Level.Error,
                     "Interrupted. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
         }
         MessageChainBuilder WelcomeMessage = new MessageChainBuilder();
@@ -49,19 +51,19 @@ public class AutoAcceptPlugin {
         e.getBot().getFriend(e.getFriend().getId()).sendMessage(WelcomeMessage.build());
     }
     public static void Main(BotInvitedJoinGroupRequestEvent e) {
-        if (!Enabled) {
+        if (!IsEnabled) {
             e.ignore();
             e.getBot().getStranger(e.getInvitorId()).sendMessage("暂不支持邀请进群");
             Log.WriteLog(Log.Level.Info,
                     "New group invite request from: " + e.getGroupId() +" ignored: Plugin disabled. ",
-                    Log.Module.PluginMain,
+                    Log.LogClass.ModuleMain,
                     PluginName);
             return;
         }
         e.accept();
     }
     public static void Main(BotJoinGroupEvent e) {
-        if (!Enabled) {
+        if (!IsEnabled) {
             e.getGroup().sendMessage("暂不支持邀请入群");
             e.getGroup().quit();
         }
@@ -70,5 +72,23 @@ public class AutoAcceptPlugin {
         WelcomeMessage.append("目前主要功能：\n");
         WelcomeMessage.append("涩图，命令：setu [Keyword1] [keyword2] ...\n");
         e.getGroup().sendMessage(WelcomeMessage.build());
+    }
+
+    public void Init() {
+        IsEnabled = false;
+        Log.WriteLog(Log.Level.Debug, "AutoAccept initiated. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void Shutdown() {
+        IsEnabled = false;
+        Log.WriteLog(Log.Level.Info, "AutoAccept off. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+        return;
+    }
+
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+        return;
     }
 }

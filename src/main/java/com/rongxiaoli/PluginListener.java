@@ -11,6 +11,9 @@ public class PluginListener extends SimpleListenerHost {
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
         exception.printStackTrace();
     }
+    public void onPoke(NudgeEvent e){
+        MessageProcessor.PokeProcess(e);
+    }
     @EventHandler
     public void onFriendMessage(FriendMessageEvent e) {
         MessageProcessor.FriendMessageProcess(e.getMessage().contentToString(), e);

@@ -1,6 +1,6 @@
-package com.rongxiaoli.plugin.DailySign.ModuleBackend.CustomString;
+package com.rongxiaoli.module.DailySign.ModuleBackend.CustomString;
 
-import com.rongxiaoli.plugin.DailySign.DailySign;
+import com.rongxiaoli.module.DailySign.DailySign;
 import net.mamoe.mirai.contact.Contact;
 
 import java.util.Objects;

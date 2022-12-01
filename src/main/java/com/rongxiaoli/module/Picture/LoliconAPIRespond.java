@@ -1,4 +1,4 @@
-package com.rongxiaoli.plugin.Picture;
+package com.rongxiaoli.module.Picture;
 
 import java.util.List;
 
