@@ -3,6 +3,7 @@ package com.rongxiaoli.module.PokeAction;
 import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.NudgeEvent;
 
 import java.util.Random;
@@ -36,9 +37,19 @@ public class PokeAction extends Module {
             return;
         }
         long TargetID = e.getTarget().getId();
-        //Start processing.
-        Action action = new Action();
+        long BotID = e.getBot().getId();
+        if (TargetID != BotID) return;
 
+        Class subjectClass = e.getSubject().getClass();
+        boolean isFromGroup = false;
+        if (subjectClass.getName().equals(Group.class.getName())) isFromGroup = true;
+
+        long SubjectID = e.getSubject().getId();
+        long FromID = e.getFrom().getId();
+        //Start processing.
+        long seed = BotID * 2 - FromID + SubjectID;
+        Action action = new Action(seed);
+        action.Main(e, e.getFrom().getId(), e.getBot().getId(),isFromGroup,e.getSubject().getId());
     }
     /**
      * Friend message process.

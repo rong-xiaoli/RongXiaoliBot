@@ -130,7 +130,7 @@ public class MessageProcessor {
         PokeAction PA = null;
         for (Module SingleModule :
                 RongXiaoliBot.BotModuleLoader.ModuleList) {
-            if (SingleModule.getPluginName().equals("AutoAccept")) {
+            if (SingleModule.getPluginName().equals("PokeAction")) {
                 PA = (PokeAction) SingleModule;
             }
         }

@@ -13,22 +13,22 @@ public class Action {
     /**
      * Initiate.
      */
-    public Action(){
-        Rand = new Random();
-        long newSeed = Rand.nextLong();
-        Rand.setSeed(newSeed);
-        Log.WriteLog(Log.Level.Verbose, "New seed of random is: " + newSeed, Log.LogClass.ModuleMain, "PokeAction");
+    public Action(long seed){
+        Rand = new Random(seed);
+        Log.WriteLog(Log.Level.Verbose, "New seed of random is: " + seed, Log.LogClass.ModuleMain, "PokeAction");
     }
 
-    public void Main(){
-        switch (Rand.nextInt(0,1)){
-            case 0:
-                Talk.Main();
-                break;
-            case 1:
-                Poke.Main();
-                break;
-            default:
-        }
+    public void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID){
+        Poke.Main(e, TargetID, BotID, IsGroup, GroupID);
+        return;
+//        switch (Rand.nextInt(0,1)){
+//            case 0:
+//                Talk.Main();
+//                break;
+//            case 1:
+//                Poke.Main(e, TargetID, BotID, IsGroup, GroupID);
+//                break;
+//            default:
+//        }
     }
 }

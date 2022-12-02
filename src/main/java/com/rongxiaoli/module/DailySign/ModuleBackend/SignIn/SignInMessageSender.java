@@ -423,7 +423,7 @@ public class SignInMessageSender {
             }
             OutputBuilder.append("今天是：" + Year + "年" + Month + "月" + Day + "日" + ",\n");
             OutputBuilder.append(Week.getDisplayName(TextStyle.FULL,Locale.PRC) + "\n");
-            OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second);
+            OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second + "\n");
             OutputBuilder.append(GetRandomString(Year, Month, Day, Week, Hour, Minute, Second, Millisecond) + "\n");
             return OutputBuilder.toString();
         }
