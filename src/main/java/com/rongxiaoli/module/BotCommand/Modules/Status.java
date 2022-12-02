@@ -1,7 +1,7 @@
 package com.rongxiaoli.module.BotCommand.Modules;
 
-import com.rongxiaoli.module.DailySign.DailySign;
-import com.rongxiaoli.module.Picture.PicturePlugin;
+import com.rongxiaoli.RongXiaoliBot;
+import com.rongxiaoli.Module;
 import net.mamoe.mirai.contact.Contact;
 
 public class Status {
@@ -11,18 +11,15 @@ public class Status {
             "获取各插件运作状态";
     public static void Process(String[] arrCommand, Contact SenderContact) {
         StringBuilder Message = new StringBuilder();
-        if (PicturePlugin.IsEnabled) {
-            Message.append(PicturePlugin.PluginName + ":" + "运作中");
-        } else {
-            Message.append(PicturePlugin.PluginName + ":" + "已关闭");
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            Message.append(SingleModule.getPluginName()).append(": ");
+            if (SingleModule.isEnabled()){
+                Message.append("On\n");
+            } else {
+                Message.append("Off\n");
+            }
         }
-
-        if (DailySign.IsEnabled) {
-            Message.append(DailySign.PluginName + ":" + "运作中");
-        } else {
-            Message.append(DailySign.PluginName + ":" + "已关闭");
-        }
-
         SenderContact.sendMessage(Message.toString());
     }
 }

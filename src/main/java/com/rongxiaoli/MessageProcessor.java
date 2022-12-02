@@ -6,6 +6,7 @@ import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.BotCommand.BotCommand;
 import com.rongxiaoli.module.Picture.PicturePlugin;
+import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.event.events.*;
 
 public class MessageProcessor {
@@ -126,5 +127,13 @@ public class MessageProcessor {
 
     public void PokeProcess(NudgeEvent e){
         //Todo: Add poke event.
+        PokeAction PA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                PA = (PokeAction) SingleModule;
+            }
+        }
+        PA.PokeMain(e);
     }
 }

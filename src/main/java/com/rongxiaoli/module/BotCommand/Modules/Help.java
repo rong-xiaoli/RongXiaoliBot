@@ -1,5 +1,7 @@
 package com.rongxiaoli.module.BotCommand.Modules;
 
+import com.rongxiaoli.Module;
+import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.Picture.PicturePlugin;
 import net.mamoe.mirai.contact.Contact;
@@ -12,32 +14,20 @@ public class Help {
             "参数: \n" +
             "command: 要查看的命令的帮助";
 
-    public static void Process(String[] arrCommand, Contact SenderContact) {
+    public void Process(String[] arrCommand, Contact SenderContact) {
         StringBuilder HelpMessage = new StringBuilder();
         if (arrCommand.length == 1) {
-            HelpMessage.append("容小狸Bot帮助: \n");
-            HelpMessage.append(HelpContent + "\n");
-            HelpMessage.append(DailySign.HelpContent + "\n");
-            HelpMessage.append(PicturePlugin.HelpContent + "\n");
-            HelpMessage.append(Status.HelpContent + "\n");
+            for (Module SingleModule :
+                    RongXiaoliBot.BotModuleLoader.ModuleList) {
+                HelpMessage.append(HelpContent + "\n");
+            }
             SenderContact.sendMessage(HelpMessage.toString());
         } else if (arrCommand.length == 2) {
-            switch (arrCommand[1]) {
-                case "RSign":
-                    SenderContact.sendMessage(DailySign.HelpContent);
-                    break;
-                case "setu":
-                    SenderContact.sendMessage(PicturePlugin.HelpContent);
-                    break;
-                case "help":
-                    SenderContact.sendMessage(HelpContent);
-                    break;
-                case "status":
-                    SenderContact.sendMessage(Status.HelpContent);
-                    break;
-                default:
-                    SenderContact.sendMessage("未知命令");
-                    break;
+            for (Module SingleModule :
+                    RongXiaoliBot.BotModuleLoader.ModuleList) {
+                if (SingleModule.getPluginName().equals(arrCommand[1])){
+                    SenderContact.sendMessage(SingleModule.getHelpContent());
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.rongxiaoli.module.PokeAction;
 import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.event.events.NudgeEvent;
 
 import java.util.Random;
 
@@ -14,27 +15,31 @@ public class PokeAction extends Module {
     private Boolean IsEnabled = false;
     private Boolean DebugMode = false;
 
-    // Module private vars.
-    private Random rand;
+    //Vars declaration end.
     /**
      * Module initiate function.
      */
     public void Init() {
-        rand = new Random();
-        long seed = rand.nextLong();
-        rand.setSeed(seed);
-        Log.WriteLog(Log.Level.Verbose, "Seed: " + seed, Log.LogClass.ModuleMain, PluginName);
         IsEnabled = true;
         Log.WriteLog(Log.Level.Debug, "PokeAction initiated. ", Log.LogClass.ModuleMain, PluginName);
     }
 
     /**
-     *
+     * Shutdown.
      */
     public void Shutdown() {
         Log.WriteLog(Log.Level.Debug, "PokeAction stopped. ", Log.LogClass.ModuleMain, PluginName);
     }
 
+    public void PokeMain(NudgeEvent e){
+        if (!isEnabled()) {
+            return;
+        }
+        long TargetID = e.getTarget().getId();
+        //Start processing.
+        Action action = new Action();
+
+    }
     /**
      * Friend message process.
      *

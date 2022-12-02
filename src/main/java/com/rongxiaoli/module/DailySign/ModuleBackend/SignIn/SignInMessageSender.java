@@ -230,7 +230,7 @@ public class SignInMessageSender {
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Month = " + Month,
                             Log.LogClass.ModuleMain,
-                            DailySign.PluginName);
+                            "DailySign");
                     break;
             }
             //Day of week only.
@@ -261,7 +261,7 @@ public class SignInMessageSender {
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Week = " + Week,
                             Log.LogClass.ModuleMain,
-                            DailySign.PluginName);
+                            "DailySign");
                     break;
             }
             //Day only.
@@ -348,7 +348,7 @@ public class SignInMessageSender {
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Hour = " + Hour,
                             Log.LogClass.ModuleMain,
-                            DailySign.PluginName);
+                            "DailySign");
                     break;
             }
 
@@ -376,7 +376,7 @@ public class SignInMessageSender {
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: (nextInt(6))",
                             Log.LogClass.ModuleMain,
-                            DailySign.PluginName);
+                            "DailySign");
                     break;
             }
 

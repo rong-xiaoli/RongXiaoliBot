@@ -13,8 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 public class DailySign extends Module {
+    private static final String CommandPrefix = "Rsign";
     private static final String HelpContent = "Rsign\n" +
             "签到";
     public static Data SignList = new Data();
@@ -78,7 +80,15 @@ public class DailySign extends Module {
         if (arrCommand.length == 0) {
             return;
         }
-
+        //Judge if prefix is correct.
+        if (!Objects.equals(arrCommand[0], CommandPrefix)) {
+            return;
+        }
+        //Judge if the plugin is enabled.
+        if (!IsEnabled) {
+            SenderContact.sendMessage("当前插件未启用");
+            return;
+        }
         //Start processing.
         SignInRequestProcess.Process(arrCommand, Friend, 0, SenderContact);
     }
@@ -88,7 +98,15 @@ public class DailySign extends Module {
         if (arrCommand.length == 0) {
             return;
         }
-
+        //Judge if prefix is correct.
+        if (!Objects.equals(arrCommand[0], CommandPrefix)) {
+            return;
+        }
+        //Judge if the plugin is enabled.
+        if (!IsEnabled) {
+            SenderContact.sendMessage("当前插件未启用");
+            return;
+        }
         //Start processing.
         SignInRequestProcess.Process(arrCommand, Friend, Group, SenderContact);
     }

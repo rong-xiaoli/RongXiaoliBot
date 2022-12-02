@@ -26,11 +26,13 @@ public class BotCommand extends Module {
                 if (SenderContact.getId() != RongXiaoliBot.Owner) {
                     return;
                 }
-                Management.Process(arrCommand, SenderContact);
+                Management m = new Management();
+                m.Process(arrCommand, SenderContact);
                 //End.
             } else if (Objects.equals(arrCommand[0], Help.CommandPrefix)) {
                 //Help message.
-                Help.Process(arrCommand,SenderContact);
+                Help h = new Help();
+                h.Process(arrCommand, SenderContact);
                 //End.
             } else if (Objects.equals(arrCommand[0], Status.CommandPrefix)) {
                 //Status.
