@@ -2,6 +2,7 @@ package com.rongxiaoli.backend.Network;
 
 import com.rongxiaoli.backend.Log;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,6 +55,9 @@ public class HttpDownload {
         } catch (ClosedChannelException CCE) {
             Log.Exception(CCE, "Channel closed. ", Log.LogClass.Network, PluginName);
             throw CCE;
+        } catch (SSLHandshakeException SSLHE) {
+            Log.Exception(SSLHE, "SSL Handshake error. ", Log.LogClass.Network, PluginName);
+            throw SSLHE;
         } catch (IOException IOE) {
             Log.Exception(IOE, "IOException occurred. ", Log.LogClass.Network, PluginName);
             throw IOE;

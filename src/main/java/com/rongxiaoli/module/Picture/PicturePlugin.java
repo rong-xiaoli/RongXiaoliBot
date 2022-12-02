@@ -11,6 +11,7 @@ import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.utils.ExternalResource;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -250,6 +251,9 @@ public class PicturePlugin extends Module {
             } catch (ClosedChannelException CCE) {
                 SenderContact.sendMessage("连结终止，请重试");
                 isProcessing = false;
+            } catch (SSLHandshakeException SSLHE) {
+                SenderContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
+                isProcessing = false;
             } catch (IOException IOE) {
                 if (IOE.getMessage().contains("timed out")) {
                     SenderContact.sendMessage("连接超时，请重试");
@@ -482,6 +486,9 @@ public class PicturePlugin extends Module {
                 isProcessing = false;
             } catch (ClosedChannelException CCE) {
                 SenderContact.sendMessage("连结终止，请重试");
+                isProcessing = false;
+            } catch (SSLHandshakeException SSLHE) {
+                SenderContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
                 isProcessing = false;
             } catch (IOException IOE) {
                 if (IOE.getMessage().contains("timed out")) {

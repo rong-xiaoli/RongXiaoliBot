@@ -16,7 +16,7 @@ import java.nio.file.Path;
 public final class RongXiaoliBot extends JavaPlugin {
     public static final RongXiaoliBot INSTANCE = new RongXiaoliBot();
     private static final String PluginName = "RongXiaoliBot PluginMain";
-    public static final long Owner = 0000000000;
+    public static final long Owner = 1751362263;
     public static boolean IsEnabled = false;
     public static Path DataPath;
     public static Path ConfigPath;
@@ -42,26 +42,9 @@ public final class RongXiaoliBot extends JavaPlugin {
         ConfigPath = getConfigFolderPath();
 
         //Plugin init.
-        /*
-
-        //Version 0.1.0 removed:
-        //Reason: After being banned for many times, this function is banned forever for others.
-        PicturePlugin.Init();
-        Log.WriteLog(Log.Level.Debug,
-                "setu Plugin initiated. ",
-                Log.Module.PluginMain,
-                PluginName);
-
-        DailySign.Init();
-        Log.WriteLog(Log.Level.Debug,
-                "DailySign Plugin initiated. ",
-                Log.Module.PluginMain,
-                PluginName);
-
-        */
         BotModuleLoader = new ModuleLoader();
         BotModuleLoader.ModuleList = new Module[6];
-        //Add bot module start.
+        //Adding bot module.
 
         BotModuleLoader.ModuleList[0] = new EmergencyStop();
         BotModuleLoader.ModuleList[1] = new BotCommand();
