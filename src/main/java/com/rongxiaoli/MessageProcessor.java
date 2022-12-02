@@ -15,7 +15,7 @@ public class MessageProcessor {
      * @param originalMessage Original message.
      * @param e FriendMessageEvent.
      */
-    public static void FriendMessageProcess(String originalMessage, FriendMessageEvent e) {
+    public void FriendMessageProcess(String originalMessage, FriendMessageEvent e) {
         //Variables initiate.
         String[] arrCommand;
         //Start processing.
@@ -44,7 +44,7 @@ public class MessageProcessor {
      * @param originalMessage Original message.
      * @param e GroupMessageEvent.
      */
-    public static void GroupMessageProcess(String originalMessage, GroupMessageEvent e) {
+    public void GroupMessageProcess(String originalMessage, GroupMessageEvent e) {
         //Variables initiate.
         String[] arrCommand;
         //Start processing.
@@ -70,33 +70,61 @@ public class MessageProcessor {
      * Invoke when a friend request is sent.
      * @param e Friend request event.
      */
-    public static void FriendAddRequestProcess(NewFriendRequestEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void FriendAddRequestProcess(NewFriendRequestEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
 
     /**
      * Invoke when a friend is added.
      * @param e Friend add event.
      */
-    public static void FriendAddProcess(FriendAddEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void FriendAddProcess(FriendAddEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
 
     /**
      * Invoke when a group request is sent.
      * @param e Group request event.
      */
-    public static void GroupAddRequestProcess(BotInvitedJoinGroupRequestEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void GroupAddRequestProcess(BotInvitedJoinGroupRequestEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
     /**
      * Invoke when added in a group.
      */
-    public static void GroupAddProcess(BotJoinGroupEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void GroupAddProcess(BotJoinGroupEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
 
-    public static void PokeProcess(NudgeEvent e){
+    public void PokeProcess(NudgeEvent e){
         //Todo: Add poke event.
     }
 }

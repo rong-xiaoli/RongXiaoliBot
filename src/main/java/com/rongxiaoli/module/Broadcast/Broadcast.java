@@ -16,7 +16,7 @@ import java.util.Random;
 public class Broadcast extends Module {
     public static String PluginName = "Broadcast";
 
-    public static boolean IsEnabled = true;
+    private static boolean IsEnabled = true;
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
         if (arrCommand.length == 0) {
             return;
@@ -88,5 +88,42 @@ public class Broadcast extends Module {
 
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
         return;
+    }
+
+    /**
+     * Plugin name. Use in logs.
+     */
+    public String getPluginName() {
+        return PluginName;
+    }
+
+    /**
+     * Help content. Used in BotCommand.Modules.Help.
+     */
+    public String getHelpContent() {
+        return null;
+    }
+
+    /**
+     * True if enabled.
+     */
+    public boolean isEnabled() {
+        return IsEnabled;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param status Status
+     */
+    public void setEnabled(boolean status) {
+        IsEnabled = status;
+    }
+
+    /**
+     * Debug mode.
+     */
+    public boolean isDebugMode() {
+        return false;
     }
 }

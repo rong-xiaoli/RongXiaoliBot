@@ -7,6 +7,7 @@ import com.rongxiaoli.module.Broadcast.Broadcast;
 import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.Picture.PicturePlugin;
+import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
@@ -43,15 +44,15 @@ public final class RongXiaoliBot extends JavaPlugin {
 
         //Plugin init.
         BotModuleLoader = new ModuleLoader();
-        BotModuleLoader.ModuleList = new Module[6];
         //Adding bot module.
 
-        BotModuleLoader.ModuleList[0] = new EmergencyStop();
-        BotModuleLoader.ModuleList[1] = new BotCommand();
-        BotModuleLoader.ModuleList[2] = new Broadcast();
-        BotModuleLoader.ModuleList[3] = new AutoAcceptPlugin();
-        BotModuleLoader.ModuleList[4] = new PicturePlugin();
-        BotModuleLoader.ModuleList[5] = new DailySign();
+        BotModuleLoader.ModuleList.add(new EmergencyStop());
+        BotModuleLoader.ModuleList.add(new BotCommand());
+        BotModuleLoader.ModuleList.add(new Broadcast());
+        BotModuleLoader.ModuleList.add(new AutoAcceptPlugin());
+        BotModuleLoader.ModuleList.add(new PicturePlugin());
+        BotModuleLoader.ModuleList.add(new DailySign());
+        BotModuleLoader.ModuleList.add(new PokeAction());
 
         //Done.
         //Module init.

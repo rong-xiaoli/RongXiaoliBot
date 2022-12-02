@@ -9,7 +9,7 @@ public class CustomStringOperationRequestProcess {
     public static String CommandPrefix = "/Str";
     public static void Process(String[] arrCommand, long QQID, long GroupID, Contact SenderContact) {
         //Judge if the plugin is enabled.
-        if (!DailySign.Enabled) {
+        if (!DailySign.IsEnabled) {
             SenderContact.sendMessage("当前插件未启用");
             return;
         }

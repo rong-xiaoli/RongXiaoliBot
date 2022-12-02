@@ -19,7 +19,7 @@ public class SignInRequestProcess {
      */
     public static void Process(String[] arrCommand, long qqID, long groupID, Contact SenderContact) {
         //Judge if the plugin is enabled.
-        if (!DailySign.Enabled) {
+        if (!DailySign.IsEnabled) {
             SenderContact.sendMessage("当前插件未启用");
             return;
         }

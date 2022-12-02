@@ -17,7 +17,7 @@ public class Status {
             Message.append(PicturePlugin.PluginName + ":" + "已关闭");
         }
 
-        if (DailySign.Enabled) {
+        if (DailySign.IsEnabled) {
             Message.append(DailySign.PluginName + ":" + "运作中");
         } else {
             Message.append(DailySign.PluginName + ":" + "已关闭");

@@ -11,23 +11,25 @@ import net.mamoe.mirai.event.events.NewFriendRequestEvent;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 public class AutoAcceptPlugin extends Module {
-    public static String PluginName = "AutoAccept";
-    public static boolean IsEnabled = false;
-    public static void Main(NewFriendRequestEvent e) {
-        if (!IsEnabled) {
+    private String PluginName = "AutoAccept";
+    private boolean IsEnabled = false;
+
+    public void Main(NewFriendRequestEvent e) {
+        if (!isEnabled()) {
             if (e.getFromGroup() != null) {
                 e.getFromGroup().get(e.getFromId()).sendMessage("暂不支持添加好友");
             }
             e.reject(false);
             Log.WriteLog(Log.Level.Info,
-                    "New friend request from: " + e.getFromId() +" rejected: Plugin disabled. ",
+                    "New friend request from: " + e.getFromId() + " rejected: Plugin disabled. ",
                     Log.LogClass.ModuleMain,
                     PluginName);
             return;
         }
         e.accept();
     }
-    public static void Main(FriendAddEvent e) {
+
+    public void Main(FriendAddEvent e) {
         for (Friend SingleFriend :
                 e.getBot().getFriends()) {
             Log.WriteLog(Log.Level.Verbose,
@@ -50,19 +52,21 @@ public class AutoAcceptPlugin extends Module {
         WelcomeMessage.append("打卡，命令：sign");
         e.getBot().getFriend(e.getFriend().getId()).sendMessage(WelcomeMessage.build());
     }
-    public static void Main(BotInvitedJoinGroupRequestEvent e) {
+
+    public void Main(BotInvitedJoinGroupRequestEvent e) {
         if (!IsEnabled) {
             e.ignore();
             e.getBot().getStranger(e.getInvitorId()).sendMessage("暂不支持邀请进群");
             Log.WriteLog(Log.Level.Info,
-                    "New group invite request from: " + e.getGroupId() +" ignored: Plugin disabled. ",
+                    "New group invite request from: " + e.getGroupId() + " ignored: Plugin disabled. ",
                     Log.LogClass.ModuleMain,
                     PluginName);
             return;
         }
         e.accept();
     }
-    public static void Main(BotJoinGroupEvent e) {
+
+    public void Main(BotJoinGroupEvent e) {
         if (!IsEnabled) {
             e.getGroup().sendMessage("暂不支持邀请入群");
             e.getGroup().quit();
@@ -90,5 +94,42 @@ public class AutoAcceptPlugin extends Module {
 
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
         return;
+    }
+
+    /**
+     * Plugin name. Use in logs.
+     */
+    public String getPluginName() {
+        return PluginName;
+    }
+
+    /**
+     * Help content. Used in BotCommand.Modules.Help.
+     */
+    public String getHelpContent() {
+        return null;
+    }
+
+    /**
+     * True if enabled.
+     */
+    public boolean isEnabled() {
+        return IsEnabled;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param status Status
+     */
+    public void setEnabled(boolean status) {
+        IsEnabled = status;
+    }
+
+    /**
+     * Debug mode.
+     */
+    public boolean isDebugMode() {
+        return false;
     }
 }

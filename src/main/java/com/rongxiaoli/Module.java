@@ -23,23 +23,37 @@ public abstract class Module {
      */
     public abstract void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact);
 
+    private String PluginName;
+
+    private String HelpContent;
+
+    private boolean IsEnabled;
+
+    private boolean DebugMode;
+
     /**
      * Plugin name. Use in logs.
      */
-    public String PluginName;
+    public abstract String getPluginName();
 
     /**
      * Help content. Used in BotCommand.Modules.Help.
      */
-    public String HelpContent;
+    public abstract String getHelpContent();
 
     /**
      * True if enabled.
      */
-    public boolean IsEnabled;
+    public abstract boolean isEnabled();
+
+    /**
+     * Set status.
+     * @param status Status
+     */
+    public abstract void setEnabled(boolean status);
 
     /**
      * Debug mode.
      */
-    public boolean DebugMode;
+    public abstract boolean isDebugMode();
 }

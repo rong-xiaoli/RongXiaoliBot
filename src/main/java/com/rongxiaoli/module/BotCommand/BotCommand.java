@@ -52,4 +52,41 @@ public class BotCommand extends Module {
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
         return;
     }
+
+    /**
+     * Plugin name. Use in logs.
+     */
+    public String getPluginName() {
+        return PluginName;
+    }
+
+    /**
+     * Help content. Used in BotCommand.Modules.Help.
+     */
+    public String getHelpContent() {
+        return null;
+    }
+
+    /**
+     * True if enabled.
+     */
+    public boolean isEnabled() {
+        return true;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param status Status
+     */
+    public void setEnabled(boolean status) {
+        return;
+    }
+
+    /**
+     * Debug mode.
+     */
+    public boolean isDebugMode() {
+        return false;
+    }
 }

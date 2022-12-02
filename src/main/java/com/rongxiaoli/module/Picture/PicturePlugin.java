@@ -22,46 +22,48 @@ import java.security.KeyManagementException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 public class PicturePlugin extends Module {
 
-    /**
-     * Is plugin enabled.
-     */
-    public static boolean IsEnabled = false;
-    public static boolean DebugMode = false;
-    /**
-     * Plugin name.
-     */
-    public static String PluginName = "setu";
-    /**
-     * The prefix of the plugin.
-     */
-    public static String CommandPrefix = "setu";
-    public static String PictureProxy = "i.pixiv.re";
-    public static String HelpContent =
-            "setu [Keyword] [Keyword] ...\n" +
-            //"(API返回301，以及另一些特殊原因，该插件已弃用)\n" +
-            "获取一张涩图\n" +
-            "参数: \n" +
-            "Keyword: 要查询的关键字";
-    /**
-     * Is plugin running.
-     */
-    public static boolean isRunning = true;
-    /**
-     * Used as process lock.
-     */
-    public static boolean isProcessing = false;
     /**
      * Cooling thread.
      */
     public static CoolingThread CThread = new CoolingThread();
+    /**
+     * Is plugin running.
+     */
+    private static boolean isRunning = true;
+    /**
+     * Used as process lock.
+     */
+    private static boolean isProcessing = false;
+    /**
+     * Is plugin enabled.
+     */
+    private static boolean IsEnabled = false;
+    private static boolean DebugMode = false;
+    /**
+     * Plugin name.
+     */
+    private final String PluginName = "setu";
+    /**
+     * The prefix of the plugin.
+     */
+    private final String CommandPrefix = "setu";
+    private final String PictureProxy = "i.pixiv.re";
+    private final String HelpContent =
+            "setu [Keyword] [Keyword] ...\n" +
+                    //"(API返回301，以及另一些特殊原因，该插件已弃用)\n" +
+                    "获取一张涩图\n" +
+                    "参数: \n" +
+                    "Keyword: 要查询的关键字";
 
     /**
      * Plugin main method for groups.
-     * @param arrCommand Command array.
-     * @param Friend QQID.
-     * @param Group Group ID.
+     *
+     * @param arrCommand    Command array.
+     * @param Friend        QQID.
+     * @param Group         Group ID.
      * @param SenderContact Contact of the sender.
      */
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
@@ -131,10 +133,7 @@ public class PicturePlugin extends Module {
         Keywords = null;
         if (arrCommand.length >= 2) {
             Keywords = new String[arrCommand.length - 1];
-            for (int num = 0; num <= Keywords.length - 1; num++
-            ) {
-                Keywords[num] = arrCommand[num + 1];
-            }
+            System.arraycopy(arrCommand, 1, Keywords, 0, Keywords.length - 1 + 1);
             Log.WriteLog(Log.Level.Verbose,
                     "Command received (raw): " + Arrays.toString(arrCommand),
                     Log.LogClass.ModuleMain,
@@ -151,7 +150,7 @@ public class PicturePlugin extends Module {
             }
         }
         APIHttpsGet.Par.Append("size", "regular");
-        APIHttpsGet.Par.Append("proxy",PictureProxy);
+        APIHttpsGet.Par.Append("proxy", PictureProxy);
         try {
             ApiReturnString = APIHttpsGet.GET(PluginName);
             Log.WriteLog(Log.Level.Verbose,
@@ -195,7 +194,7 @@ public class PicturePlugin extends Module {
             isProcessing = false;
             return;
         }
-        if (!JSON.isValid(ApiReturnString)){
+        if (!JSON.isValid(ApiReturnString)) {
             SenderContact.sendMessage("错误：JSON未能正确转换");
             Log.WriteLog(Log.Level.Warning,
                     "JSON cannot be resolved. ",
@@ -292,9 +291,47 @@ public class PicturePlugin extends Module {
     }
 
     /**
+     * Plugin name. Use in logs.
+     */
+    public String getPluginName() {
+        return PluginName;
+    }
+
+    /**
+     * Help content. Used in BotCommand.Modules.Help.
+     */
+    public String getHelpContent() {
+        return HelpContent;
+    }
+
+    /**
+     * True if enabled.
+     */
+    public boolean isEnabled() {
+        return IsEnabled;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param status Status
+     */
+    public void setEnabled(boolean status) {
+        IsEnabled = status;
+    }
+
+    /**
+     * Debug mode.
+     */
+    public boolean isDebugMode() {
+        return DebugMode;
+    }
+
+    /**
      * Plugin main method for friends.
-     * @param arrCommand Command array.
-     * @param Friend QQID.
+     *
+     * @param arrCommand    Command array.
+     * @param Friend        QQID.
      * @param SenderContact Contact of the sender.
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
@@ -360,7 +397,7 @@ public class PicturePlugin extends Module {
             FreezeTime = 90;
             RemainingTime = CoolingObjectList.Add(FriendID, FreezeTime);
             if (RemainingTime != -1) {
-                SenderContact.sendMessage("冷却还剩" + RemainingTime +"秒，请耐心等待");
+                SenderContact.sendMessage("冷却还剩" + RemainingTime + "秒，请耐心等待");
                 isProcessing = false;
                 return;
             }
@@ -371,10 +408,7 @@ public class PicturePlugin extends Module {
         Keywords = null;
         if (arrCommand.length >= 2) {
             Keywords = new String[arrCommand.length - 1];
-            for (int num = 0; num<= Keywords.length - 1; num++
-            ) {
-                Keywords[num]=arrCommand[num+1];
-            }
+            System.arraycopy(arrCommand, 1, Keywords, 0, Keywords.length - 1 + 1);
             Log.WriteLog(Log.Level.Verbose,
                     "Command received (raw): " + Arrays.toString(arrCommand),
                     Log.LogClass.ModuleMain,
@@ -391,7 +425,7 @@ public class PicturePlugin extends Module {
             }
         }
         APIHttpsGet.Par.Append("size", "regular");
-        APIHttpsGet.Par.Append("proxy",PictureProxy);
+        APIHttpsGet.Par.Append("proxy", PictureProxy);
         try {
             ApiReturnString = APIHttpsGet.GET(PluginName);
             Log.WriteLog(Log.Level.Verbose,
@@ -431,7 +465,7 @@ public class PicturePlugin extends Module {
             isProcessing = false;
             return;
         }
-        if (!JSON.isValid(ApiReturnString)){
+        if (!JSON.isValid(ApiReturnString)) {
             SenderContact.sendMessage("错误：JSON未能正确转换");
             Log.WriteLog(Log.Level.Warning,
                     "JSON cannot be resolved. ",
@@ -554,6 +588,7 @@ public class PicturePlugin extends Module {
     public static class CoolingObject {
         public long FriendID;
         public short RemainingTime;
+
         public CoolingObject(long Friend, short RemainingTime) {
             this.FriendID = Friend;
             this.RemainingTime = RemainingTime;
@@ -566,21 +601,23 @@ public class PicturePlugin extends Module {
      */
     public static class CoolingObjectList {
         private static final CopyOnWriteArrayList<CoolingObject> CoolingObjectList = new CopyOnWriteArrayList<>();
+
         public static void Tick() {
             for (CoolingObject SingleObj :
                     CoolingObjectList) {
-                SingleObj.RemainingTime --;
+                SingleObj.RemainingTime--;
                 if (SingleObj.RemainingTime <= 0) {
                     Log.WriteLog(Log.Level.Debug,
                             "CoolingObject removed: " + SingleObj.FriendID,
                             Log.LogClass.Multithreading,
-                            PluginName);
+                            "setu");
                     CoolingObjectList.remove(SingleObj);
                 }
             }
         }
+
         public static short Add(long Friend, short RemainingTime) {
-            CoolingObject ObjAdding = new CoolingObject(Friend,RemainingTime);
+            CoolingObject ObjAdding = new CoolingObject(Friend, RemainingTime);
             for (CoolingObject SingleObject :
                     CoolingObjectList) {
                 if (SingleObject.FriendID == Friend) {
@@ -590,7 +627,7 @@ public class PicturePlugin extends Module {
             Log.WriteLog(Log.Level.Debug,
                     "CoolingObject added: " + Friend,
                     Log.LogClass.Multithreading,
-                    PluginName);
+                    "setu");
             CoolingObjectList.add(ObjAdding);
             return -1;
         }
@@ -599,35 +636,36 @@ public class PicturePlugin extends Module {
     /**
      * Cooling thread.
      */
-    public static class CoolingThread extends Thread{
+    public static class CoolingThread extends Thread {
         private int DebugTimer = 0;
+
         @Override
         public void run() {
             while (isRunning) {
                 try {
                     Thread.sleep(1000);
-                    DebugTimer ++;
+                    DebugTimer++;
                     if (DebugTimer >= 60) {
                         DebugTimer = 0;
-                        if (IsEnabled){
+                        if (IsEnabled) {
                             if (DebugMode) {
                                 Log.WriteLog(Log.Level.Verbose,
                                         "CoolingObject List: ",
                                         Log.LogClass.Multithreading,
-                                        PluginName);
+                                        "setu");
                                 for (CoolingObject SingleObject :
                                         CoolingObjectList.CoolingObjectList) {
                                     Log.WriteLog(Log.Level.Verbose,
                                             "ID: " + SingleObject.FriendID,
                                             Log.LogClass.Multithreading,
-                                            PluginName);
+                                            "setu");
                                 }
                             }
                         }
                     }
                     CoolingObjectList.Tick();
                 } catch (InterruptedException e) {
-                    Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, PluginName);
+                    Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, "setu");
                 }
             }
         }

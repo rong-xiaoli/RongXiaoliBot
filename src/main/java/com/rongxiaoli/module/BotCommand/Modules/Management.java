@@ -44,7 +44,7 @@ public class Management {
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已禁用");
                         break;
                     case "dailysign" :
-                        DailySign.Enabled = false;
+                        DailySign.IsEnabled = false;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已禁用");
                     default:
                         SenderContact.sendMessage("未知插件");
@@ -76,7 +76,7 @@ public class Management {
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已启用");
                         break;
                     case "dailysign" :
-                        DailySign.Enabled = true;
+                        DailySign.IsEnabled = true;
                         SenderContact.sendMessage("插件：" + arrCommand[2] + "已启用");
                     default:
                         SenderContact.sendMessage("未知插件");
