@@ -38,7 +38,7 @@ public class Ping extends Module {
         if (arrCommand.length == 0) {
             return;
         }
-        if (arrCommand[0] == "/ping") SenderContact.sendMessage("Pong! ");
+        if (arrCommand[0].equals("ping")) SenderContact.sendMessage("Pong! ");
     }
 
     /**
@@ -54,7 +54,7 @@ public class Ping extends Module {
         if (arrCommand.length == 0) {
             return;
         }
-        if (arrCommand[0] == "/ping") SenderContact.sendMessage("Pong! ");
+        if (arrCommand[0].equals("ping")) SenderContact.sendMessage("Pong! ");
     }
 
     /**
