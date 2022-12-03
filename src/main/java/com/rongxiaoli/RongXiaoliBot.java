@@ -1,5 +1,5 @@
 package com.rongxiaoli;
-//Todo: Test the whole plugin.
+
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
 import com.rongxiaoli.module.BotCommand.BotCommand;

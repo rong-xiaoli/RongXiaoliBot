@@ -53,7 +53,7 @@ public class MessageProcessor {
         //Invoke plugin main methods.
         //First step: unregistered modules.
 
-        //None.
+        //BotCommand.UnregisteredFriendMain(arrCommand, e.getSubject());
 
         //Judge if the plugin is running or not.
         if (!RongXiaoliBot.IsEnabled) {
@@ -126,7 +126,6 @@ public class MessageProcessor {
     }
 
     public void PokeProcess(NudgeEvent e){
-        //Todo: Add poke event.
         PokeAction PA = null;
         for (Module SingleModule :
                 RongXiaoliBot.BotModuleLoader.ModuleList) {

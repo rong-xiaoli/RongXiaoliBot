@@ -3,7 +3,6 @@ package com.rongxiaoli.module.PokeAction;
 import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.NudgeEvent;
 
 import java.util.Random;
@@ -11,16 +10,21 @@ import java.util.Random;
 public class PokeAction extends Module {
 
     // Module status vars.
+    private Action action;
     private String PluginName = "PokeAction";
     private String HelpContent = "戳一戳：无帮助文档。\n";
     private Boolean IsEnabled = false;
     private Boolean DebugMode = false;
 
+    private Random random;
     //Vars declaration end.
+
     /**
      * Module initiate function.
      */
     public void Init() {
+        action = new Action();
+        random = new Random();
         IsEnabled = true;
         Log.WriteLog(Log.Level.Debug, "PokeAction initiated. ", Log.LogClass.ModuleMain, PluginName);
     }
@@ -32,7 +36,7 @@ public class PokeAction extends Module {
         Log.WriteLog(Log.Level.Debug, "PokeAction stopped. ", Log.LogClass.ModuleMain, PluginName);
     }
 
-    public void PokeMain(NudgeEvent e){
+    public void PokeMain(NudgeEvent e) {
         if (!isEnabled()) {
             return;
         }
@@ -40,17 +44,18 @@ public class PokeAction extends Module {
         long BotID = e.getBot().getId();
         if (TargetID != BotID) return;
 
-        Class subjectClass = e.getSubject().getClass();
         boolean isFromGroup = false;
-        if (subjectClass.getName().equals(Group.class.getName())) isFromGroup = true;
+        if (e.getSubject().getId() != e.getFrom().getId()) isFromGroup = true;
 
         long SubjectID = e.getSubject().getId();
         long FromID = e.getFrom().getId();
         //Start processing.
-        long seed = BotID * 2 - FromID + SubjectID;
-        Action action = new Action(seed);
-        action.Main(e, e.getFrom().getId(), e.getBot().getId(),isFromGroup,e.getSubject().getId());
+        int ReplyType = random.nextInt(0,2);
+        int InnerRandom1 = random.nextInt(0, 2);
+        int InnerRandom2 = random.nextInt(0, 5);
+        action.Main(e, e.getFrom().getId(), e.getBot().getId(), isFromGroup, e.getSubject().getId(), ReplyType, InnerRandom1, InnerRandom2);
     }
+
     /**
      * Friend message process.
      *
