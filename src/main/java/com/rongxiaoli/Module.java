@@ -11,6 +11,10 @@ public abstract class Module {
      * Module initiate function.
      */
     public abstract void Init();
+
+    /**
+     * Module shutdown function.
+     */
     public abstract void Shutdown();
 
     /**
