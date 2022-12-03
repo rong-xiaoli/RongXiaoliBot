@@ -1,7 +1,7 @@
-package com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn;
+package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.plugin.DailySign.DailySign;
+import com.rongxiaoli.module.DailySign.DailySign;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -229,8 +229,8 @@ public class SignInMessageSender {
                     MonthBasedString = "美好的一天~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Month = " + Month,
-                            Log.Module.PluginMain,
-                            DailySign.PluginName);
+                            Log.LogClass.ModuleMain,
+                            "DailySign");
                     break;
             }
             //Day of week only.
@@ -260,8 +260,8 @@ public class SignInMessageSender {
                     WeekBasedString = "美好的一天~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Week = " + Week,
-                            Log.Module.PluginMain,
-                            DailySign.PluginName);
+                            Log.LogClass.ModuleMain,
+                            "DailySign");
                     break;
             }
             //Day only.
@@ -347,8 +347,8 @@ public class SignInMessageSender {
                     HourBasedString = "美好的一天~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: Hour = " + Hour,
-                            Log.Module.PluginMain,
-                            DailySign.PluginName);
+                            Log.LogClass.ModuleMain,
+                            "DailySign");
                     break;
             }
 
@@ -375,8 +375,8 @@ public class SignInMessageSender {
                     OtherString = "C#是世界上最美的语言~";
                     Log.WriteLog(Log.Level.Warning,
                             "Unexpected value: (nextInt(6))",
-                            Log.Module.PluginMain,
-                            DailySign.PluginName);
+                            Log.LogClass.ModuleMain,
+                            "DailySign");
                     break;
             }
 
@@ -423,7 +423,7 @@ public class SignInMessageSender {
             }
             OutputBuilder.append("今天是：" + Year + "年" + Month + "月" + Day + "日" + ",\n");
             OutputBuilder.append(Week.getDisplayName(TextStyle.FULL,Locale.PRC) + "\n");
-            OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second);
+            OutputBuilder.append("现在是" + Hour + ":" + Minute + ":" + Second + "\n");
             OutputBuilder.append(GetRandomString(Year, Month, Day, Week, Hour, Minute, Second, Millisecond) + "\n");
             return OutputBuilder.toString();
         }

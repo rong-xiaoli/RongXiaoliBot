@@ -7,32 +7,41 @@ import net.mamoe.mirai.event.events.*;
 import org.jetbrains.annotations.NotNull;
 
 public class PluginListener extends SimpleListenerHost {
+    public MessageProcessor MP;
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
         exception.printStackTrace();
     }
     @EventHandler
+    public void onPoke(NudgeEvent e){
+        MP.PokeProcess(e);
+    }
+    @EventHandler
     public void onFriendMessage(FriendMessageEvent e) {
-        MessageProcessor.FriendMessageProcess(e.getMessage().contentToString(), e);
+        MP.FriendMessageProcess(e.getMessage().contentToString(), e);
     }
     @EventHandler
     public void onGroupMessage(GroupMessageEvent e) {
-        MessageProcessor.GroupMessageProcess(e.getMessage().contentToString(), e);
+        MP.GroupMessageProcess(e.getMessage().contentToString(), e);
     }
     @EventHandler
     public void onFriendAddRequest(NewFriendRequestEvent e) {
-        MessageProcessor.FriendAddRequestProcess(e);
+        MP.FriendAddRequestProcess(e);
     }
     @EventHandler
     public void onFriendAdd(FriendAddEvent e) {
-        MessageProcessor.FriendAddProcess(e);
+        MP.FriendAddProcess(e);
     }
     @EventHandler
     public void onGroupAddRequest(BotInvitedJoinGroupRequestEvent e) {
-        MessageProcessor.GroupAddRequestProcess(e);
+        MP.GroupAddRequestProcess(e);
     }
     @EventHandler
     public void onGroupAdd(BotJoinGroupEvent e) {
-        MessageProcessor.GroupAddProcess(e);
+        MP.GroupAddProcess(e);
+    }
+
+    public PluginListener(){
+        MP = new MessageProcessor();
     }
 }

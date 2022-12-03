@@ -10,40 +10,40 @@ public class Log {
         Warning,
         Error,
     }
-    public enum Module {
+    public enum LogClass {
         Network,
         Data,
         Log,
         File,
         Multithreading,
-        PluginMain,
+        ModuleMain,
     }
     public static void Init() {
     }
-    public static void WriteLog(@NotNull Level level, String msg, Module module, String PluginName) {
+    public static void WriteLog(@NotNull Level level, String msg, LogClass logClass, String PluginName) {
         switch (level) {
             case Verbose:
-                System.out.println("RongXiaoliBot Logger: VER "+PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: VER "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Debug:
-                System.out.println("RongXiaoliBot Logger: DBG "+PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: DBG "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Info:
-                System.out.println("RongXiaoliBot Logger: INF "+PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: INF "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Warning:
-                System.out.println("RongXiaoliBot Logger: WRN "+PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: WRN "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Error:
-                System.out.println("RongXiaoliBot Logger: ERR "+PluginName+"."+module+": "+msg);
+                System.out.println("RongXiaoliBot Logger: ERR "+PluginName+"."+ logClass +": "+msg);
                 break;
         }
     }
-    public static void Exception(Exception e, String eInfo, Module module, String PluginName) {
+    public static void Exception(Exception e, String eInfo, LogClass logClass, String PluginName) {
         System.out.println("RongXiaoliBot Logger: ERR Exception occurred! " + "\n" +
                 e +
                 "Extra info: " + eInfo + "\n" +
-                "In module: " + module + "\n" +
+                "In module: " + logClass + "\n" +
                 "In plugin: " + PluginName);
         e.printStackTrace();
     }

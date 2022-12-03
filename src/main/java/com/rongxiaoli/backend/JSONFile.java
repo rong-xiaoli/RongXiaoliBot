@@ -11,7 +11,6 @@ public class JSONFile {
     public String PluginName;
 
     public JSONFile(String pluginName, String FilePath, String FileName) {
-        //Todo: Complete this function.
         //Check file.
         JSONFileHandler = new File(FilePath, FileName);
         //Try creating file path.
@@ -22,7 +21,7 @@ public class JSONFile {
             } catch (IOException e) {
                 Log.Exception(e,
                         "",
-                        Log.Module.File,
+                        Log.LogClass.File,
                         PluginName);
             }
         }
@@ -43,7 +42,7 @@ public class JSONFile {
             //Empty.
             Log.WriteLog(Log.Level.Debug,
                     "JSON file empty. ",
-                    Log.Module.File,
+                    Log.LogClass.File,
                     PluginName);
             return null;
         }
@@ -61,7 +60,7 @@ public class JSONFile {
         } catch (IOException e) {
             Log.Exception(e,
                     "",
-                    Log.Module.File,
+                    Log.LogClass.File,
                     PluginName);
         }
     }
@@ -74,7 +73,7 @@ public class JSONFile {
         } catch (IOException e) {
             Log.Exception(e,
                     "",
-                    Log.Module.File,
+                    Log.LogClass.File,
                     PluginName);
         }
     }

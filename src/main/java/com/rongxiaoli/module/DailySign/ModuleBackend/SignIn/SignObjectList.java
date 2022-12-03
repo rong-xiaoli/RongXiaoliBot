@@ -1,4 +1,4 @@
-package com.rongxiaoli.plugin.DailySign.ModuleBackend.SignIn;
+package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 /**
  * This class is for typedef.

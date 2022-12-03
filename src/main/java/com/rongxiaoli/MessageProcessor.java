@@ -1,11 +1,12 @@
 package com.rongxiaoli;
 
-import com.rongxiaoli.plugin.AutoAccept.AutoAcceptPlugin;
-import com.rongxiaoli.plugin.Broadcast.Broadcast;
-import com.rongxiaoli.plugin.DailySign.DailySign;
-import com.rongxiaoli.plugin.EmergencyStop.EmergencyStop;
-import com.rongxiaoli.plugin.BotCommand.BotCommand;
-import com.rongxiaoli.plugin.Picture.PicturePlugin;
+import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
+import com.rongxiaoli.module.Broadcast.Broadcast;
+import com.rongxiaoli.module.DailySign.DailySign;
+import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
+import com.rongxiaoli.module.BotCommand.BotCommand;
+import com.rongxiaoli.module.Picture.PicturePlugin;
+import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.event.events.*;
 
 public class MessageProcessor {
@@ -15,32 +16,28 @@ public class MessageProcessor {
      * @param originalMessage Original message.
      * @param e FriendMessageEvent.
      */
-    public static void FriendMessageProcess(String originalMessage, FriendMessageEvent e) {
+    public void FriendMessageProcess(String originalMessage, FriendMessageEvent e) {
         //Variables initiate.
         String[] arrCommand;
         //Start processing.
         arrCommand = originalMessage.split(" ");
         //Invoke plugin main methods.
         //First step.
-        EmergencyStop.Main(arrCommand, e.getSubject());
 
-        BotCommand.Main(arrCommand, e.getSubject());
+        EmergencyStop.UnregisteredFriendMain(arrCommand, e.getSubject());
+        Broadcast.UnregisteredFriendMain(arrCommand, e.getSubject());
+        BotCommand.UnregisteredFriendMain(arrCommand, e.getSubject());
+
         //Judge if the plugin is running or not.
-        if (!RongXiaoliBot.isPluginRunning) {
+        if (!RongXiaoliBot.IsEnabled) {
             return;
         }
 
         //Second step.
-        //Plugin name: broadcast.
-        Broadcast.Main(arrCommand, e.getSubject());
-
-        //Version 0.1.0 removed:
-        //Reason: After being banned for many times, this function is banned forever for others.
-        //Plugin name: setu.
-        PicturePlugin.Main(arrCommand, e.getSubject().getId(),e.getSubject());
-
-        //Plugin name: dailysign.
-        DailySign.Main(arrCommand,e.getSubject().getId(),0,e.getSubject());
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            SingleModule.FriendMain(arrCommand,e.getSubject().getId(),e.getSender());
+        }
     }
 
     /**
@@ -48,58 +45,94 @@ public class MessageProcessor {
      * @param originalMessage Original message.
      * @param e GroupMessageEvent.
      */
-    public static void GroupMessageProcess(String originalMessage, GroupMessageEvent e) {
+    public void GroupMessageProcess(String originalMessage, GroupMessageEvent e) {
         //Variables initiate.
         String[] arrCommand;
         //Start processing.
         arrCommand = originalMessage.split(" ");
         //Invoke plugin main methods.
-        //First step.
-        EmergencyStop.Main(arrCommand, e.getSubject());
+        //First step: unregistered modules.
 
-        BotCommand.Main(arrCommand, e.getSubject());
+        //BotCommand.UnregisteredFriendMain(arrCommand, e.getSubject());
+
         //Judge if the plugin is running or not.
-        if (!RongXiaoliBot.isPluginRunning) {
+        if (!RongXiaoliBot.IsEnabled) {
             return;
         }
-        //Second step.
-
-        //Version 0.1.0 removed:
-        //Reason: After being banned for many times, this function is banned forever for others.
-        //Plugin name: setu.
-        PicturePlugin.Main(arrCommand, e.getSender().getId(),e.getSubject().getId(),e.getSubject());
-
-        //Plugin name: dailysign.
-        DailySign.Main(arrCommand, e.getSender().getId(), e.getSubject().getId(),e.getSubject());
+        //Second step: registered modules.
+        for (Module SingleModule:
+                RongXiaoliBot.BotModuleLoader.ModuleList
+             ) {
+            SingleModule.GroupMain(arrCommand, e.getSender().getId(), e.getSubject().getId(), e.getSubject());
+        }
     }
 
     /**
      * Invoke when a friend request is sent.
      * @param e Friend request event.
      */
-    public static void FriendAddRequestProcess(NewFriendRequestEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void FriendAddRequestProcess(NewFriendRequestEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
 
     /**
      * Invoke when a friend is added.
      * @param e Friend add event.
      */
-    public static void FriendAddProcess(FriendAddEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void FriendAddProcess(FriendAddEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
 
     /**
      * Invoke when a group request is sent.
      * @param e Group request event.
      */
-    public static void GroupAddRequestProcess(BotInvitedJoinGroupRequestEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void GroupAddRequestProcess(BotInvitedJoinGroupRequestEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
     }
     /**
      * Invoke when added in a group.
      */
-    public static void GroupAddProcess(BotJoinGroupEvent e) {
-        AutoAcceptPlugin.Main(e);
+    public void GroupAddProcess(BotJoinGroupEvent e) {
+        AutoAcceptPlugin AA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("AutoAccept")) {
+                AA = (AutoAcceptPlugin) SingleModule;
+            }
+        }
+        AA.Main(e);
+    }
+
+    public void PokeProcess(NudgeEvent e){
+        PokeAction PA = null;
+        for (Module SingleModule :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            if (SingleModule.getPluginName().equals("PokeAction")) {
+                PA = (PokeAction) SingleModule;
+            }
+        }
+        PA.PokeMain(e);
     }
 }

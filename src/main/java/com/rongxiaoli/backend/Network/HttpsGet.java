@@ -2,7 +2,6 @@ package com.rongxiaoli.backend.Network;
 import com.rongxiaoli.backend.Log;
 
 import java.io.IOException;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -95,13 +94,13 @@ public class HttpsGet {
         }  catch (IOException | NoSuchAlgorithmException | KeyManagementException IOE) {
             Log.Exception(IOE,
                     null,
-                    Log.Module.Network,
+                    Log.LogClass.Network,
                     PluginName);
             throw IOE;
         } catch (Exception e) {
             Log.Exception(e,
                     "Unknown reason. ",
-                    Log.Module.Network,
+                    Log.LogClass.Network,
                     PluginName);
             throw e;
         } finally {
