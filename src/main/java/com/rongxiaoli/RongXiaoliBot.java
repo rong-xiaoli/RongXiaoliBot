@@ -7,6 +7,7 @@ import com.rongxiaoli.module.Broadcast.Broadcast;
 import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.Picture.PicturePlugin;
+import com.rongxiaoli.module.Ping;
 import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
@@ -53,6 +54,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         BotModuleLoader.ModuleList.add(new PicturePlugin());
         BotModuleLoader.ModuleList.add(new DailySign());
         BotModuleLoader.ModuleList.add(new PokeAction());
+        BotModuleLoader.ModuleList.add(new Ping());
 
         //Done.
         //Module init.
