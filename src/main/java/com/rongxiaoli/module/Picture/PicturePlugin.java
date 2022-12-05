@@ -434,15 +434,19 @@ public class PicturePlugin extends Module {
                     PluginName);
         } catch (ConnectException CE) {
             SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
+            isProcessing = false;
             return;
         } catch (IOException IOE) {
             SenderContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
+            isProcessing = false;
             return;
         } catch (KeyManagementException KME) {
             SenderContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
+            isProcessing = false;
             return;
         } catch (Exception e) {
             SenderContact.sendMessage("API获取失败，多次失败请联系主人维修");
+            isProcessing = false;
             return;
         }
 
