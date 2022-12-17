@@ -6,7 +6,7 @@ import com.rongxiaoli.module.BotCommand.BotCommand;
 import com.rongxiaoli.module.Broadcast.Broadcast;
 import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
-import com.rongxiaoli.module.Picture.PicturePlugin;
+import com.rongxiaoli.module.setu.PicturePlugin;
 import com.rongxiaoli.module.Ping;
 import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;

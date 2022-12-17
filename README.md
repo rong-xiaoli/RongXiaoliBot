@@ -78,7 +78,7 @@ Modules marked * cannot be disabled by management module.
 | Name                                | Command + Parameters                  | Description                                                  |
 | ----------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
 | Auto accept(AutoAccept)             | \                                     | Auto accept invitations.                                     |
-| *Bot management command(BotCommand) | /help [moduleName]                    | Get the help context of a module.                           |
+| *Bot management command(BotCommand) | /help [moduleName]                    | Get the help context of a module.                            |
 | *Bot management command(BotCommand) | /manage (enable/disable) (moduleName) | Enable/Disable a module.                                     |
 | *Bot management command(BotCommand) | /status                               | Get the modules' status                                     |
 | Message broadcast(Broadcast)        | /broadcast (message)                  | Send the message from bot owner to every friends and groups. |

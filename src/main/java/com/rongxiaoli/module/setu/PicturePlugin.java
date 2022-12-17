@@ -1,4 +1,4 @@
-package com.rongxiaoli.module.Picture;
+package com.rongxiaoli.module.setu;
 
 import com.alibaba.fastjson2.JSON;
 import com.rongxiaoli.Module;
