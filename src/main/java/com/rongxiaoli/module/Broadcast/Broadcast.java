@@ -15,15 +15,29 @@ import java.util.Random;
 
 public class Broadcast extends Module {
     public static String PluginName = "Broadcast";
-
+    public String HelpContent = "/broadcast (message) +\n" +
+            "广播消息至所有联系人。";
     private static boolean IsEnabled = true;
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
+    }
+
+    public void Init() {
+        Log.WriteLog(Log.Level.Debug, "Broadcast module initiated. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void Shutdown() {
+        IsEnabled = false;
+        Log.WriteLog(Log.Level.Debug, "Broadcast module stopped. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
         if (arrCommand.length == 0) {
             return;
         }
+        if (!IsEnabled) return;
         StringBuilder BroadcastMessageBuilder;
         if (SenderContact.getId() == RongXiaoliBot.Owner) {
-            if (Objects.equals(arrCommand[0], "广播")) {
+            if (Objects.equals(arrCommand[0], "/broadcast")) {
                 if (!IsEnabled) {
                     SenderContact.sendMessage("功能未启用");
                     return;
@@ -73,19 +87,6 @@ public class Broadcast extends Module {
         }
     }
 
-    public void Init() {
-        Log.WriteLog(Log.Level.Debug, "Broadcast module initiated. ", Log.LogClass.ModuleMain, PluginName);
-    }
-
-    public void Shutdown() {
-        IsEnabled = false;
-        Log.WriteLog(Log.Level.Debug, "Broadcast module stopped. ", Log.LogClass.ModuleMain, PluginName);
-    }
-
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
-        return;
-    }
-
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
         return;
     }
@@ -101,7 +102,7 @@ public class Broadcast extends Module {
      * Help content. Used in BotCommand.Modules.Help.
      */
     public String getHelpContent() {
-        return null;
+        return HelpContent;
     }
 
     /**

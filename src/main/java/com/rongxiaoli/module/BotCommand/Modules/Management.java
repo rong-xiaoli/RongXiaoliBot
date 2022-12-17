@@ -7,7 +7,7 @@ import com.rongxiaoli.module.BotCommand.BotCommand;
 import net.mamoe.mirai.contact.Contact;
 
 public class Management {
-    public static String CommandPrefix = "管理";
+    public static String CommandPrefix = "manage";
 
     public void Process(String[] arrCommand, Contact SenderContact) {
         if (SenderContact.getId() != RongXiaoliBot.Owner) {
@@ -19,7 +19,7 @@ public class Management {
         }
         switch (arrCommand[1]) {
             // Disable plugins.
-            case "禁用":
+            case "disable":
                 if (arrCommand.length <= 2) {
                     SenderContact.sendMessage("请输入禁用插件名");
                     return;
@@ -37,7 +37,7 @@ public class Management {
                 break;
 
             // Enable plugins.
-            case "启用":
+            case "enable":
                 if (arrCommand.length <= 2) {
                     SenderContact.sendMessage("请输入启用的插件名");
                     return;

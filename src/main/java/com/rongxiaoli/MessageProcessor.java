@@ -2,10 +2,8 @@ package com.rongxiaoli;
 
 import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
 import com.rongxiaoli.module.Broadcast.Broadcast;
-import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.BotCommand.BotCommand;
-import com.rongxiaoli.module.Picture.PicturePlugin;
 import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.event.events.*;
 
@@ -25,7 +23,6 @@ public class MessageProcessor {
         //First step.
 
         EmergencyStop.UnregisteredFriendMain(arrCommand, e.getSubject());
-        Broadcast.UnregisteredFriendMain(arrCommand, e.getSubject());
         BotCommand.UnregisteredFriendMain(arrCommand, e.getSubject());
 
         //Judge if the plugin is running or not.

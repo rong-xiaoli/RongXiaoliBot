@@ -62,6 +62,7 @@ Modules WIP:
 | *紧急停止(EmergencyStop)    | /stop                                 | 停止所有功能                     |
 | *紧急停止(EmergencyStop)    | /start                                | 开启原本状为开启的功能           |
 | 随机图片(setu)              | setu [keyword1] [keyword2] ...        | 获取一张涩图                     |
+| Ping                        | ping                                  | 乓！                             |
 | 戳一戳(PokeAction)          | \                                     | 戳一戳事件响应                   |
 
 The chart below offers every parameters of each command, the module name is in the brackets, which will be used in managing modules.
@@ -78,7 +79,7 @@ Modules marked * cannot be disabled by management module.
 | Name                                | Command + Parameters                  | Description                                                  |
 | ----------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
 | Auto accept(AutoAccept)             | \                                     | Auto accept invitations.                                     |
-| *Bot management command(BotCommand) | /help [moduleName]                    | Get the help context of a module.                           |
+| *Bot management command(BotCommand) | /help [moduleName]                    | Get the help context of a module.                            |
 | *Bot management command(BotCommand) | /manage (enable/disable) (moduleName) | Enable/Disable a module.                                     |
 | *Bot management command(BotCommand) | /status                               | Get the modules' status                                     |
 | Message broadcast(Broadcast)        | /broadcast (message)                  | Send the message from bot owner to every friends and groups. |
@@ -86,4 +87,5 @@ Modules marked * cannot be disabled by management module.
 | *Emergency stop(EmergencyStop)      | /stop                                 | Stop all modules.                                            |
 | *Emergency stop(EmergencyStop)      | /start                                | Open all modules which were originally on.                   |
 | Random picture(setu)                | setu [keyword1] [keyword2] ...        | Get a random picture.                                        |
+| Ping(Ping)                          |                                       |                                                              |
 | Poke(PokeAction)                    | \                                     | Respond to poke action.                                      |

@@ -38,6 +38,7 @@ public class Ping extends Module {
         if (arrCommand.length == 0) {
             return;
         }
+        if (!IsEnabled) return;
         if (arrCommand[0].equals("ping")) SenderContact.sendMessage("Pong! ");
     }
 

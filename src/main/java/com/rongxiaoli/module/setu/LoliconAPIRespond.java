@@ -1,4 +1,4 @@
-package com.rongxiaoli.module.Picture;
+package com.rongxiaoli.module.setu;
 
 import java.util.List;
 
