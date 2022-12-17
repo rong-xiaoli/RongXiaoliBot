@@ -219,7 +219,7 @@ public class PicturePlugin extends Module {
             return;
         }
 
-        //Download picture.
+        //Download picture. (Not needed)
         String[] UrlSplit = PictureUrlString.split("/");
         HttpDownload PictureDownload = new HttpDownload();
         PictureDownload.targetUrl = PictureUrlString;
@@ -265,12 +265,12 @@ public class PicturePlugin extends Module {
         }
 
         //Send message.
-        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
-        Log.WriteLog(Log.Level.Verbose,
-                "Using file: " + PictureFilePath,
-                Log.LogClass.ModuleMain,
-                PluginName);
-        isProcessing = false;
+//        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
+//        Log.WriteLog(Log.Level.Verbose,
+//                "Using file: " + PictureFilePath,
+//                Log.LogClass.ModuleMain,
+//                PluginName);
+//        isProcessing = false;
         PictureAuthor = PictData.getAuthor();
         PicturePid = PictData.getPid();
         //PictureTags = PictData.getTags().toString();
