@@ -87,5 +87,5 @@ Modules marked * cannot be disabled by management module.
 | *Emergency stop(EmergencyStop)      | /stop                                 | Stop all modules.                                            |
 | *Emergency stop(EmergencyStop)      | /start                                | Open all modules which were originally on.                   |
 | Random picture(setu)                | setu [keyword1] [keyword2] ...        | Get a random picture.                                        |
-| Ping(Ping)                          |                                       |                                                              |
+| Ping(Ping)                          | ping                                  | Pong!                                                        |
 | Poke(PokeAction)                    | \                                     | Respond to poke action.                                      |
