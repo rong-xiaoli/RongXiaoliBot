@@ -15,5 +15,6 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("com.alibaba.fastjson2:fastjson2:2.0.7")
+    implementation("com.alibaba.fastjson2:fastjson2:2.0.21")
+    implementation("com.google.code.gson:gson:2.10")
 }

@@ -61,9 +61,9 @@ public class PokeAction extends Module {
      *
      * @param arrCommand
      * @param Friend
-     * @param SenderContact
+     * @param SubjectContact
      */
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         return;
     }
 
@@ -74,9 +74,9 @@ public class PokeAction extends Module {
      * @param arrCommand
      * @param Friend
      * @param Group
-     * @param SenderContact
+     * @param SubjectContact
      */
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         return;
     }
 

@@ -64,9 +64,9 @@ public class PicturePlugin extends Module {
      * @param arrCommand    Command array.
      * @param Friend        QQID.
      * @param Group         Group ID.
-     * @param SenderContact Contact of the sender.
+     * @param SubjectContact Contact of the sender.
      */
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         if (arrCommand.length == 0) {
             return;
         }
@@ -101,7 +101,7 @@ public class PicturePlugin extends Module {
         }
         //Judge if the plugin is enabled.
         if (!IsEnabled) {
-            SenderContact.sendMessage("当前图片插件未启用");
+            SubjectContact.sendMessage("当前图片插件未启用");
             return;
         }
         FriendID = Friend;
@@ -116,14 +116,14 @@ public class PicturePlugin extends Module {
 
         //Lock.
         if (isProcessing) {
-            SenderContact.sendMessage("其他消息正在处理，请稍后");
+            SubjectContact.sendMessage("其他消息正在处理，请稍后");
             return;
         }
         if (FriendID != RongXiaoliBot.Owner) {
             FreezeTime = 60;
             RemainingTime = CoolingObjectList.Add(FriendID, FreezeTime);
             if (RemainingTime != -1) {
-                SenderContact.sendMessage("冷却还剩" + RemainingTime + "秒，请耐心等待");
+                SubjectContact.sendMessage("冷却还剩" + RemainingTime + "秒，请耐心等待");
                 return;
             }
         }
@@ -158,26 +158,26 @@ public class PicturePlugin extends Module {
                     Log.LogClass.ModuleMain,
                     PluginName);
         } catch (ConnectException CE) {
-            SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
             isProcessing = false;
             return;
         } catch (IOException IOE) {
-            SenderContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
             isProcessing = false;
             return;
         } catch (KeyManagementException KME) {
-            SenderContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
             isProcessing = false;
             return;
         } catch (Exception e) {
-            SenderContact.sendMessage("API获取失败，多次失败请联系主人维修");
+            SubjectContact.sendMessage("API获取失败，多次失败请联系主人维修");
             isProcessing = false;
             return;
         }
 
         //JSON resolve.
         if (Objects.equals(ApiReturnString, "")) {
-            SenderContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
             Log.WriteLog(Log.Level.Warning,
                     "API returned empty string. ",
                     Log.LogClass.ModuleMain,
@@ -186,7 +186,7 @@ public class PicturePlugin extends Module {
             return;
         }
         if (Objects.equals(ApiReturnString, "{\"error\":\"\",\"data\":[]}")) {
-            SenderContact.sendMessage("找不到相关图片，换一个关键词试试");
+            SubjectContact.sendMessage("找不到相关图片，换一个关键词试试");
             Log.WriteLog(Log.Level.Info,
                     "Picture not found. ",
                     Log.LogClass.ModuleMain,
@@ -195,7 +195,7 @@ public class PicturePlugin extends Module {
             return;
         }
         if (!JSON.isValid(ApiReturnString)) {
-            SenderContact.sendMessage("错误：JSON未能正确转换");
+            SubjectContact.sendMessage("错误：JSON未能正确转换");
             Log.WriteLog(Log.Level.Warning,
                     "JSON cannot be resolved. ",
                     Log.LogClass.ModuleMain,
@@ -214,7 +214,7 @@ public class PicturePlugin extends Module {
             PictureUrlString = PictData.getUrls().getRegular();
         }
         if (PictureUrlString == null) {
-            SenderContact.sendMessage("图片链接获取失败，请联系主人维修");
+            SubjectContact.sendMessage("图片链接获取失败，请联系主人维修");
             isProcessing = false;
             return;
         }
@@ -227,7 +227,7 @@ public class PicturePlugin extends Module {
         PictureDownload.localFilePath = PictureSavingPath;
         PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
         PictureLocalFile = new File(PictureFilePath);
-        SenderContact.sendMessage("图片获取中");
+        SubjectContact.sendMessage("图片获取中");
         if (PictureLocalFile.exists()) {
             Log.WriteLog(Log.Level.Verbose,
                     "File: " + PictureLocalFile + " exists. Using local file instead. ",
@@ -237,40 +237,41 @@ public class PicturePlugin extends Module {
             try {
                 PictureDownload.Download(PluginName);
             } catch (MalformedURLException MUE) {
-                SenderContact.sendMessage("API返回URL错误，请重试");
+                SubjectContact.sendMessage("API返回URL错误，请重试");
                 isProcessing = false;
             } catch (ConnectException CE) {
-                SenderContact.sendMessage("连接超时，请重试");
+                SubjectContact.sendMessage("连接超时，请重试");
             } catch (FileNotFoundException FNFE) {
-                SenderContact.sendMessage("API返回异常，请重试");
+                SubjectContact.sendMessage("API返回异常，请重试");
                 isProcessing = false;
             } catch (IllegalArgumentException IAE) {
-                SenderContact.sendMessage("未知的参数错误，请联系主人维修");
+                SubjectContact.sendMessage("未知的参数错误，请联系主人维修");
                 isProcessing = false;
             } catch (ClosedChannelException CCE) {
-                SenderContact.sendMessage("连结终止，请重试");
+                SubjectContact.sendMessage("连结终止，请重试");
                 isProcessing = false;
             } catch (SSLHandshakeException SSLHE) {
-                SenderContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
+                SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
                 isProcessing = false;
             } catch (IOException IOE) {
                 if (IOE.getMessage().contains("timed out")) {
-                    SenderContact.sendMessage("连接超时，请重试");
+                    SubjectContact.sendMessage("连接超时，请重试");
                     isProcessing = false;
                     return;
                 }
-                SenderContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
+                SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
                 isProcessing = false;
             }
         }
-
-        //Send message.
-//        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
-//        Log.WriteLog(Log.Level.Verbose,
-//                "Using file: " + PictureFilePath,
-//                Log.LogClass.ModuleMain,
-//                PluginName);
-//        isProcessing = false;
+        //The commented code below is used for sending message.
+/*
+        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
+        Log.WriteLog(Log.Level.Verbose,
+                "Using file: " + PictureFilePath,
+                Log.LogClass.ModuleMain,
+                PluginName);
+        isProcessing = false;
+*/
         PictureAuthor = PictData.getAuthor();
         PicturePid = PictData.getPid();
         //PictureTags = PictData.getTags().toString();
@@ -281,7 +282,7 @@ public class PicturePlugin extends Module {
         //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
         PictureInfoMessage.append("链接: ").append(PictureUrlString);
         //PictureMessage.append(image);
-        SenderContact.sendMessage(PictureInfoMessage.build());
+        SubjectContact.sendMessage(PictureInfoMessage.build());
         //SenderContact.sendMessage(PictureMessage.build());
         Log.WriteLog(Log.Level.Debug,
                 "Process completed. ",
@@ -332,9 +333,9 @@ public class PicturePlugin extends Module {
      *
      * @param arrCommand    Command array.
      * @param Friend        QQID.
-     * @param SenderContact Contact of the sender.
+     * @param SubjectContact Contact of the sender.
      */
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         //0-length array.
         if (arrCommand.length == 0) {
             return;
@@ -369,7 +370,7 @@ public class PicturePlugin extends Module {
         }
         //Judge if the plugin is enabled.
         if (!IsEnabled) {
-            SenderContact.sendMessage("当前图片插件未启用");
+            SubjectContact.sendMessage("当前图片插件未启用");
             return;
         }
         FriendID = Friend;
@@ -389,7 +390,7 @@ public class PicturePlugin extends Module {
 
         //Lock.
         if (isProcessing) {
-            SenderContact.sendMessage("其他消息正在处理，请稍后");
+            SubjectContact.sendMessage("其他消息正在处理，请稍后");
             return;
         }
         isProcessing = true;
@@ -397,7 +398,7 @@ public class PicturePlugin extends Module {
             FreezeTime = 90;
             RemainingTime = CoolingObjectList.Add(FriendID, FreezeTime);
             if (RemainingTime != -1) {
-                SenderContact.sendMessage("冷却还剩" + RemainingTime + "秒，请耐心等待");
+                SubjectContact.sendMessage("冷却还剩" + RemainingTime + "秒，请耐心等待");
                 isProcessing = false;
                 return;
             }
@@ -433,26 +434,26 @@ public class PicturePlugin extends Module {
                     Log.LogClass.ModuleMain,
                     PluginName);
         } catch (ConnectException CE) {
-            SenderContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
             isProcessing = false;
             return;
         } catch (IOException IOE) {
-            SenderContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
             isProcessing = false;
             return;
         } catch (KeyManagementException KME) {
-            SenderContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
             isProcessing = false;
             return;
         } catch (Exception e) {
-            SenderContact.sendMessage("API获取失败，多次失败请联系主人维修");
+            SubjectContact.sendMessage("API获取失败，多次失败请联系主人维修");
             isProcessing = false;
             return;
         }
 
         //JSON resolve.
         if (Objects.equals(ApiReturnString, "")) {
-            SenderContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
+            SubjectContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
             Log.WriteLog(Log.Level.Warning,
                     "API returned empty string. ",
                     Log.LogClass.ModuleMain,
@@ -461,7 +462,7 @@ public class PicturePlugin extends Module {
             return;
         }
         if (Objects.equals(ApiReturnString, "{\"error\":\"\",\"data\":[]}")) {
-            SenderContact.sendMessage("找不到相关图片，换一个关键词试试");
+            SubjectContact.sendMessage("找不到相关图片，换一个关键词试试");
             Log.WriteLog(Log.Level.Info,
                     "Picture not found. ",
                     Log.LogClass.ModuleMain,
@@ -470,7 +471,7 @@ public class PicturePlugin extends Module {
             return;
         }
         if (!JSON.isValid(ApiReturnString)) {
-            SenderContact.sendMessage("错误：JSON未能正确转换");
+            SubjectContact.sendMessage("错误：JSON未能正确转换");
             Log.WriteLog(Log.Level.Warning,
                     "JSON cannot be resolved. ",
                     Log.LogClass.ModuleMain,
@@ -489,7 +490,7 @@ public class PicturePlugin extends Module {
             PictureUrlString = PictData.getUrls().getRegular();
         }
         if (PictureUrlString == null) {
-            SenderContact.sendMessage("图片链接获取失败，请联系主人维修");
+            SubjectContact.sendMessage("图片链接获取失败，请联系主人维修");
             isProcessing = false;
             return;
         }
@@ -502,7 +503,7 @@ public class PicturePlugin extends Module {
         PictureDownload.localFilePath = PictureSavingPath;
         PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
         PictureLocalFile = new File(PictureFilePath);
-        SenderContact.sendMessage("图片加载中");
+        SubjectContact.sendMessage("图片加载中");
         if (PictureLocalFile.exists()) {
             Log.WriteLog(Log.Level.Verbose,
                     "File: " + PictureLocalFile + " exists. Using local file instead. ",
@@ -512,35 +513,35 @@ public class PicturePlugin extends Module {
             try {
                 PictureDownload.Download(PluginName);
             } catch (MalformedURLException MUE) {
-                SenderContact.sendMessage("API返回URL错误，请重试");
+                SubjectContact.sendMessage("API返回URL错误，请重试");
                 isProcessing = false;
             } catch (ConnectException CE) {
-                SenderContact.sendMessage("连接超时，请重试");
+                SubjectContact.sendMessage("连接超时，请重试");
             } catch (FileNotFoundException FNFE) {
-                SenderContact.sendMessage("API返回异常，请重试");
+                SubjectContact.sendMessage("API返回异常，请重试");
                 isProcessing = false;
             } catch (IllegalArgumentException IAE) {
-                SenderContact.sendMessage("未知的参数错误，请联系主人维修");
+                SubjectContact.sendMessage("未知的参数错误，请联系主人维修");
                 isProcessing = false;
             } catch (ClosedChannelException CCE) {
-                SenderContact.sendMessage("连结终止，请重试");
+                SubjectContact.sendMessage("连结终止，请重试");
                 isProcessing = false;
             } catch (SSLHandshakeException SSLHE) {
-                SenderContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
+                SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
                 isProcessing = false;
             } catch (IOException IOE) {
                 if (IOE.getMessage().contains("timed out")) {
-                    SenderContact.sendMessage("连接超时，请重试");
+                    SubjectContact.sendMessage("连接超时，请重试");
                     isProcessing = false;
                     return;
                 }
-                SenderContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
+                SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
                 isProcessing = false;
             }
         }
 
         //Send message.
-        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
+        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SubjectContact);
         Log.WriteLog(Log.Level.Verbose,
                 "Using file: " + PictureFilePath,
                 Log.LogClass.ModuleMain,
@@ -556,8 +557,8 @@ public class PicturePlugin extends Module {
         //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
         PictureInfoMessage.append("链接: ").append(PictureUrlString);
         PictureMessage.append(image);
-        SenderContact.sendMessage(PictureInfoMessage.build());
-        SenderContact.sendMessage(PictureMessage.build());
+        SubjectContact.sendMessage(PictureInfoMessage.build());
+        SubjectContact.sendMessage(PictureMessage.build());
         Log.WriteLog(Log.Level.Debug,
                 "Process completed. ",
                 Log.LogClass.ModuleMain,

@@ -1,14 +1,13 @@
 package com.rongxiaoli.module.DailySign;
-
+//Todo: Finish this module.
 import com.rongxiaoli.Module;
-import com.rongxiaoli.backend.Timer;
 import net.mamoe.mirai.contact.Contact;
-import org.jetbrains.annotations.Nullable;
 
 public class DailySign extends Module {
     // Public vars.
-    private String PluginName = "DailySign";
-    private String HelpContent;
+    private final String PluginName = "DailySign";
+    private String HelpContent = "DailySign\n" +
+            "每日签到";
     private boolean IsEnabled = true;
     private boolean DebugMode = false;
     // Private vars.
@@ -18,14 +17,14 @@ public class DailySign extends Module {
      * Module initiate function.
      */
     public void Init() {
-
+        //Ready to read JSON.
     }
 
     /**
      * Module shutdown function.
      */
     public void Shutdown() {
-
+        //Todo: Add JSON save func.
     }
 
     /**
@@ -33,10 +32,13 @@ public class DailySign extends Module {
      *
      * @param arrCommand
      * @param Friend
-     * @param SenderContact
+     * @param SubjectContact
      */
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
-
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
+        //0-width.
+        if (arrCommand.length == 0) {
+            return;
+        }
     }
 
     /**
@@ -45,10 +47,13 @@ public class DailySign extends Module {
      * @param arrCommand
      * @param Friend
      * @param Group
-     * @param SenderContact
+     * @param SubjectContact
      */
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
-
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
+        //0-width.
+        if (arrCommand.length == 0) {
+            return;
+        }
     }
 
     /**

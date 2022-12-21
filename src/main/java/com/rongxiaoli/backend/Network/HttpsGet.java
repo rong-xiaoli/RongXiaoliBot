@@ -37,7 +37,7 @@ public class HttpsGet {
         return targetUrl + Par.Build();
     }
     public Param Par = new Param();
-    public class Param {
+    public static class Param {
         public StringBuilder Par;
         /**
          * Append a param to params.

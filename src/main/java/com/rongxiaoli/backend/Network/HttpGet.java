@@ -145,17 +145,6 @@ public class HttpGet {
                         "Unexpected code received: " + httpConn.getResponseCode(),
                         Log.LogClass.Network,
                         PluginName);
-//                inStream = httpConn.getInputStream();
-//                bufferedReader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
-//                String line;
-//                while ((line = bufferedReader.readLine()) != null) {
-//                    Output.append(line);
-//                    Log.WriteLog(Log.Level.Verbose,
-//                            "Received data: "+ "\n" +
-//                                    line,
-//                            Log.Module.Network,
-//                            PluginName);
-//                }
             }
         } catch (MalformedURLException MUE) {
             Log.Exception(MUE, "URL incorrect. URL: " + FinalUrl, Log.LogClass.Network,PluginName);

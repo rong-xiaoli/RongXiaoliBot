@@ -48,10 +48,10 @@ public class BotCommand extends Module {
     public void Shutdown() {
         Log.WriteLog(Log.Level.Debug, "BotCommand stopped. ", Log.LogClass.ModuleMain, PluginName);
     }
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         return;
     }
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         return;
     }
 

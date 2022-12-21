@@ -30,16 +30,16 @@ public class Broadcast extends Module {
         Log.WriteLog(Log.Level.Debug, "Broadcast module stopped. ", Log.LogClass.ModuleMain, PluginName);
     }
 
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         if (arrCommand.length == 0) {
             return;
         }
         if (!IsEnabled) return;
         StringBuilder BroadcastMessageBuilder;
-        if (SenderContact.getId() == RongXiaoliBot.Owner) {
+        if (SubjectContact.getId() == RongXiaoliBot.Owner) {
             if (Objects.equals(arrCommand[0], "/broadcast")) {
                 if (!IsEnabled) {
-                    SenderContact.sendMessage("功能未启用");
+                    SubjectContact.sendMessage("功能未启用");
                     return;
                 }
                 Log.WriteLog(Log.Level.Info,
@@ -54,8 +54,8 @@ public class Broadcast extends Module {
                 MessageChainBuilder BroadcastMessage = new MessageChainBuilder();
                 BroadcastMessage.append("来自主人的消息：\n");
                 BroadcastMessage.append(BroadcastMessageBuilder.toString());
-                ContactList<Friend> FriendsList = SenderContact.getBot().getFriends();
-                ContactList<Group> GroupList = SenderContact.getBot().getGroups();
+                ContactList<Friend> FriendsList = SubjectContact.getBot().getFriends();
+                ContactList<Group> GroupList = SubjectContact.getBot().getGroups();
                 Random ran = new Random();
                 for (Friend SingleFriend :
                         FriendsList) {
@@ -87,7 +87,7 @@ public class Broadcast extends Module {
         }
     }
 
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         return;
     }
 

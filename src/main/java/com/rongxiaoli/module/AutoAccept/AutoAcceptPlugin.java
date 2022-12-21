@@ -88,11 +88,11 @@ public class AutoAcceptPlugin extends Module {
         Log.WriteLog(Log.Level.Info, "AutoAccept off. ", Log.LogClass.ModuleMain, PluginName);
     }
 
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         return;
     }
 
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         return;
     }
 

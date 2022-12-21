@@ -3,7 +3,7 @@ package com.rongxiaoli.module.setu;
 import java.util.List;
 
 public class LoliconAPIRespond {
-    public class Urls
+    public static class Urls
     {
         private String regular;
         private String original;

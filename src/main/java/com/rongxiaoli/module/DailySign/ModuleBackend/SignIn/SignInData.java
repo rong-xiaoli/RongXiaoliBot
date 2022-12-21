@@ -1,12 +1,12 @@
 package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
-//Todo: Not finished. 
+//Todo: Not finished.
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 /**
  * User data. Base class.
  */
-public class Data {
+public class SignInData {
     /**
      * User list. Base class.
      */

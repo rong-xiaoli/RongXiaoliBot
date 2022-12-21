@@ -20,12 +20,12 @@ public abstract class Module {
     /**
      * Friend message process.
      */
-    public abstract void FriendMain(String[] arrCommand, long Friend, Contact SenderContact);
+    public abstract void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact);
 
     /**
      * Group message process.
      */
-    public abstract void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact);
+    public abstract void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact);
 
     private String PluginName;
 

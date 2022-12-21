@@ -54,12 +54,12 @@ public class EmergencyStop extends Module {
         Log.WriteLog(Log.Level.Debug, "EmergencyStop stopped. ", Log.LogClass.ModuleMain, PluginName);
     }
 
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         //Use unregistered main.
         return;
     }
 
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         return;
     }
 

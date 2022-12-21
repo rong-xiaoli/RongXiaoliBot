@@ -31,15 +31,15 @@ public class Ping extends Module {
      *
      * @param arrCommand
      * @param Friend
-     * @param SenderContact
+     * @param SubjectContact
      */
-    public void FriendMain(String[] arrCommand, long Friend, Contact SenderContact) {
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         //0-length array.
         if (arrCommand.length == 0) {
             return;
         }
         if (!IsEnabled) return;
-        if (arrCommand[0].equals("ping")) SenderContact.sendMessage("Pong! ");
+        if (arrCommand[0].equals("ping")) SubjectContact.sendMessage("Pong! ");
     }
 
     /**
@@ -48,14 +48,14 @@ public class Ping extends Module {
      * @param arrCommand
      * @param Friend
      * @param Group
-     * @param SenderContact
+     * @param SubjectContact
      */
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SenderContact) {
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         //0-length array.
         if (arrCommand.length == 0) {
             return;
         }
-        if (arrCommand[0].equals("ping")) SenderContact.sendMessage("Pong! ");
+        if (arrCommand[0].equals("ping")) SubjectContact.sendMessage("Pong! ");
     }
 
     /**
