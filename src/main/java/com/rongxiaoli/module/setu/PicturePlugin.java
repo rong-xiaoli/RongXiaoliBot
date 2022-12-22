@@ -56,7 +56,7 @@ public class PicturePlugin extends Module {
                     //"(API返回301，以及另一些特殊原因，该插件已弃用)\n" +
                     "获取一张涩图\n" +
                     "参数: \n" +
-                    "Keyword: 要查询的关键字";
+                    "Keyword: 要查询的关键字\n";
 
     /**
      * Plugin main method for groups.

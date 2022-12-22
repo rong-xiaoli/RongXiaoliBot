@@ -18,7 +18,7 @@ public class DailySign extends Module {
     // Public vars.
     private final String PluginName = "DailySign";
     private final String HelpContent = "DailySign\n" +
-            "每日签到";
+            "每日签到\n";
     private boolean IsEnabled = true;
     private boolean DebugMode = false;
     // Private vars.

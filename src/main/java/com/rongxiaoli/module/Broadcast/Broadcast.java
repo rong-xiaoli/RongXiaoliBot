@@ -15,11 +15,9 @@ import java.util.Random;
 
 public class Broadcast extends Module {
     public static String PluginName = "Broadcast";
-    public String HelpContent = "/broadcast (message) +\n" +
-            "广播消息至所有联系人。";
+    public String HelpContent = "";//"/broadcast (message) +\n" +
+            //"广播消息至所有联系人。（仅限号主可用）\n";
     private static boolean IsEnabled = true;
-    public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
-    }
 
     public void Init() {
         Log.WriteLog(Log.Level.Debug, "Broadcast module initiated. ", Log.LogClass.ModuleMain, PluginName);

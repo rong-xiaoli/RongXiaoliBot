@@ -7,7 +7,7 @@ import net.mamoe.mirai.contact.Contact;
 public class Ping extends Module {
     private String PluginName = "Ping";
     private String HelpContent = "/ping +\n" +
-            "返回\"Pong!\"";
+            "返回\"Pong!\"\n";
     private boolean IsEnabled = false;
     /**
      * Module initiate function.

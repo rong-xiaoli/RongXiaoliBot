@@ -10,14 +10,15 @@ public class Help {
             "/help [command]: \n" +
                     "获取帮助\n" +
                     "参数: \n" +
-                    "command: 要查看的命令的帮助";
+                    "command: 要查看的命令的帮助\n";
 
     public void Process(String[] arrCommand, Contact SenderContact) {
         StringBuilder HelpMessage = new StringBuilder();
+        HelpMessage.append(HelpContent);
         if (arrCommand.length == 1) {
             for (Module SingleModule :
                     RongXiaoliBot.BotModuleLoader.ModuleList) {
-                HelpMessage.append(SingleModule.getHelpContent() + "\n");
+                HelpMessage.append(SingleModule.getHelpContent());
             }
             SenderContact.sendMessage(HelpMessage.toString());
         } else if (arrCommand.length == 2) {
