@@ -2,9 +2,8 @@ package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 import com.rongxiaoli.backend.Log;
 
-import java.time.Clock;
 import java.time.DayOfWeek;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
@@ -34,9 +33,7 @@ public class SignString {
 
         int StringSelection;
 
-        
-
-        Random random = new Random((long) Year + Month + Day + Hour + Minute + Second + Millisecond);
+        Random random = new Random();
 
         //Year only.
         YearBasedString = "今年是";
@@ -79,6 +76,7 @@ public class SignString {
                 break;
         }
         //Holiday region start.
+        //MixedString.
         if (Month == 1 && Day >= 1 && Day <=3) {
             MixedString = "元旦快乐！";
         }
@@ -86,7 +84,7 @@ public class SignString {
             MixedString = "真准时呢~元旦快乐哦~";
         }
         if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0 && Second == 0 && Millisecond == 0){
-            MixedString = "怎么做到的？？新年快乐~";
+            MixedString = "怎么做到这么准时的？？新年快乐~";
         }
         if (Month == 2 && Day == 14) {
             MixedString = "祝福天下有情人~";
@@ -356,5 +354,28 @@ public class SignString {
             default:
                 return HourBasedString;
         }
+    }
+
+    /**
+     * Generate a sign in content for a friend.
+     *
+     * @param presentTime    Present time.
+     * @param signInPosition Sign in position.
+     * @return Sign in message content.
+     */
+    public String FriendString(GregorianCalendar presentTime, long signInPosition) {
+        StringBuilder friendStringBuilder = new StringBuilder();
+        int year = presentTime.get(Calendar.YEAR),
+                month = presentTime.get(Calendar.MONTH) + 1,
+                day = presentTime.get(Calendar.DATE),
+                hour = presentTime.get(Calendar.HOUR_OF_DAY),
+                minute = presentTime.get(Calendar.MINUTE),
+                second = presentTime.get(Calendar.SECOND),
+                millisecond = presentTime.get(Calendar.MILLISECOND);
+        friendStringBuilder.append("今天是").append(year).append("年").append(month).append("月").append(day).append("日").append("\n");
+        friendStringBuilder.append("现在是").append(hour).append(":").append(minute).append(":").append(second).append("\n");
+        friendStringBuilder.append("本次打卡位次为：").append(signInPosition).append("\n");
+        friendStringBuilder.append(GetRandomString(year,month,day, DayOfWeek.of(presentTime.get(Calendar.DAY_OF_WEEK)), hour,minute,second,millisecond));
+        return friendStringBuilder.toString();
     }
 }

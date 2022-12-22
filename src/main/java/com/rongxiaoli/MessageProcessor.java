@@ -58,8 +58,7 @@ public class MessageProcessor {
         }
         //Second step: registered modules.
         for (Module SingleModule:
-                RongXiaoliBot.BotModuleLoader.ModuleList
-             ) {
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
             SingleModule.GroupMain(arrCommand, e.getSender().getId(), e.getSubject().getId(), e.getSubject());
         }
     }

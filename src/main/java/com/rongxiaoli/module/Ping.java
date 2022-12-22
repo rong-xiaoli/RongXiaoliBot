@@ -6,7 +6,7 @@ import net.mamoe.mirai.contact.Contact;
 
 public class Ping extends Module {
     private String PluginName = "Ping";
-    private String HelpContext = "/ping +\n" +
+    private String HelpContent = "/ping +\n" +
             "返回\"Pong!\"";
     private boolean IsEnabled = false;
     /**
@@ -69,7 +69,7 @@ public class Ping extends Module {
      * Help content. Used in BotCommand.Modules.Help.
      */
     public String getHelpContent() {
-        return HelpContext;
+        return HelpContent;
     }
 
     /**

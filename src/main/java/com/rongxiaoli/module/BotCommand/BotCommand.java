@@ -17,26 +17,27 @@ public class BotCommand extends Module {
         if (arrCommand.length == 0) {
             return;
         }
-        if (arrCommand[0].startsWith("/")) {
+        String[] message = arrCommand.clone();
+        if (message[0].startsWith("/")) {
             //Pre-process.
-            arrCommand[0] = arrCommand[0].replaceFirst("/","");
+            message[0] = message[0].replaceFirst("/","");
 
-            if (Objects.equals(arrCommand[0], Management.CommandPrefix)) {
+            if (Objects.equals(message[0], Management.CommandPrefix)) {
                 //Management.
                 if (SenderContact.getId() != RongXiaoliBot.Owner) {
                     return;
                 }
                 Management m = new Management();
-                m.Process(arrCommand, SenderContact);
+                m.Process(message, SenderContact);
                 //End.
-            } else if (Objects.equals(arrCommand[0], Help.CommandPrefix)) {
+            } else if (Objects.equals(message[0], Help.CommandPrefix)) {
                 //Help message.
                 Help h = new Help();
-                h.Process(arrCommand, SenderContact);
+                h.Process(message, SenderContact);
                 //End.
-            } else if (Objects.equals(arrCommand[0], Status.CommandPrefix)) {
+            } else if (Objects.equals(message[0], Status.CommandPrefix)) {
                 //Status.
-                Status.Process(arrCommand, SenderContact);
+                Status.Process(message, SenderContact);
                 //End.
             }
         }
