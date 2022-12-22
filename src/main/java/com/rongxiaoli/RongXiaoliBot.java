@@ -24,7 +24,7 @@ public final class RongXiaoliBot extends JavaPlugin {
     public static Path ConfigPath;
     public static ModuleLoader BotModuleLoader;
     private RongXiaoliBot() {
-        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.4")
+        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.1.5")
                 .name("RongXiaoli Bot")
                 .author("RongXiaoli")
                 .build());

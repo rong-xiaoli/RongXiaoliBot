@@ -2,8 +2,12 @@ package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 import com.rongxiaoli.backend.Log;
 
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
@@ -365,6 +369,7 @@ public class SignString {
      */
     public String FriendString(GregorianCalendar presentTime, long signInPosition) {
         StringBuilder friendStringBuilder = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         int year = presentTime.get(Calendar.YEAR),
                 month = presentTime.get(Calendar.MONTH) + 1,
                 day = presentTime.get(Calendar.DATE),
@@ -373,7 +378,7 @@ public class SignString {
                 second = presentTime.get(Calendar.SECOND),
                 millisecond = presentTime.get(Calendar.MILLISECOND);
         friendStringBuilder.append("今天是").append(year).append("年").append(month).append("月").append(day).append("日").append("\n");
-        friendStringBuilder.append("现在是").append(hour).append(":").append(minute).append(":").append(second).append("\n");
+        friendStringBuilder.append("现在是").append(sdf.format(presentTime.getTime())).append("\n");
         friendStringBuilder.append("本次打卡位次为：").append(signInPosition).append("\n");
         friendStringBuilder.append(GetRandomString(year,month,day, DayOfWeek.of(presentTime.get(Calendar.DAY_OF_WEEK)), hour,minute,second,millisecond));
         return friendStringBuilder.toString();
