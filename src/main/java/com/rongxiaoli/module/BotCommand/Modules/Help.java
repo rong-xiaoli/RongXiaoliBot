@@ -17,7 +17,7 @@ public class Help {
         if (arrCommand.length == 1) {
             for (Module SingleModule :
                     RongXiaoliBot.BotModuleLoader.ModuleList) {
-                HelpMessage.append(HelpContent + "\n");
+                HelpMessage.append(SingleModule.getHelpContent() + "\n");
             }
             SenderContact.sendMessage(HelpMessage.toString());
         } else if (arrCommand.length == 2) {

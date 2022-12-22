@@ -107,7 +107,7 @@ public class AutoAcceptPlugin extends Module {
      * Help content. Used in BotCommand.Modules.Help.
      */
     public String getHelpContent() {
-        return null;
+        return "";
     }
 
     /**
