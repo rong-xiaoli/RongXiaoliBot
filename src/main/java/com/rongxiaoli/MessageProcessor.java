@@ -50,7 +50,7 @@ public class MessageProcessor {
         //Invoke plugin main methods.
         //First step: unregistered modules.
 
-        //BotCommand.UnregisteredFriendMain(arrCommand, e.getSubject());
+        BotCommand.UnregisteredGroupMain(arrCommand, e.getSubject());
 
         //Judge if the plugin is running or not.
         if (!RongXiaoliBot.IsEnabled) {
