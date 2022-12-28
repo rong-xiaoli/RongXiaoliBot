@@ -100,7 +100,6 @@ public class DailySign extends Module {
         //Process start.
         boolean isNew = false;
         GregorianCalendar presentTime = new GregorianCalendar();
-        Date presentDate = presentTime.getTime();
         User friendUser = signInData.UserList.get(Friend);
         SignString str = new SignString();
         //Null judgement.
@@ -109,10 +108,14 @@ public class DailySign extends Module {
             friendUser = new User(Friend);
             signInData.UserList.put(Friend, friendUser);
         }
-        int year = friendUser.getDateLastSignIn().get(Calendar.YEAR),
-                month = friendUser.getDateLastSignIn().get(Calendar.MONTH),
-                day = friendUser.getDateLastSignIn().get(Calendar.DAY_OF_MONTH);
-        if (year == presentTime.get(Calendar.YEAR) && month == presentTime.get(Calendar.MONTH) && day == presentTime.get(Calendar.DAY_OF_MONTH) && !isNew) {
+        
+        int lastYear = friendUser.getDateLastSignIn().get(Calendar.YEAR),
+                lastMonth = friendUser.getDateLastSignIn().get(Calendar.MONTH),
+                lastDay = friendUser.getDateLastSignIn().get(Calendar.DAY_OF_MONTH);
+        int year = presentTime.get(Calendar.YEAR),
+                month = presentTime.get(Calendar.MONTH),
+                day = presentTime.get(Calendar.DAY_OF_MONTH);
+        if (year == lastYear && month == lastMonth && day == lastDay && !isNew) {
             //Already signed.
             MessageChainBuilder builder = new MessageChainBuilder();
             builder.append("您已经签到过了哦~\n");

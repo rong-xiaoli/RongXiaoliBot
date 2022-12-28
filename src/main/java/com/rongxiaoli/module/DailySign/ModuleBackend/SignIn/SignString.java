@@ -4,10 +4,7 @@ import com.rongxiaoli.backend.Log;
 
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
@@ -39,44 +36,46 @@ public class SignString {
 
         Random random = new Random();
 
+        Week = Week.minus(1);
+
         //Year only.
         YearBasedString = "今年是";
         switch (Year % 12) {
             case 0:
-                YearBasedString = YearBasedString + "猴年呢~";
+                YearBasedString += "猴年呢~";
                 break;
             case 1:
-                YearBasedString = YearBasedString + "鸡年呢~";
+                YearBasedString += "鸡年呢~";
                 break;
             case 2:
-                YearBasedString = YearBasedString + "狗年呢~";
+                YearBasedString += "狗年呢~";
                 break;
             case 3:
-                YearBasedString = YearBasedString + "猪年呢~";
+                YearBasedString += "猪年呢~";
                 break;
             case 4:
-                YearBasedString = YearBasedString + "鼠年呢~";
+                YearBasedString += "鼠年呢~";
                 break;
             case 5:
-                YearBasedString = YearBasedString + "牛年呢~";
+                YearBasedString += "牛年呢~";
                 break;
             case 6:
-                YearBasedString = YearBasedString + "虎年呢~";
+                YearBasedString += "虎年呢~";
                 break;
             case 7:
-                YearBasedString = YearBasedString + "兔年呢~";
+                YearBasedString += "兔年呢~";
                 break;
             case 8:
-                YearBasedString = YearBasedString + "龙年呢~";
+                YearBasedString += "龙年呢~";
                 break;
             case 9:
-                YearBasedString = YearBasedString + "蛇年呢~";
+                YearBasedString += "蛇年呢~";
                 break;
             case 10:
-                YearBasedString = YearBasedString + "马年呢~";
+                YearBasedString += "马年呢~";
                 break;
             case 11:
-                YearBasedString = YearBasedString + "羊年呢~";
+                YearBasedString += "羊年呢~";
                 break;
         }
         //Holiday region start.
@@ -84,7 +83,7 @@ public class SignString {
         if (Month == 1 && Day >= 1 && Day <=3) {
             MixedString = "元旦快乐！";
         }
-        if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0 && Second == 0) {
+        if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0) {
             MixedString = "真准时呢~元旦快乐哦~";
         }
         if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0 && Second == 0 && Millisecond == 0){
