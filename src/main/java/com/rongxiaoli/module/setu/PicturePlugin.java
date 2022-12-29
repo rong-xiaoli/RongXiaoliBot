@@ -219,8 +219,8 @@ public class PicturePlugin extends Module {
             return;
         }
 
-        //Download picture. (Not needed)
-        String[] UrlSplit = PictureUrlString.split("/");
+        // Download picture. (Not needed)
+        /* String[] UrlSplit = PictureUrlString.split("/");
         HttpDownload PictureDownload = new HttpDownload();
         PictureDownload.targetUrl = PictureUrlString;
         PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
@@ -263,7 +263,8 @@ public class PicturePlugin extends Module {
                 isProcessing = false;
             }
         }
-        //The commented code below is used for sending message.
+*/
+//The commented code below is used for sending message.
 /*
         Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
         Log.WriteLog(Log.Level.Verbose,

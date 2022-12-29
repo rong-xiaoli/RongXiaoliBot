@@ -43,25 +43,6 @@ public class BotCommand extends Module {
         }
     }
     public static void UnregisteredGroupMain(String[] arrCommand, Contact SenderContact) {
-        //Judge if message is 0 width.
-        if (arrCommand.length == 0) {
-            return;
-        }
-        String[] message = arrCommand.clone();
-        if (message[0].startsWith("/")) {
-            //Pre-process.
-            message[0] = message[0].replaceFirst("/","");
-            if (Objects.equals(message[0], Help.CommandPrefix)) {
-                //Help message.
-                Help h = new Help();
-                h.Process(message, SenderContact);
-                //End.
-            } else if (Objects.equals(message[0], Status.CommandPrefix)) {
-                //Status.
-                Status.Process(message, SenderContact);
-                //End.
-            }
-        }
     }
 
     public void Init() {
@@ -74,7 +55,25 @@ public class BotCommand extends Module {
         return;
     }
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
-        return;
+        //Judge if message is 0 width.
+        if (arrCommand.length == 0) {
+            return;
+        }
+        String[] message = arrCommand.clone();
+        if (message[0].startsWith("/")) {
+            //Pre-process.
+            message[0] = message[0].replaceFirst("/","");
+            if (Objects.equals(message[0], Help.CommandPrefix)) {
+                //Help message.
+                Help h = new Help();
+                h.Process(message, SubjectContact);
+                //End.
+            } else if (Objects.equals(message[0], Status.CommandPrefix)) {
+                //Status.
+                Status.Process(message, SubjectContact);
+                //End.
+            }
+        }
     }
 
     /**
