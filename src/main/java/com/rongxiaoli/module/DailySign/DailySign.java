@@ -132,6 +132,7 @@ public class DailySign extends Module {
             return;
         }
         friendUser.giveCoin(1);
+        friendUser.refreshDateLastSignIn();
         signInData.UserList.replace(Friend,friendUser);
         MessageChainBuilder builder = new MessageChainBuilder();
         builder.append(str.FriendString(presentTime, SignInPosition));

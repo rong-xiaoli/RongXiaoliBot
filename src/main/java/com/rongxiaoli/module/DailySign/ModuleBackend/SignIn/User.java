@@ -41,7 +41,7 @@ public class User {
     public long getID() {
         return ID;
     }
-    public void RefreshDateLastSignIn() {
+    public void refreshDateLastSignIn() {
         DateLastSignIn = new GregorianCalendar();
     }
     public GregorianCalendar getDateLastSignIn() {

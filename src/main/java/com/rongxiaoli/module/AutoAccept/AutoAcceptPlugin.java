@@ -30,13 +30,10 @@ public class AutoAcceptPlugin extends Module {
     }
 
     public void Main(FriendAddEvent e) {
-        for (Friend SingleFriend :
-                e.getBot().getFriends()) {
-            Log.WriteLog(Log.Level.Verbose,
-                    String.valueOf(SingleFriend.getId()),
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        }
+        Log.WriteLog(Log.Level.Verbose,
+            String.valueOf(e.getFriend().getId()),
+            Log.LogClass.ModuleMain,
+            PluginName);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException IE) {
