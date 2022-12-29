@@ -4,11 +4,7 @@
 
 本插件沿用[mirai框架](https://github.com/mamoe/mirai)所使用的AGPL-3.0许可证。
 
-**不许商用**。可以自行**私人使用**，但是**不能未经允许直接使用我的任何一部分源码**。
-
 This plugin uses the AGPL-3.0 license which [mirai framework](https://github.com/mamoe/mirai) uses.
-
-**Commercial use is prohibited**. **Private use** is allowed, but **unconfirmed directedly using any part of my code is not allowed**.
 
 ## 功能 Modules
 
@@ -24,8 +20,6 @@ This plugin uses the AGPL-3.0 license which [mirai framework](https://github.com
 
 正在开发的功能：
 
-* [X]  每日签到
-
 This bot has these modules:
 
 * Random pictures; (This function is developed based on Lolicon API. API docs please refer to [this link](https://api.lolicon.app/#/setu).)
@@ -37,8 +31,6 @@ This bot has these modules:
 * Stop all modules at once;
 
 Modules WIP:
-
-* [X]  Daily sign
 
 ## 命令 Command
 
