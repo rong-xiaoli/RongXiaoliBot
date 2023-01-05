@@ -17,45 +17,43 @@ public class Management {
             SenderContact.sendMessage("请输入指令");
             return;
         }
-        switch (arrCommand[1]) {
-            // Disable plugins.
-            case "disable":
-                if (arrCommand.length <= 2) {
-                    SenderContact.sendMessage("请输入禁用插件名");
-                    return;
+        // Disable plugins.
+        if ("disable".equals(arrCommand[1])) {
+            if (arrCommand.length <= 2) {
+                SenderContact.sendMessage("请输入禁用插件名");
+                return;
+            }
+            Log.WriteLog(Log.Level.Info,
+                    "Plugin disable request, plugin name: " + arrCommand[2],
+                    Log.LogClass.ModuleMain,
+                    BotCommand.PluginName);
+            for (Module SingleModule :
+                    RongXiaoliBot.BotModuleLoader.ModuleList) {
+                if (SingleModule.getPluginName().equals(arrCommand[2])) {
+                    SingleModule.setEnabled(false);
+                    SenderContact.sendMessage(SingleModule.getPluginName() + " disabled. ");
                 }
-                Log.WriteLog(Log.Level.Info,
-                        "Plugin disable request, plugin name: " + arrCommand[2],
-                        Log.LogClass.ModuleMain,
-                        BotCommand.PluginName);
-                for (Module SingleModule :
-                        RongXiaoliBot.BotModuleLoader.ModuleList) {
-                    if (SingleModule.getPluginName().equals(arrCommand[2])) {
-                        SingleModule.setEnabled(false);
-                    }
-                }
-                break;
+            }
 
             // Enable plugins.
-            case "enable":
-                if (arrCommand.length <= 2) {
-                    SenderContact.sendMessage("请输入启用的插件名");
-                    return;
+        } else if ("enable".equals(arrCommand[1])) {
+            if (arrCommand.length <= 2) {
+                SenderContact.sendMessage("请输入启用的插件名");
+                return;
+            }
+            Log.WriteLog(Log.Level.Info,
+                    "Plugin enable request, plugin name: " + arrCommand[2],
+                    Log.LogClass.ModuleMain,
+                    BotCommand.PluginName);
+            for (Module SingleModule :
+                    RongXiaoliBot.BotModuleLoader.ModuleList) {
+                if (SingleModule.getPluginName().equals(arrCommand[2])) {
+                    SingleModule.setEnabled(true);
+                    SenderContact.sendMessage(SingleModule.getPluginName() + " enabled. ");
                 }
-                Log.WriteLog(Log.Level.Info,
-                        "Plugin enable request, plugin name: " + arrCommand[2],
-                        Log.LogClass.ModuleMain,
-                        BotCommand.PluginName);
-                for (Module SinleModule :
-                        RongXiaoliBot.BotModuleLoader.ModuleList) {
-                    if (SinleModule.getPluginName().equals(arrCommand[2])) {
-                        SinleModule.setEnabled(true);
-                    }
-                }
-                break;
-            default:
-                SenderContact.sendMessage("未知的命令");
-                break;
+            }
+        } else {
+            SenderContact.sendMessage("Unknown command. ");
         }
     }
 }

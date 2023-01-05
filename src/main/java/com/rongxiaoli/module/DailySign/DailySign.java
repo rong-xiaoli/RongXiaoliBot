@@ -22,9 +22,10 @@ public class DailySign extends Module {
     private boolean IsEnabled = true;
     private boolean DebugMode = false;
     // Private vars.
-    private String JSONFilePath = RongXiaoliBot.DataPath.toString() + "/DailySign/DailySignData.json";
-    private String Command = "/sign";
+    private final String JSONFilePath = RongXiaoliBot.DataPath.toString() + "/DailySign/DailySignData.json";
+    private final String Command = "/sign";
     private Timer DailyRefreshTimer;
+    private DateRefresher refresher;
     private SignInData signInData;
     private JSONHelper json;
     private long SignInPosition = 1;
@@ -50,17 +51,9 @@ public class DailySign extends Module {
             signInData = new SignInData();
             signInData.UserList = new HashMap<>();
         }
-        //Init DailyRefreshTimer.
-        DailyRefreshTimer = new Timer();
-        GregorianCalendar scheduleTime = new GregorianCalendar();
-        scheduleTime.set(Calendar.HOUR, 0);
-        scheduleTime.set(Calendar.MINUTE, 0);
-        scheduleTime.set(Calendar.SECOND, 0);
-        scheduleTime.set(Calendar.MILLISECOND, 0);
-        scheduleTime.add(Calendar.DAY_OF_MONTH, 1);
-        DailyRefreshTimer.schedule(new DailyRefresher(), scheduleTime.getTime(),86400000);
-
-
+        // Init DateRefresher.
+        refresher = new DateRefresher();
+        refresher.start();
         // Done.
         Log.WriteLog(Log.Level.Debug,
                 "DailySign initiated! ",
@@ -121,7 +114,7 @@ public class DailySign extends Module {
             builder.append("您已经签到过了哦~\n");
             builder.append(str.GetRandomString(
                     presentTime.get(Calendar.YEAR),
-                    presentTime.get(Calendar.MONTH),
+                    presentTime.get(Calendar.MONTH) + 1,
                     presentTime.get(Calendar.DAY_OF_MONTH),
                     DayOfWeek.of(presentTime.get(Calendar.DAY_OF_WEEK)),
                     presentTime.get(Calendar.HOUR_OF_DAY),
@@ -180,7 +173,12 @@ public class DailySign extends Module {
      * @param status Status
      */
     public void setEnabled(boolean status) {
-        this.IsEnabled = isEnabled();
+        if (status) {
+            this.Init();
+        } else {
+            this.Shutdown();
+        }
+        this.IsEnabled = status;
     }
 
     /**
@@ -190,21 +188,32 @@ public class DailySign extends Module {
         return DebugMode;
     }
 
-    private class DailyRefresher extends TimerTask {
-        /**
-         * The action to be performed by this timer task.
-         */
+    private class DateRefresher extends Thread {
+        private int dayOfYear = -1;
         @Override
         public void run() {
-            //Todo: Finish this.
-            Log.WriteLog(Log.Level.Verbose, "DailyRefresher start. ", Log.LogClass.Multithreading, PluginName);
-            SignInPosition = 1;
-            try {
-                json.JSONSave();
-            } catch (IOException e) {
-                Log.Exception(e, "Unexpected IOError occurred. ", Log.LogClass.File, PluginName);
-                Log.WriteLog(Log.Level.Error, "DailySign cannot save file do to unexpected IOException. Quitting without saving data!!! ", Log.LogClass.ModuleMain, PluginName);
+            GregorianCalendar gc;
+            while (isEnabled()) {
+                try {
+                    Thread.sleep(1000);
+                    gc = new GregorianCalendar();
+                    if (gc.get(Calendar.DAY_OF_YEAR) != dayOfYear) {
+                        dayOfYear = gc.get(Calendar.DAY_OF_YEAR);
+                        Log.WriteLog(Log.Level.Verbose, "DailyRefresher start. ", Log.LogClass.Multithreading, PluginName);
+                        SignInPosition = 1;
+                        try {
+                            json.JSONSave();
+                        } catch (IOException e) {
+                            Log.Exception(e, "Unexpected IOError occurred. ", Log.LogClass.File, PluginName);
+                            Log.WriteLog(Log.Level.Error, "DailySign cannot save file do to unexpected IOException. Quitting without saving data!!! ", Log.LogClass.ModuleMain, PluginName);
+                        }
+                        // Done.
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
+
         }
     }
 }
