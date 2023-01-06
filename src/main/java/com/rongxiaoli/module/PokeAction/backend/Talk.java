@@ -2,7 +2,6 @@ package com.rongxiaoli.module.PokeAction.backend;
 
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Friend;
-import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.event.events.NudgeEvent;
 
 import java.util.Random;
@@ -44,8 +43,10 @@ public class Talk {
         }
     }
 
-    public static void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID, int type, int number) {
-
+    public static void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID) {
+        Random random = new Random();
+        int type = random.nextInt(2);
+        int number = random.nextInt(5);
         if (IsGroup) {
             if (GroupID == 0) {
                 return;

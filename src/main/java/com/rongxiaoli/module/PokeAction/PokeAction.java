@@ -54,7 +54,7 @@ public class PokeAction extends Module {
         int ReplyType = random.nextInt(0,2);
         int InnerRandom1 = random.nextInt(0, 2);
         int InnerRandom2 = random.nextInt(0, 5);
-        action.Main(e, e.getFrom().getId(), e.getBot().getId(), isFromGroup, e.getSubject().getId(), ReplyType, InnerRandom1, InnerRandom2);
+        action.Main(e, e.getFrom().getId(), e.getBot().getId(), isFromGroup, e.getSubject().getId(), ReplyType);
     }
 
     /**
