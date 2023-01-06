@@ -18,7 +18,7 @@ public class MessageProcessor {
         //Variables initiate.
         String[] arrCommand;
         //Start processing.
-        arrCommand = originalMessage.split(" ");
+        arrCommand = originalMessage.split("\\s+");
         //Invoke plugin main methods.
         //First step.
 
@@ -46,7 +46,7 @@ public class MessageProcessor {
         //Variables initiate.
         String[] arrCommand;
         //Start processing.
-        arrCommand = originalMessage.split(" ");
+        arrCommand = originalMessage.split("\\s+");
         //Invoke plugin main methods.
         //First step: unregistered modules.
 

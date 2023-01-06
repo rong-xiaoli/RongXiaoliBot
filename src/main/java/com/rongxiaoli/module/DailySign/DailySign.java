@@ -84,12 +84,18 @@ public class DailySign extends Module {
      * @param SubjectContact
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
         //0-width.
-        if (arrCommand.length == 0) {
+        if (message.length == 0) {
             return;
         }
         if (!IsEnabled) return;
-        if (!arrCommand[0].equals(Command)) return;
+        if (!message[0].equals(Command)) return;
         //Process start.
         boolean isNew = false;
         GregorianCalendar presentTime = new GregorianCalendar();

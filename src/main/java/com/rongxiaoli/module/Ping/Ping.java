@@ -1,20 +1,24 @@
-package com.rongxiaoli.module;
+package com.rongxiaoli.module.Ping;
 
 import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Ping extends Module {
     private String PluginName = "Ping";
     private String HelpContent = "/ping +\n" +
             "返回\"Pong!\"\n";
     private boolean IsEnabled = false;
+
     /**
      * Module initiate function.
      */
     public void Init() {
         IsEnabled = true;
-        Log.WriteLog(Log.Level.Debug,"Ping initiated. ", Log.LogClass.ModuleMain, PluginName);
+        Log.WriteLog(Log.Level.Debug, "Ping initiated. ", Log.LogClass.ModuleMain, PluginName);
     }
 
     /**
@@ -22,7 +26,7 @@ public class Ping extends Module {
      */
     public void Shutdown() {
         IsEnabled = false;
-        Log.WriteLog(Log.Level.Debug,"Ping shutting down. ", Log.LogClass.ModuleMain, PluginName);
+        Log.WriteLog(Log.Level.Debug, "Ping shutting down. ", Log.LogClass.ModuleMain, PluginName);
 
     }
 
@@ -34,6 +38,12 @@ public class Ping extends Module {
      * @param SubjectContact
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
         //0-length array.
         if (arrCommand.length == 0) {
             return;
@@ -51,6 +61,12 @@ public class Ping extends Module {
      * @param SubjectContact
      */
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+        
         //0-length array.
         if (arrCommand.length == 0) {
             return;

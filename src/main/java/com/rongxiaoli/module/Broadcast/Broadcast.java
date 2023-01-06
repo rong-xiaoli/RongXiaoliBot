@@ -10,6 +10,7 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -29,25 +30,32 @@ public class Broadcast extends Module {
     }
 
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
-        if (arrCommand.length == 0) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
+        // 0-width.
+        if (message.length == 0) {
             return;
         }
         if (!IsEnabled) return;
         StringBuilder BroadcastMessageBuilder;
         if (SubjectContact.getId() == RongXiaoliBot.Owner) {
-            if (Objects.equals(arrCommand[0], "/broadcast")) {
+            if (Objects.equals(message[0], "/broadcast")) {
                 if (!IsEnabled) {
                     SubjectContact.sendMessage("功能未启用");
                     return;
                 }
                 Log.WriteLog(Log.Level.Info,
-                        "Received broadcast message from bot owner:" + RongXiaoliBot.Owner + Arrays.toString(arrCommand),
+                        "Received broadcast message from bot owner:" + RongXiaoliBot.Owner + Arrays.toString(message),
                         Log.LogClass.ModuleMain,
                         PluginName);
                 //Process.
                 BroadcastMessageBuilder = new StringBuilder();
-                for (int num = 1; num <= arrCommand.length - 1; num ++) {
-                    BroadcastMessageBuilder.append(arrCommand[num]);
+                for (int num = 1; num <= message.length - 1; num ++) {
+                    BroadcastMessageBuilder.append(message[num]);
                 }
                 MessageChainBuilder BroadcastMessage = new MessageChainBuilder();
                 BroadcastMessage.append("来自主人的消息：\n");

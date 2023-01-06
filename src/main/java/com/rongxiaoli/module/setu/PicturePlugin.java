@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.nio.channels.ClosedChannelException;
 import java.security.KeyManagementException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -53,7 +54,8 @@ public class PicturePlugin extends Module {
     private final String PictureProxy = "i.pixiv.re";
     private final String HelpContent =
             "setu [Keyword] [Keyword] ...\n" +
-                    //"(API返回301，以及另一些特殊原因，该插件已弃用)\n" +
+                    "暂时不能使用中文关键词\n" +
+                    //"(一些特殊原因，该插件已弃用)\n" +
                     "获取一张涩图\n" +
                     "参数: \n" +
                     "Keyword: 要查询的关键字\n";
@@ -67,7 +69,13 @@ public class PicturePlugin extends Module {
      * @param SubjectContact Contact of the sender.
      */
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
-        if (arrCommand.length == 0) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
+        if (message.length == 0) {
             return;
         }
 
@@ -96,7 +104,7 @@ public class PicturePlugin extends Module {
         MessageChainBuilder PictureMessage = new MessageChainBuilder();
 
         //Start process.
-        if (!Objects.equals(arrCommand[0], CommandPrefix)) {
+        if (!Objects.equals(message[0], CommandPrefix)) {
             return;
         }
         //Judge if the plugin is enabled.
@@ -110,7 +118,7 @@ public class PicturePlugin extends Module {
                 "Received group command from: " + "\n" +
                         "Group: " + GroupID + "\n" +
                         "Member: " + FriendID + "\n" +
-                        "Content: " + Arrays.toString(arrCommand),
+                        "Content: " + Arrays.toString(message),
                 Log.LogClass.ModuleMain,
                 PluginName);
 
@@ -131,11 +139,11 @@ public class PicturePlugin extends Module {
 
         //Process tags.
         Keywords = null;
-        if (arrCommand.length >= 2) {
-            Keywords = new String[arrCommand.length - 1];
-            System.arraycopy(arrCommand, 1, Keywords, 0, Keywords.length - 1 + 1);
+        if (message.length >= 2) {
+            Keywords = new String[message.length - 1];
+            System.arraycopy(message, 1, Keywords, 0, Keywords.length - 1 + 1);
             Log.WriteLog(Log.Level.Verbose,
-                    "Command received (raw): " + Arrays.toString(arrCommand),
+                    "Command received (raw): " + Arrays.toString(message),
                     Log.LogClass.ModuleMain,
                     PluginName);
         }
@@ -337,8 +345,14 @@ public class PicturePlugin extends Module {
      * @param SubjectContact Contact of the sender.
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
         //0-length array.
-        if (arrCommand.length == 0) {
+        if (message.length == 0) {
             return;
         }
 
@@ -366,7 +380,7 @@ public class PicturePlugin extends Module {
         MessageChainBuilder PictureMessage = new MessageChainBuilder();
 
         //Start process.
-        if (!Objects.equals(arrCommand[0], CommandPrefix)) {
+        if (!Objects.equals(message[0], CommandPrefix)) {
             return;
         }
         //Judge if the plugin is enabled.
@@ -378,7 +392,7 @@ public class PicturePlugin extends Module {
         Log.WriteLog(Log.Level.Verbose,
                 "Received friend command from: " + "\n" +
                         "Friend: " + FriendID + "\n" +
-                        "Content: " + Arrays.toString(arrCommand),
+                        "Content: " + Arrays.toString(message),
                 Log.LogClass.ModuleMain,
                 PluginName);
 
@@ -408,11 +422,11 @@ public class PicturePlugin extends Module {
 
         //Process tags.
         Keywords = null;
-        if (arrCommand.length >= 2) {
-            Keywords = new String[arrCommand.length - 1];
-            System.arraycopy(arrCommand, 1, Keywords, 0, Keywords.length - 1 + 1);
+        if (message.length >= 2) {
+            Keywords = new String[message.length - 1];
+            System.arraycopy(message, 1, Keywords, 0, Keywords.length - 1 + 1);
             Log.WriteLog(Log.Level.Verbose,
-                    "Command received (raw): " + Arrays.toString(arrCommand),
+                    "Command received (raw): " + Arrays.toString(message),
                     Log.LogClass.ModuleMain,
                     PluginName);
         }

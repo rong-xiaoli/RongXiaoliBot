@@ -8,16 +8,24 @@ import com.rongxiaoli.module.BotCommand.Modules.Management;
 import com.rongxiaoli.module.BotCommand.Modules.Status;
 import net.mamoe.mirai.contact.Contact;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class BotCommand extends Module {
     public static String PluginName = "BotCommand";
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
         //Judge if message is 0 width.
-        if (arrCommand.length == 0) {
+        if (message.length == 0) {
             return;
         }
-        String[] message = arrCommand.clone();
+
         if (message[0].startsWith("/")) {
             //Pre-process.
             message[0] = message[0].replaceFirst("/","");
@@ -55,11 +63,16 @@ public class BotCommand extends Module {
         return;
     }
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+
         //Judge if message is 0 width.
         if (arrCommand.length == 0) {
             return;
         }
-        String[] message = arrCommand.clone();
         if (message[0].startsWith("/")) {
             //Pre-process.
             message[0] = message[0].replaceFirst("/","");

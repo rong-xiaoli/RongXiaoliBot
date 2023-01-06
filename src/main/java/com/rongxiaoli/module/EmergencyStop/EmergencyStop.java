@@ -5,6 +5,8 @@ import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class EmergencyStop extends Module {
@@ -12,30 +14,37 @@ public class EmergencyStop extends Module {
     private boolean IsEnabled = true;
 
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
+        
+        //Start processing.
         if (RongXiaoliBot.IsEnabled) {
-            if (arrCommand.length == 0) {
+            if (message.length == 0) {
                 return;
             }
             //Running.
-            if (Objects.equals(arrCommand[0], "/stop") && arrCommand.length == 1) {
+            if (Objects.equals(message[0], "/stop") && message.length == 1) {
                 //Received stop command.
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     //Owner command.
                     SenderContact.sendMessage("收到紧急停止消息，正在停止");
                     RongXiaoliBot.IsEnabled = false;
                 }
-            } else if (Objects.equals(arrCommand[0], "/start")) {
+            } else if (Objects.equals(message[0], "/start")) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     SenderContact.sendMessage("插件正在运行");
                 }
             }
         } else {
             //Not running.
-            if (Objects.equals(arrCommand[0], "/stop") && arrCommand.length == 1) {
+            if (Objects.equals(message[0], "/stop") && message.length == 1) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     SenderContact.sendMessage("插件已停止");
                 }
-            } else if (Objects.equals(arrCommand[0], "/start")) {
+            } else if (Objects.equals(message[0], "/start")) {
                 if (SenderContact.getId() == RongXiaoliBot.Owner) {
                     RongXiaoliBot.IsEnabled = true;
                     SenderContact.sendMessage("插件已重新启用");
