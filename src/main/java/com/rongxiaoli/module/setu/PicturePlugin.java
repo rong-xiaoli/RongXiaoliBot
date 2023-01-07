@@ -530,20 +530,27 @@ public class PicturePlugin extends Module {
             } catch (MalformedURLException MUE) {
                 SubjectContact.sendMessage("API返回URL错误，请重试");
                 isProcessing = false;
+                return;
             } catch (ConnectException CE) {
                 SubjectContact.sendMessage("连接超时，请重试");
+                isProcessing = false
+                return;
             } catch (FileNotFoundException FNFE) {
-                SubjectContact.sendMessage("API返回异常，请重试");
+                SubjectContact.sendMessage("图床图片文件返回异常，请重试");
                 isProcessing = false;
+                return;
             } catch (IllegalArgumentException IAE) {
                 SubjectContact.sendMessage("未知的参数错误，请联系主人维修");
                 isProcessing = false;
+                return;
             } catch (ClosedChannelException CCE) {
                 SubjectContact.sendMessage("连结终止，请重试");
                 isProcessing = false;
+                return;
             } catch (SSLHandshakeException SSLHE) {
                 SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
                 isProcessing = false;
+                return;
             } catch (IOException IOE) {
                 if (IOE.getMessage().contains("timed out")) {
                     SubjectContact.sendMessage("连接超时，请重试");
@@ -552,6 +559,7 @@ public class PicturePlugin extends Module {
                 }
                 SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
                 isProcessing = false;
+                return;
             }
         }
 
