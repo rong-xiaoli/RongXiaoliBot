@@ -533,7 +533,7 @@ public class PicturePlugin extends Module {
                 return;
             } catch (ConnectException CE) {
                 SubjectContact.sendMessage("连接超时，请重试");
-                isProcessing = false
+                isProcessing = false;
                 return;
             } catch (FileNotFoundException FNFE) {
                 SubjectContact.sendMessage("图床图片文件返回异常，请重试");
