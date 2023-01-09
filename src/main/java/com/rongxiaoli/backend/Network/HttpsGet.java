@@ -109,7 +109,3 @@ public class HttpsGet {
         return Output.toString();
     }
 }
-
-
-
-

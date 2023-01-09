@@ -19,6 +19,10 @@ public class JSONHelper {
         Gson gson = new Gson();
         String jsonString = gson.toJson(jsonObject);
         File jsonFile = new File(filePath);
+        File jsonFileRoot = jsonFile.getParentFile();
+        if (jsonFileRoot.mkdirs()) {
+            throw new IOException("Cannot create path: " + jsonFileRoot.getAbsolutePath());
+        }
         if (!jsonFile.exists()) {
             jsonFile.createNewFile();
         }
@@ -36,6 +40,10 @@ public class JSONHelper {
         if (filePath.equals(null)) throw new IllegalArgumentException("filePath cannot be null! ");
         Gson gson = new Gson();
         File jsonFile = new File(filePath);
+        File jsonFileRoot = jsonFile.getParentFile();
+        if (jsonFileRoot.mkdirs()) {
+            throw new IOException("Cannot create path: " + jsonFileRoot.getAbsolutePath());
+        }
         if (!jsonFile.exists()) {
             jsonFile.createNewFile();
         }
