@@ -45,8 +45,10 @@ public class JSONHelper {
         Gson gson = new Gson();
         File jsonFile = new File(filePath);
         File jsonFileRoot = jsonFile.getParentFile();
-        if (jsonFileRoot.mkdirs()) {
-            throw new IOException("Cannot create path: " + jsonFileRoot.getAbsolutePath());
+        if (!jsonFileRoot.exists()) {
+            if (jsonFileRoot.mkdirs()) {
+                throw new IOException("Cannot create path: " + jsonFileRoot.getAbsolutePath());
+            }
         }
         if (!jsonFile.exists()) {
             jsonFile.createNewFile();

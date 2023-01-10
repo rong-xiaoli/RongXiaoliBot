@@ -24,4 +24,12 @@ public class StringProcess {
         message = messageWordList.toArray(new String[0]);
         return message;
     }
+    public static String RemoveSpace(String[] originalMessage) {
+        StringBuilder stb = new StringBuilder();
+        for(String singleString :
+                originalMessage) {
+            stb.append(singleString);
+        }
+        return stb.toString();
+    }
 }

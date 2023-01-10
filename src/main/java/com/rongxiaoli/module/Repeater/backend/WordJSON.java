@@ -1,7 +1,7 @@
 package com.rongxiaoli.module.Repeater.backend;
 
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WordJSON {
-    public List<String> BannedWordList;
+    public CopyOnWriteArrayList<String> BannedWordList;
 }
