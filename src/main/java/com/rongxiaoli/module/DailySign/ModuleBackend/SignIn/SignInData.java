@@ -1,5 +1,5 @@
 package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
-//Todo: Not finished.
+
 import java.util.HashMap;
 
 /**

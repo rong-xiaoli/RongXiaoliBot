@@ -1,5 +1,5 @@
 package com.rongxiaoli.module.DailySign;
-//Todo: Finish this module.
+
 import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.JSONHelper;
