@@ -86,6 +86,33 @@ public class Repeater extends Module {
      * @param SubjectContact
      */
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
+        if (!IsEnabled) return;
+        // Start processing.
+        boolean isInRepeatList = false;
+        for (long SingleFriendID :
+                RepeatFriend) {
+            if (SingleFriendID == Friend) {
+                isInRepeatList = true;
+                break;
+            }
+        }
+        if (!Objects.equals(Objects.requireNonNull(StringProcess.Imperative(arrCommand))[0], "/repeat")) {
+            if (isInRepeatList) {
+                //In repeat list, not a command. Repeat.
+                // The process starts here.
+                Process p = new Process();
+                p.start(arrCommand, SubjectContact);
+            }
+            //Not in the list, not a command. Return.
+            return;
+        }
+        if (isInRepeatList) {
+            RepeatFriend.remove(Friend);
+            SubjectContact.sendMessage("不复读啦！累了");
+        } else {
+            RepeatFriend.add(SubjectContact.getId());
+            SubjectContact.sendMessage("我是复读姬！");
+        }
     }
 
     /**
@@ -131,7 +158,7 @@ public class Repeater extends Module {
          */
         public void start(String[] splitMessage, Contact SubjectContact) {
             // First step: check inappropriate word.
-            BannedWordCheck check = new BannedWordCheck(BannedWordConfigPath);
+            BannedWordCheck check = new BannedWordCheck(BannedWordConfigPath, PluginName);
             if (!check.isSuitable(splitMessage)) {
                 SubjectContact.sendMessage("我才不复读这个呢，哼");
                 return;

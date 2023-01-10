@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 
 import java.io.*;
 
+/**
+ * To use this class to read, first fill the file path, then call func: JSONRead(Class objClass), finally get the jsonObject.
+ * To use this class to write, first fill the file path, next set the jsonObject, finally call func: JSONSave().
+ */
 public class JSONHelper {
     public Object jsonObject;
     public String filePath;

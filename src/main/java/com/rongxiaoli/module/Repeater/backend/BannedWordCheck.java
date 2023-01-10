@@ -1,8 +1,10 @@
 package com.rongxiaoli.module.Repeater.backend;
 
+import com.rongxiaoli.backend.JSONHelper;
+import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.StringProcess;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,12 +20,24 @@ public class BannedWordCheck {
      * This list stores the banned word.
      */
     private List<String> BannedWordList;
-    public BannedWordCheck(String conPath) {
+    public BannedWordCheck(String conPath, String pluginName) {
         configFile = conPath + "BannedWord.txt";
         BannedWordList = new ArrayList<>();
         //Todo: Finish it.
         //Load word list.
-        File bannedWordFile = new File(configFile);
+        WordJSON wordJSON = new WordJSON();
+        JSONHelper helper = new JSONHelper();
+        helper.filePath = configFile;
+        try {
+            helper.JSONRead(wordJSON.getClass());
+            BannedWordList = ((WordJSON) helper.jsonObject).BannedWordList;
+        } catch (IOException e) {
+            Log.Exception(e, "", Log.LogClass.File, pluginName);
+            Log.WriteLog(Log.Level.Warning,
+                    "Cannot load banned word due to unexpected IOException. Banned word is empty. ",
+                    Log.LogClass.ModuleMain,
+                    pluginName);
+        }
     }
     public boolean isSuitable(String[] originalMessage) {
         // Start processing.
