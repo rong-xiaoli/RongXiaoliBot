@@ -17,10 +17,10 @@ This plugin uses the AGPL-3.0 license which [mirai framework](https://github.com
 * 自动同意入群邀请、朋友申请；
 * 开关功能；
 * 紧急停止全部功能；
+* 今日运势；
 
 正在开发的功能：
 
-* 今日运势
 
 This bot has these modules:
 
@@ -32,10 +32,9 @@ This bot has these modules:
 * Auto accept group invitation, friend invitation;
 * Turn on and off selected modules;
 * Stop all modules at once;
+* Fortune today;
 
 Modules WIP:
-
-* FortuneToday
 
 ## 命令 Command
 
