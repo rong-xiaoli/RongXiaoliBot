@@ -40,7 +40,7 @@ public class Repeater extends Module {
     public void Shutdown() {
         check.saveBannedWord();
         this.IsEnabled = false;
-        Log.WriteLog(Log.Level.Debug, "Repeat shut down. ", Log.LogClass.ModuleMain, PluginName);
+        Log.WriteLog(Log.Level.Debug, "Repeat shutting down. ", Log.LogClass.ModuleMain, PluginName);
     }
 
     /**
