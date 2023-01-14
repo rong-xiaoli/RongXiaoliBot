@@ -6,10 +6,11 @@ import com.rongxiaoli.module.BotCommand.BotCommand;
 import com.rongxiaoli.module.Broadcast.Broadcast;
 import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
-import com.rongxiaoli.module.Repeater.Repeater;
-import com.rongxiaoli.module.setu.PicturePlugin;
+import com.rongxiaoli.module.FortuneToday.FortuneToday;
 import com.rongxiaoli.module.Ping.Ping;
 import com.rongxiaoli.module.PokeAction.PokeAction;
+import com.rongxiaoli.module.Repeater.Repeater;
+import com.rongxiaoli.module.setu.PicturePlugin;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.event.GlobalEventChannel;
@@ -57,8 +58,9 @@ public final class RongXiaoliBot extends JavaPlugin {
         BotModuleLoader.ModuleList.add(new PokeAction());
         BotModuleLoader.ModuleList.add(new Ping());
         BotModuleLoader.ModuleList.add(new Repeater());
-
+        BotModuleLoader.ModuleList.add(new FortuneToday());
         //Done.
+
         //Module init.
         for (Module SingleModule :
                 BotModuleLoader.ModuleList) {
