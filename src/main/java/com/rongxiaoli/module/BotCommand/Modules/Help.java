@@ -4,6 +4,8 @@ import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import net.mamoe.mirai.contact.Contact;
 
+import java.util.Objects;
+
 public class Help {
     public static String CommandPrefix = "help";
     public static String HelpContent =
@@ -18,7 +20,9 @@ public class Help {
         if (arrCommand.length == 1) {
             for (Module SingleModule :
                     RongXiaoliBot.BotModuleLoader.ModuleList) {
-                HelpMessage.append(SingleModule.getHelpContent());
+                if (!Objects.equals(SingleModule.getHelpContent(), "") && SingleModule.getHelpContent() != null) {
+                    HelpMessage.append(SingleModule.getHelpContent()).append("\n");
+                }
             }
             SenderContact.sendMessage(HelpMessage.toString());
         } else if (arrCommand.length == 2) {

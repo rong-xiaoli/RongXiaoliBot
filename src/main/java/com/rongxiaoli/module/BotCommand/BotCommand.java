@@ -51,18 +51,6 @@ public class BotCommand extends Module {
         }
     }
     public static void UnregisteredGroupMain(String[] arrCommand, Contact SenderContact) {
-    }
-
-    public void Init() {
-        Log.WriteLog(Log.Level.Debug, "BotCommand initiated. ", Log.LogClass.ModuleMain, PluginName);
-    }
-    public void Shutdown() {
-        Log.WriteLog(Log.Level.Debug, "BotCommand stopped. ", Log.LogClass.ModuleMain, PluginName);
-    }
-    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
-        return;
-    }
-    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
         // Remove empty spaces.
         String[] message = arrCommand.clone();
         List<String> emptyStringRemover = Arrays.asList(message);
@@ -79,14 +67,29 @@ public class BotCommand extends Module {
             if (Objects.equals(message[0], Help.CommandPrefix)) {
                 //Help message.
                 Help h = new Help();
-                h.Process(message, SubjectContact);
+                h.Process(message, SenderContact);
                 //End.
             } else if (Objects.equals(message[0], Status.CommandPrefix)) {
                 //Status.
-                Status.Process(message, SubjectContact);
+                Status.Process(message, SenderContact);
                 //End.
             }
         }
+    }
+
+    public void Init() {
+        Log.WriteLog(Log.Level.Debug, "BotCommand initiated. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void Shutdown() {
+        Log.WriteLog(Log.Level.Debug, "BotCommand stopped. ", Log.LogClass.ModuleMain, PluginName);
+    }
+
+    public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
+        return;
+    }
+
+    public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
     }
 
     /**
