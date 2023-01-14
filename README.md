@@ -20,9 +20,12 @@ This plugin uses the AGPL-3.0 license which [mirai framework](https://github.com
 
 正在开发的功能：
 
+* 今日运势
+
 This bot has these modules:
 
-* Random pictures; (This function is developed based on Lolicon API. API docs please refer to [this link](https://api.lolicon.app/#/setu).)
+* Random pictures; (This function is developed based on Lolicon API. API docs please refer
+  to [this link](https://api.lolicon.app/#/setu).)
 * Sign-in system;
 * Random message while poked;
 * Broadcast message which is from bot owner;
@@ -31,6 +34,8 @@ This bot has these modules:
 * Stop all modules at once;
 
 Modules WIP:
+
+* FortuneToday
 
 ## 命令 Command
 
