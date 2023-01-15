@@ -16,7 +16,7 @@ public class Repeater extends Module {
     private final String HelpContent = "复读姬\n" +
             "发送/repeat启动复读模式\n" +
             "再次发送/repeat关闭复读模式\n" +
-            "注：该功能对于多个空行等情况并不能准确复读\n";
+            "注：该功能对于多个空行等情况并不能准确复读";
     private final String BannedWordConfigPath = RongXiaoliBot.ConfigPath.toString() + "/Repeater/BannedWord/";
     private boolean IsEnabled = true;
     private BannedWordCheck check;
@@ -79,7 +79,7 @@ public class Repeater extends Module {
             return;
         }
         if (isInRepeatList) {
-            RepeatFriend.remove(Friend);
+            RepeatFriend.remove(SubjectContact.getId());
             SubjectContact.sendMessage("不复读啦！累了");
         } else {
             RepeatFriend.add(SubjectContact.getId());
@@ -124,7 +124,7 @@ public class Repeater extends Module {
             return;
         }
         if (isInRepeatList) {
-            RepeatGroup.remove(Friend);
+            RepeatGroup.remove(SubjectContact.getId());
             SubjectContact.sendMessage("不复读啦！累了");
         } else {
             RepeatGroup.add(SubjectContact.getId());

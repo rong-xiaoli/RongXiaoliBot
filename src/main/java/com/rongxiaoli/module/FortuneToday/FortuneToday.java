@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class FortuneToday extends Module {
     private final String PluginName = "FortuneToday";
-    private final String HelpContent = "今日运势\n" +
-            "/fortune 获取今日运势\n";
+    private final String HelpContent = "/fortune\n" +
+            "获取今日运势";
     private boolean IsEnabled = true;
     private String Command = "/fortune";
 

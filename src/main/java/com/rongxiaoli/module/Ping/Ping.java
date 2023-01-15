@@ -10,7 +10,7 @@ import java.util.List;
 public class Ping extends Module {
     private String PluginName = "Ping";
     private String HelpContent = "/ping +\n" +
-            "返回\"Pong!\"\n";
+            "返回\"Pong!\"";
     private boolean IsEnabled = false;
 
     /**

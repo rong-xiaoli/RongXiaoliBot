@@ -58,7 +58,7 @@ public class PicturePlugin extends Module {
                     //"(一些特殊原因，该插件已弃用)\n" +
                     "获取一张涩图\n" +
                     "参数: \n" +
-                    "Keyword: 要查询的关键字\n";
+                    "Keyword: 要查询的关键字";
 
     /**
      * Plugin main method for groups.

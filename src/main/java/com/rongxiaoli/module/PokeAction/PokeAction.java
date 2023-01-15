@@ -13,7 +13,7 @@ public class PokeAction extends Module {
     private Action action;
     private String PluginName = "PokeAction";
     private String HelpContent = "戳一戳\n" +
-            "无帮助文档。\n";
+            "无帮助文档。";
     private Boolean IsEnabled = false;
     private Boolean DebugMode = false;
 

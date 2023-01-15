@@ -10,15 +10,15 @@ import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.User;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
-import java.io.*;
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.*;
 
 public class DailySign extends Module {
     // Public vars.
     private final String PluginName = "DailySign";
-    private final String HelpContent = "DailySign\n" +
-            "每日签到\n";
+    private final String HelpContent = "/sign\n" +
+            "每日签到";
     private boolean IsEnabled = true;
     private boolean DebugMode = false;
     // Private vars.
