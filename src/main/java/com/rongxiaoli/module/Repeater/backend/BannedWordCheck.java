@@ -116,6 +116,7 @@ public class BannedWordCheck {
     public String getBannedWord() {
         if (BannedWordList.isEmpty()) return "无禁用词";
         StringBuilder stb = new StringBuilder();
+        stb.append("禁用词：\n");
         for(String singleBannedWord :
                 BannedWordList) {
             stb.append(singleBannedWord + "\n");

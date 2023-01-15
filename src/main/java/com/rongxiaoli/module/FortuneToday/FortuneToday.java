@@ -146,12 +146,12 @@ public class FortuneToday extends Module {
             } else if (55 < fortuneRandom && fortuneRandom <= 70) {
                 return "今天有点小幸运呢";
             } else if (70 < fortuneRandom && fortuneRandom <= 85) {
-                return "幸运一天～";
+                return "幸运的 一天～";
             } else if (85 < fortuneRandom && fortuneRandom <= 99) {
                 return "Lucky~今天好幸运啊!";
-            } else {
+            } else if (fortuneRandom == 100) {
                 return "哇！欧皇！";
-            }
+            } else return "";
         }
     }
 }

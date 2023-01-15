@@ -18,6 +18,7 @@ This plugin uses the AGPL-3.0 license which [mirai framework](https://github.com
 * 开关功能；
 * 紧急停止全部功能；
 * 今日运势；
+* 复读姬；
 
 正在开发的功能：
 
@@ -33,6 +34,7 @@ This bot has these modules:
 * Turn on and off selected modules;
 * Stop all modules at once;
 * Fortune today;
+* Repeatress
 
 Modules WIP:
 
