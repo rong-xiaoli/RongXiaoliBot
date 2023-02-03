@@ -10,6 +10,7 @@ import net.mamoe.mirai.event.events.NewFriendRequestEvent;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 public class AutoAcceptPlugin extends Module {
+
     private final String PluginName = "AutoAccept";
     private boolean IsEnabled = false;
 

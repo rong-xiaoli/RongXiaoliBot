@@ -24,7 +24,6 @@ public class DailySign extends Module {
     // Private vars.
     private final String JSONFilePath = RongXiaoliBot.DataPath.toString() + "/DailySign/DailySignData.json";
     private final String Command = "/sign";
-    private Timer DailyRefreshTimer;
     private DateRefresher refresher;
     private SignInData signInData;
     private JSONHelper json;
