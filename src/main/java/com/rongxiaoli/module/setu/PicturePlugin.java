@@ -226,25 +226,8 @@ public class PicturePlugin extends Module {
             isProcessing = false;
             return;
         }
-
-        // Download picture. (Not needed)
-        /* String[] UrlSplit = PictureUrlString.split("/");
-        HttpDownload PictureDownload = new HttpDownload();
-        PictureDownload.targetUrl = PictureUrlString;
-        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
-        PictureDownload.localFilePath = PictureSavingPath;
-        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
-        PictureLocalFile = new File(PictureFilePath);
-        SubjectContact.sendMessage("图片获取中");
-        if (PictureLocalFile.exists()) {
-            Log.WriteLog(Log.Level.Verbose,
-                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } else {
-            try {
-                PictureDownload.Download(PluginName);
-            } catch (MalformedURLException MUE) {
+            // Download picture. (Not needed)
+        /*  catch (MalformedURLException MUE) {
                 SubjectContact.sendMessage("API返回URL错误，请重试");
                 isProcessing = false;
             } catch (ConnectException CE) {
@@ -270,17 +253,47 @@ public class PicturePlugin extends Module {
                 SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
                 isProcessing = false;
             }
+                    String[] UrlSplit = PictureUrlString.split("/");
+        HttpDownload PictureDownload = new HttpDownload();
+        PictureDownload.targetUrl = PictureUrlString;
+        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+        PictureDownload.localFilePath = PictureSavingPath;
+        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+        PictureLocalFile = new File(PictureFilePath);
+        SubjectContact.sendMessage("图片获取中");
+        if (PictureLocalFile.exists()) {
+            Log.WriteLog(Log.Level.Verbose,
+                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+        } else {
+            try {
+                PictureDownload.Download(PluginName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 */
-//The commented code below is used for sending message.
-/*
-        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SenderContact);
-        Log.WriteLog(Log.Level.Verbose,
-                "Using file: " + PictureFilePath,
-                Log.LogClass.ModuleMain,
-                PluginName);
-        isProcessing = false;
-*/
+        String[] UrlSplit = PictureUrlString.split("/");
+        HttpDownload PictureDownload = new HttpDownload();
+        PictureDownload.targetUrl = PictureUrlString;
+        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+        PictureDownload.localFilePath = PictureSavingPath;
+        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+        PictureLocalFile = new File(PictureFilePath);
+        SubjectContact.sendMessage("图片获取中");
+        if (PictureLocalFile.exists()) {
+            Log.WriteLog(Log.Level.Verbose,
+                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+        } else {
+            try {
+                PictureDownload.Download(PluginName);
+            } catch (IOException e) {
+                Log.Exception(e, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
+            }
+        }
         PictureAuthor = PictData.getAuthor();
         PicturePid = PictData.getPid();
         //PictureTags = PictData.getTags().toString();
@@ -298,6 +311,26 @@ public class PicturePlugin extends Module {
                 Log.LogClass.ModuleMain,
                 PluginName);
         isProcessing = false;
+
+        // Try to cache the queried picture.
+        PictureDownload.targetUrl = PictureUrlString;
+        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+        PictureDownload.localFilePath = PictureSavingPath;
+        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+        PictureLocalFile = new File(PictureFilePath);
+        SubjectContact.sendMessage("图片获取中");
+        if (PictureLocalFile.exists()) {
+            Log.WriteLog(Log.Level.Verbose,
+                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+        } else {
+            try {
+                PictureDownload.Download(PluginName);
+            } catch (IOException e) {
+                Log.WriteLog(Log.Level.Warning, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
+            }
+        }
     }
 
     /**
