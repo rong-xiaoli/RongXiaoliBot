@@ -1,6 +1,6 @@
 package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
-public class CoinNotEnoughException extends RuntimeException {
+public class CoinNotEnoughException extends Exception {
     public long Own;
     public long Require;
 

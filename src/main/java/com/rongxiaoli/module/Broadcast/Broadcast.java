@@ -15,8 +15,8 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Broadcast extends Module {
-    public static String PluginName = "Broadcast";
-    public String HelpContent = "";//"/broadcast (message) +\n" +
+    public static final String PluginName = "Broadcast";
+    public final String HelpContent = "";//"/broadcast (message) +\n" +
             //"广播消息至所有联系人。（仅限号主可用）\n";
     private static boolean IsEnabled = true;
 

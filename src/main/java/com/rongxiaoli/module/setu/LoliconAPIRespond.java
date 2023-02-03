@@ -20,7 +20,7 @@ public class LoliconAPIRespond {
             return this.original;
         }
     }
-    protected class Data
+    protected static class Data
     {
         private int pid;
 

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class BotCommand extends Module {
-    public static String PluginName = "BotCommand";
+    public static final String PluginName = "BotCommand";
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
         // Remove empty spaces.
         String[] message = arrCommand.clone();

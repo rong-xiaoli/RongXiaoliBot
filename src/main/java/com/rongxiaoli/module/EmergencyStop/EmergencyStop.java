@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class EmergencyStop extends Module {
-    private String PluginName = "EmergencyStop";
+    private final String PluginName = "EmergencyStop";
     private boolean IsEnabled = true;
 
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {

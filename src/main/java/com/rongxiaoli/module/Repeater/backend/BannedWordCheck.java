@@ -5,6 +5,7 @@ import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.StringProcess;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -95,7 +96,7 @@ public class BannedWordCheck {
     public boolean addBannedWord(String bannedWord) {
         for(String singleBannedWord :
                 BannedWordList) {
-            if (singleBannedWord == bannedWord) {
+            if (Objects.equals(singleBannedWord, bannedWord)) {
                 return true;
             }
         }

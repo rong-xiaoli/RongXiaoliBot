@@ -3,7 +3,6 @@ package com.rongxiaoli.module.AutoAccept;
 import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
 import net.mamoe.mirai.event.events.BotJoinGroupEvent;
 import net.mamoe.mirai.event.events.FriendAddEvent;
@@ -11,7 +10,7 @@ import net.mamoe.mirai.event.events.NewFriendRequestEvent;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 public class AutoAcceptPlugin extends Module {
-    private String PluginName = "AutoAccept";
+    private final String PluginName = "AutoAccept";
     private boolean IsEnabled = false;
 
     public void Main(NewFriendRequestEvent e) {

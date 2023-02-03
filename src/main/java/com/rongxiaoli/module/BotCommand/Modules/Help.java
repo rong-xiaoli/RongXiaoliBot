@@ -7,8 +7,8 @@ import net.mamoe.mirai.contact.Contact;
 import java.util.Objects;
 
 public class Help {
-    public static String CommandPrefix = "help";
-    public static String HelpContent =
+    public static final String CommandPrefix = "help";
+    public static final String HelpContent =
             "/help [command]: \n" +
                     "获取帮助\n" +
                     "参数: \n" +
