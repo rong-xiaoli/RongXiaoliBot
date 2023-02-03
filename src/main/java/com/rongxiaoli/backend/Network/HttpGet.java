@@ -42,6 +42,20 @@ public class HttpGet {
         public Param() {
             this.Par=new StringBuilder();
         }
+
+        public void Append(String name, String value, boolean unicodeEncodeMode) {
+            String finalValue = value;
+            if (unicodeEncodeMode) {
+                byte[] ParByte = value.getBytes(StandardCharsets.UTF_8);
+                StringBuilder encodedParByte = new StringBuilder();
+                for (byte singleByte :
+                        ParByte) {
+                    encodedParByte.append("%").append((Integer.toHexString(( singleByte & 0x000000ff) | 0xffffff00)).substring(6));
+                }
+                finalValue = encodedParByte.toString();
+            }
+            Append(name, finalValue);
+        }
     }
 
     /**

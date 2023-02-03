@@ -1,7 +1,8 @@
 package com.rongxiaoli.backend.Network;
 import com.rongxiaoli.backend.Log;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -10,9 +11,6 @@ import javax.net.ssl.HostnameVerifier;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -47,9 +45,22 @@ public class HttpsGet {
         public void Append(String name,String value) {
             if (Par.length()==0){
                 Par.append('?').append(name).append('=').append(value);
-            }else {
+            } else {
                 Par.append('&').append(name).append('=').append(value);
             }
+        }
+        public void Append(String name, String value, boolean unicodeEncodeMode) {
+            String finalValue = value;
+            if (unicodeEncodeMode) {
+                byte[] ParByte = value.getBytes(StandardCharsets.UTF_8);
+                StringBuilder encodedParByte = new StringBuilder();
+                for (byte singleByte :
+                        ParByte) {
+                    encodedParByte.append("%").append((Integer.toHexString(( singleByte & 0x000000ff) | 0xffffff00)).substring(6));
+                }
+                finalValue = encodedParByte.toString();
+            }
+            Append(name, finalValue);
         }
         /**
          * Get params.

@@ -5,6 +5,7 @@ import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.Network.HttpDownload;
+import com.rongxiaoli.backend.Network.HttpGet;
 import com.rongxiaoli.backend.Network.HttpsGet;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.Image;
@@ -15,6 +16,7 @@ import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.nio.channels.ClosedChannelException;
@@ -154,7 +156,7 @@ public class PicturePlugin extends Module {
         if (Keywords != null) {
             for (String tag :
                     Keywords) {
-                APIHttpsGet.Par.Append("tag", tag);
+                APIHttpsGet.Par.Append("tag", tag, true);
             }
         }
         APIHttpsGet.Par.Append("size", "regular");
@@ -170,9 +172,22 @@ public class PicturePlugin extends Module {
             isProcessing = false;
             return;
         } catch (IOException IOE) {
-            SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
+            Log.WriteLog(Log.Level.Warning, "Unexpected IOException got. Try to get in http protocol. ", Log.LogClass.ModuleMain, PluginName);
+            HttpGet httpGet = new HttpGet();
+            httpGet.targetUrl = "http://api.lolicon.app/setu/v2";
+            for (String tag :
+                    Keywords) {
+                httpGet.Par.Append("tag", tag, true);
+            }
+            httpGet.Par.Append("size", "regular");
+            httpGet.Par.Append("proxy", PictureProxy);
+            try {
+                ApiReturnString = httpGet.GET(PluginName);
+            } catch (IOException e) {
+                SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
+                isProcessing = false;
+                throw new RuntimeException(e);
+            }
         } catch (KeyManagementException KME) {
             SubjectContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
             isProcessing = false;
