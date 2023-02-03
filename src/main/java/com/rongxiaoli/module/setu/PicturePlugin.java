@@ -42,7 +42,7 @@ public class PicturePlugin extends Module {
      * Is plugin enabled.
      */
     private static boolean IsEnabled = false;
-    private static boolean DebugMode = false;
+    private static final boolean DebugMode = false;
     /**
      * Plugin name.
      */

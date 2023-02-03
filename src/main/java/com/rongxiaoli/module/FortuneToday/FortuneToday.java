@@ -14,7 +14,7 @@ public class FortuneToday extends Module {
     private final String HelpContent = "/fortune\n" +
             "获取今日运势";
     private boolean IsEnabled = true;
-    private String Command = "/fortune";
+    private final String Command = "/fortune";
 
     /**
      * Module initiate function.

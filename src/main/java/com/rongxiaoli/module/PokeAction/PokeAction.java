@@ -11,8 +11,8 @@ public class PokeAction extends Module {
 
     // Module status vars.
     private Action action;
-    private String PluginName = "PokeAction";
-    private String HelpContent = "戳一戳\n" +
+    private final String PluginName = "PokeAction";
+    private final String HelpContent = "戳一戳\n" +
             "无帮助文档。";
     private Boolean IsEnabled = false;
     private Boolean DebugMode = false;
