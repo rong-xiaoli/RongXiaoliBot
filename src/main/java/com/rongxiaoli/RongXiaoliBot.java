@@ -64,10 +64,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Done.
 
         //Module init.
-        for (Module SingleModule :
-                BotModuleLoader.ModuleList) {
-            SingleModule.Init();
-        }
+        BotModuleLoader.ModuleInit();
         // Todo: Data init.
 
         //Plugin init finish.
