@@ -7,6 +7,11 @@ import net.mamoe.mirai.contact.Contact;
  */
 public abstract class Module {
 
+    private String PluginName;
+    private String HelpContent;
+    private boolean IsEnabled;
+    private boolean DebugMode;
+
     /**
      * Module initiate function.
      */
@@ -27,14 +32,6 @@ public abstract class Module {
      */
     public abstract void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact);
 
-    private String PluginName;
-
-    private String HelpContent;
-
-    private boolean IsEnabled;
-
-    private boolean DebugMode;
-
     /**
      * Plugin name. Use in logs.
      */
@@ -52,6 +49,7 @@ public abstract class Module {
 
     /**
      * Set status.
+     *
      * @param status Status
      */
     public abstract void setEnabled(boolean status);
@@ -60,4 +58,14 @@ public abstract class Module {
      * Debug mode.
      */
     public abstract boolean isDebugMode();
+
+    /**
+     * This class is used to store all the private data the module needs.
+     */
+    public static abstract class ModuleData {
+        /**
+         * This module is used to initiate the data.
+         */
+        public abstract void init();
+    }
 }

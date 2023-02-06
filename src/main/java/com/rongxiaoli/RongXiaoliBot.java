@@ -1,6 +1,7 @@
 package com.rongxiaoli;
 
 import com.rongxiaoli.backend.Log;
+import com.rongxiaoli.data.UserData;
 import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
 import com.rongxiaoli.module.BotCommand.BotCommand;
 import com.rongxiaoli.module.Broadcast.Broadcast;
@@ -20,6 +21,7 @@ import java.nio.file.Path;
 public final class RongXiaoliBot extends JavaPlugin {
     public static final RongXiaoliBot INSTANCE = new RongXiaoliBot();
     private static final String PluginName = "RongXiaoliBot PluginMain";
+    public static UserData userData;
     public static final long Owner = 1751362263;
     public static boolean IsEnabled = false;
     public static Path DataPath;
@@ -62,11 +64,9 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Done.
 
         //Module init.
-        for (Module SingleModule :
-                BotModuleLoader.ModuleList) {
-            SingleModule.Init();
-        }
-        
+        BotModuleLoader.ModuleInit();
+        // Todo: Data init.
+
         //Plugin init finish.
         //Register listener.
         GlobalEventChannel.INSTANCE.registerListenerHost(new PluginListener());
@@ -85,6 +85,8 @@ public final class RongXiaoliBot extends JavaPlugin {
                 "Plugin exiting...",
                 Log.LogClass.ModuleMain,
                 PluginName);
+
+        // Todo: Save data.
 
         for (Module SingleModule:
                 BotModuleLoader.ModuleList) {
