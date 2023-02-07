@@ -38,7 +38,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Initiate all parts.
         getLogger().info("Plugin initiating. ");
         //Logger init.
-        Log.Init();
+        Log.Init(getLogger());
         Log.WriteLog(Log.Level.Debug,
                 "Log module initiated. ",
                 Log.LogClass.Log,
