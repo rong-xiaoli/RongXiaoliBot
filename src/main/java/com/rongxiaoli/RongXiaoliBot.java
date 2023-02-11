@@ -1,7 +1,6 @@
 package com.rongxiaoli;
 
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.data.UserData;
 import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
 import com.rongxiaoli.module.BotCommand.BotCommand;
 import com.rongxiaoli.module.Broadcast.Broadcast;
@@ -21,7 +20,6 @@ import java.nio.file.Path;
 public final class RongXiaoliBot extends JavaPlugin {
     public static final RongXiaoliBot INSTANCE = new RongXiaoliBot();
     private static final String PluginName = "RongXiaoliBot PluginMain";
-    public static UserData userData;
     public static final long Owner = 1751362263;
     public static boolean IsEnabled = false;
     public static Path DataPath;
