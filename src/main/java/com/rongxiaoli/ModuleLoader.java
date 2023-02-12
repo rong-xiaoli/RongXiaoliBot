@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleLoader {
-    public DataBaseClass baseClass;
+    public DataBaseClass DataBase;
     public List<Module> ModuleList;
 
     public void ModuleInit() {
@@ -27,7 +27,7 @@ public class ModuleLoader {
 
     public ModuleLoader() {
         ModuleList = new ArrayList<>();
-        baseClass = new DataBaseClass();
+        DataBase = new DataBaseClass();
     }
 
     /**
@@ -38,7 +38,7 @@ public class ModuleLoader {
         helper.filePath = RongXiaoliBot.DataPath.toString() + "data";
         try {
             helper.JSONRead(DataBaseClass.class);
-            baseClass = (DataBaseClass) helper.jsonObject;
+            DataBase = (DataBaseClass) helper.jsonObject;
         } catch (IOException IOE) {
             Log.Exception(IOE, "Unexpected IOException occurred. ", Log.LogClass.File, "RongXiaoliBot");
             Log.WriteLog(Log.Level.Error, "The whole plugin will be run in memory mode due to an IOException!!! ", Log.LogClass.File, "RongXiaoliBot");
@@ -50,7 +50,7 @@ public class ModuleLoader {
      */
     public void DataSave() {
         JSONHelper helper = new JSONHelper();
-        helper.jsonObject = baseClass;
+        helper.jsonObject = DataBase;
         try {
             helper.JSONSave();
         } catch (IOException e) {

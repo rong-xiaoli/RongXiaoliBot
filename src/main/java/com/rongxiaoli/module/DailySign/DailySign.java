@@ -4,6 +4,7 @@ import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.JSONHelper;
 import com.rongxiaoli.backend.Log;
+import com.rongxiaoli.data.DataBlock;
 import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInData;
 import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignString;
 import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.User;
@@ -12,6 +13,7 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DailySign extends Module {
@@ -219,6 +221,57 @@ public class DailySign extends Module {
                 }
             }
 
+        }
+    }
+
+    private class UserDataOperation {
+        private boolean isNew = false;
+        public UserDataOperation(long id) {
+            this.userID = id;
+            signInRequestDateTime = LocalDateTime.now();
+        }
+        private long userID;
+        private LocalDateTime lastSignInDateTime;
+        public LocalDateTime signInRequestDateTime;
+        public void signInProcess() {
+            com.rongxiaoli.data.User user = RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrNull(userID);
+            if (user == null) {
+                // New user.
+                isNew = true;
+                DataBlock block = new DataBlock();
+                block.DataAdd("Coin", 1, PluginName);
+                block.DataAdd("DateLastSignIn", LocalDateTime.now(), PluginName);
+                // Ready to add user.
+                user = new com.rongxiaoli.data.User();
+                user.DataBlockAdd(PluginName, block, PluginName);
+                // Add into database.
+                RongXiaoliBot.BotModuleLoader.DataBase.UserAdd(userID, user, PluginName);
+                // Done.
+                return;
+            }
+            DataBlock block = user.DataBlockReadOrNull(PluginName);
+            if (user.DataBlockReadOrNull(PluginName) == null) {
+                isNew = true;
+                block = new DataBlock();
+                block.DataAdd("Coin", 1, PluginName);
+                block.DataAdd("DateLastSignIn", LocalDateTime.now(), PluginName);
+                user.DataBlockAdd(PluginName, block, PluginName);
+            } else {
+                Object CoinObject = block.DataReadOrNull("Coin");
+                Object DateLastSignInObject = block.DataReadOrNull("DateLastSignIn");
+
+                long Coin = 0;
+
+                if (CoinObject != null) {
+                    Coin = (long) CoinObject;
+                }
+                Coin += 1;
+                if (DateLastSignInObject == null) {
+                    Coin = 0;
+                    lastSignInDateTime = LocalDateTime.now();
+                }
+                // Todo: finish this.
+            }
         }
     }
 }
