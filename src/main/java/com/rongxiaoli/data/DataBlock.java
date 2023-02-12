@@ -27,7 +27,7 @@ public class DataBlock {
      * @return Data.
      * @throws NoSuchElementException This exception is thrown when the data is not recorded in database.
      */
-    public Object DataReadOrException(String DataName) throws NoSuchElementException {
+    public Object DataReadOrException(String DataName) {
         if (!DataMap.containsKey(DataName)) throw new NoSuchElementException("Data block " + DataName + " not exist in database. ");
         else return DataMap.get(DataName);
     }

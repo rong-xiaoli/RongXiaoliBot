@@ -2,6 +2,7 @@ package com.rongxiaoli.backend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.ToNumberPolicy;
 import com.rongxiaoli.backend.JSONAdaptor.LocalDateTimeAdaptor;
 
 import java.io.*;
@@ -26,7 +27,7 @@ public class JSONHelper {
         GsonBuilder builder = new GsonBuilder();
         // Add Adaptor below.
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdaptor());
-
+        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
         // Finished. Building.
 
         Gson gson = builder.create();
@@ -56,7 +57,7 @@ public class JSONHelper {
         GsonBuilder builder = new GsonBuilder();
         // Add Adaptor below.
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdaptor());
-
+        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
         // Finished. Building.
 
         Gson gson = builder.create();

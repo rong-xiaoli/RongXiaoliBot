@@ -35,7 +35,7 @@ public class ModuleLoader {
      */
     public void DataInit() {
         JSONHelper helper = new JSONHelper();
-        helper.filePath = RongXiaoliBot.DataPath.toString() + "data";
+        helper.filePath = RongXiaoliBot.DataPath.toString() + "/data/Data.json";
         try {
             helper.JSONRead(DataBaseClass.class);
             DataBase = (DataBaseClass) helper.jsonObject;
@@ -51,6 +51,7 @@ public class ModuleLoader {
     public void DataSave() {
         JSONHelper helper = new JSONHelper();
         helper.jsonObject = DataBase;
+        helper.filePath = RongXiaoliBot.DataPath.toString() + "/data/Data.json";
         try {
             helper.JSONSave();
         } catch (IOException e) {

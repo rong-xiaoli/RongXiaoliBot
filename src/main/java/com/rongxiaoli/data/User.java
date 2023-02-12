@@ -68,7 +68,7 @@ public class User {
      * @return Data block.
      * @throws NoSuchElementException This exception is thrown when the data block is not recorded in database.
      */
-    public DataBlock DataBlockReadOrException(String DataBlockName) throws NoSuchElementException {
+    public DataBlock DataBlockReadOrException(String DataBlockName) {
         if (!DataBlockMap.containsKey(DataBlockName)) throw new NoSuchElementException("Data block " + DataBlockName + " not exist in database. ");
         else return DataBlockMap.get(DataBlockName);
     }
@@ -81,7 +81,7 @@ public class User {
      * @param moduleName Name of operating executor.
      * @throws NoSuchElementException This exception is thrown when data block or data is not found in database.
      */
-    public void DirectDataRefresh(String DataBlockName, String DataName, Object Data, String moduleName) throws NoSuchElementException {
+    public void DirectDataRefresh(String DataBlockName, String DataName, Object Data, String moduleName)  {
         DataBlock targetDataBlock = DataBlockReadOrException(DataBlockName);
         targetDataBlock.DataRefresh(DataName, Data, moduleName);
     }
@@ -92,7 +92,7 @@ public class User {
      * @param DataName Name of reading data.
      * @throws NoSuchElementException This exception is thrown when data block or data is not found in database.
      */
-    public Object DirectDataRead(String DataBlockName, String DataName) throws NoSuchElementException{
+    public Object DirectDataRead(String DataBlockName, String DataName) {
         DataBlock targetDataBlock = DataBlockReadOrException(DataBlockName);
         return targetDataBlock.DataReadOrException(DataName);
     }

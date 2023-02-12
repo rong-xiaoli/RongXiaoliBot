@@ -1,10 +1,7 @@
 package com.rongxiaoli.data;
 
-import com.rongxiaoli.RongXiaoliBot;
-import com.rongxiaoli.backend.JSONHelper;
 import com.rongxiaoli.backend.Log;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
@@ -19,45 +16,46 @@ public class DataBaseClass {
      * Database class initiate.
      */
     public DataBaseClass() {
-        // Init start.
-        Log.WriteLog(Log.Level.Info,
-                "Database initializing. ",
-                Log.LogClass.Data,
-                "RongXiaoliBot");
-
-        JSONHelper helper = new JSONHelper();
-        helper.filePath = RongXiaoliBot.DataPath.toString() + "/data/RongXiaoliBotData.json";
-        try {
-            helper.JSONRead(UserList.getClass());
-        } catch (IOException e) {
-            Log.Exception(e,
-                    "Database cannot initiate. Running in memory-only mode!!!",
-                    Log.LogClass.Data,
-                    "RongXiaoliBot");
-            UserList = new HashMap<>();
-        }
-
-        // File is empty.
-        if (helper.jsonObject == null) {
-            Log.WriteLog(Log.Level.Warning,
-                    "Database is null! Initiating a new one. ",
-                    Log.LogClass.Data,
-                    "RongXiaoliBot");
-            // Initiate UserList.
-            UserList = new HashMap<>();
-            // Done.
-            return;
-        }
-
-        // UserList is empty.
-        if (((HashMap<Long, User>) helper.jsonObject).isEmpty()) {
-            Log.WriteLog(Log.Level.Info,
-                    "No user is recorded. ",
-                    Log.LogClass.Data,
-                    "RongXiaoliBot");
-            return;
-        }
-        UserList = (HashMap<Long, User>) helper.jsonObject;
+        UserList = new HashMap<>();
+//        // Init start.
+//        Log.WriteLog(Log.Level.Info,
+//                "Database initializing. ",
+//                Log.LogClass.Data,
+//                "RongXiaoliBot");
+//
+//        JSONHelper helper = new JSONHelper();
+//        helper.filePath = RongXiaoliBot.DataPath.toString() + "/data/RongXiaoliBotData.json";
+//        try {
+//            helper.JSONRead(UserList.getClass());
+//        } catch (IOException e) {
+//            Log.Exception(e,
+//                    "Database cannot initiate. Running in memory-only mode!!!",
+//                    Log.LogClass.Data,
+//                    "RongXiaoliBot");
+//            UserList = new HashMap<>();
+//        }
+//
+//        // File is empty.
+//        if (helper.jsonObject == null) {
+//            Log.WriteLog(Log.Level.Warning,
+//                    "Database is null! Initiating a new one. ",
+//                    Log.LogClass.Data,
+//                    "RongXiaoliBot");
+//            // Initiate UserList.
+//            UserList = new HashMap<>();
+//            // Done.
+//            return;
+//        }
+//
+//        // UserList is empty.
+//        if (((HashMap<Long, User>) helper.jsonObject).isEmpty()) {
+//            Log.WriteLog(Log.Level.Info,
+//                    "No user is recorded. ",
+//                    Log.LogClass.Data,
+//                    "RongXiaoliBot");
+//            return;
+//        }
+//        UserList = (HashMap<Long, User>) helper.jsonObject;
     }
 
     /**

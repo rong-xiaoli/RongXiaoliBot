@@ -4,6 +4,9 @@ import com.rongxiaoli.backend.Log;
 
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
@@ -366,20 +369,20 @@ public class SignString {
      * @param signInPosition Sign in position.
      * @return Sign in message content.
      */
-    public String FriendString(GregorianCalendar presentTime, long signInPosition) {
+    public String FriendString(LocalDateTime presentTime, long signInPosition) {
         StringBuilder friendStringBuilder = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        int year = presentTime.get(Calendar.YEAR),
-                month = presentTime.get(Calendar.MONTH) + 1,
-                day = presentTime.get(Calendar.DATE),
-                hour = presentTime.get(Calendar.HOUR_OF_DAY),
-                minute = presentTime.get(Calendar.MINUTE),
-                second = presentTime.get(Calendar.SECOND),
-                millisecond = presentTime.get(Calendar.MILLISECOND);
+        int year = presentTime.getYear(),
+                month = presentTime.getMonthValue(),
+                day = presentTime.getDayOfMonth(),
+                hour = presentTime.getHour(),
+                minute = presentTime.getMinute(),
+                second = presentTime.getSecond(),
+                millisecond = presentTime.getNano();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         friendStringBuilder.append("今天是").append(year).append("年").append(month).append("月").append(day).append("日").append("\n");
-        friendStringBuilder.append("现在是").append(sdf.format(presentTime.getTime())).append("\n");
+        friendStringBuilder.append("现在是").append(presentTime.format(formatter)).append("\n");
         friendStringBuilder.append("本次打卡位次为：").append(signInPosition).append("\n");
-        friendStringBuilder.append(GetRandomString(year,month,day, DayOfWeek.of(presentTime.get(Calendar.DAY_OF_WEEK)), hour,minute,second,millisecond));
+        friendStringBuilder.append(GetRandomString(year,month,day, presentTime.getDayOfWeek(), hour,minute,second,millisecond));
         return friendStringBuilder.toString();
     }
 }
