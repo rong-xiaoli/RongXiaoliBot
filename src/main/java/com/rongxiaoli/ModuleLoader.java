@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleLoader {
-    //public Module[] ModuleList;
     public DataBaseClass baseClass;
     public List<Module> ModuleList;
 
@@ -17,6 +16,12 @@ public class ModuleLoader {
         for (Module SingleModule :
                 ModuleList) {
             SingleModule.Init();
+        }
+    }
+    public void ModuleShutdown() {
+        for (Module module :
+                RongXiaoliBot.BotModuleLoader.ModuleList) {
+            module.Shutdown();
         }
     }
 
