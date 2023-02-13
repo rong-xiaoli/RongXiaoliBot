@@ -58,14 +58,4 @@ public abstract class Module {
      * Debug mode.
      */
     public abstract boolean isDebugMode();
-
-    /**
-     * This class is used to store all the private data the module needs.
-     */
-    public static abstract class ModuleData {
-        /**
-         * This module is used to initiate the data.
-         */
-        public abstract void init();
-    }
 }
