@@ -1,6 +1,7 @@
 package com.rongxiaoli.module.Lottery;
 
 import com.rongxiaoli.Module;
+import com.rongxiaoli.backend.Log;
 import net.mamoe.mirai.contact.Contact;
 
 public class Lottery extends Module {
@@ -13,14 +14,17 @@ public class Lottery extends Module {
      * Module initiate function.
      */
     public void Init() {
-
     }
 
     /**
      * Module shutdown function.
      */
     public void Shutdown() {
-
+        this.IsEnabled = false;
+        Log.WriteLog(Log.Level.Debug,
+                "Lottery shutting down. ",
+                Log.LogClass.ModuleMain,
+                PluginName);
     }
 
     /**
