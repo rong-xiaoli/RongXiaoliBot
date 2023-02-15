@@ -2,6 +2,7 @@ package com.rongxiaoli.module.Lottery;
 
 import com.rongxiaoli.Module;
 import com.rongxiaoli.backend.Log;
+import com.rongxiaoli.backend.Math.NewRandom;
 import net.mamoe.mirai.contact.Contact;
 
 public class Lottery extends Module {
@@ -10,10 +11,17 @@ public class Lottery extends Module {
     private final String HelpContent = "/lottery (或/l)\n" +
             "抽奖\n" +
             "抽奖随机数公式在GitHub主页放出。";
+    private NewRandom random;
     /**
      * Module initiate function.
      */
     public void Init() {
+        random = new NewRandom();
+        this.IsEnabled = true;
+        Log.WriteLog(Log.Level.Debug,
+                "Lottery initiated. ",
+                Log.LogClass.ModuleMain,
+                PluginName);
     }
 
     /**
