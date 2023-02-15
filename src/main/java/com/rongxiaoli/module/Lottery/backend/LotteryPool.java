@@ -2,6 +2,7 @@ package com.rongxiaoli.module.Lottery.backend;
 
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.Math.NewRandom;
+import com.rongxiaoli.module.Lottery.Lottery;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +12,9 @@ public class LotteryPool {
     private NewRandom random = new NewRandom();
     private long pool, finalPool;
     private boolean isEnabled;
+    public void setEnabled(boolean status) {
+        this.isEnabled = status;
+    }
     private RefreshThread refreshThread;
     private ArrayList<Long> boughtFriendList;
     public boolean isFriendInList(long Friend) {
@@ -94,13 +98,12 @@ public class LotteryPool {
                                 Log.LogClass.Multithreading,
                                 "Lottery");
                     }
-                    break;
+                } else {
+                    // Date refresh.
+                    date = LocalDate.now();
+                    pool = 0;
+                    finalPool = 0;
                 }
-
-                // Date refresh.
-                date = LocalDate.now();
-                pool = 0;
-                finalPool = 0;
             }
         }
     }

@@ -23,7 +23,7 @@ public class Lottery extends Module {
     private final String PluginName = "Lottery";
     private boolean IsEnabled = false;
     private final String HelpContent = "/lottery [amount]\n" +
-            "/l [amount]\n" +
+            "或/l [amount]\n" +
             "抽奖\n" +
             "抽奖随机数公式在GitHub上的/src/main/java/com.rongxiaoli/module/Lottery/backend/LotteryPool.java。\n" +
             "参数：\n" +
@@ -34,6 +34,8 @@ public class Lottery extends Module {
      */
     public void Init() {
         lotteryPool = new LotteryPool();
+        lotteryPool.setEnabled(true);
+        lotteryPool.RefreshStart();
         this.IsEnabled = true;
         Log.WriteLog(Log.Level.Debug,
                 "Lottery initiated. ",
