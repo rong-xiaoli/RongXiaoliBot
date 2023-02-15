@@ -1,22 +1,39 @@
 package com.rongxiaoli.module.Lottery;
 
 import com.rongxiaoli.Module;
+import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.backend.Math.NewRandom;
+import com.rongxiaoli.data.DataBlock;
+import com.rongxiaoli.data.User;
+import com.rongxiaoli.module.DailySign.DailySign;
+import com.rongxiaoli.module.Lottery.backend.LotteryPool;
 import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.message.data.MessageChainBuilder;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class Lottery extends Module {
+    /**
+     * This is the data lock.
+     */
+    private boolean isLocked = false;
+    private final String Command = "/lottery";
     private final String PluginName = "Lottery";
     private boolean IsEnabled = false;
-    private final String HelpContent = "/lottery (或/l)\n" +
+    private final String HelpContent = "/lottery [amount]\n" +
+            "/l [amount]\n" +
             "抽奖\n" +
-            "抽奖随机数公式在GitHub主页放出。";
-    private NewRandom random;
+            "抽奖随机数公式在GitHub上的/src/main/java/com.rongxiaoli/module/Lottery/backend/LotteryPool.java。\n" +
+            "参数：\n" +
+            "amount：抽奖时消耗的货币数。";
+    private LotteryPool lotteryPool;
     /**
      * Module initiate function.
      */
     public void Init() {
-        random = new NewRandom();
+        lotteryPool = new LotteryPool();
         this.IsEnabled = true;
         Log.WriteLog(Log.Level.Debug,
                 "Lottery initiated. ",
@@ -28,6 +45,7 @@ public class Lottery extends Module {
      * Module shutdown function.
      */
     public void Shutdown() {
+        lotteryPool.RefreshStop();
         this.IsEnabled = false;
         Log.WriteLog(Log.Level.Debug,
                 "Lottery shutting down. ",
@@ -43,7 +61,82 @@ public class Lottery extends Module {
      * @param SubjectContact
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
+        // Remove empty spaces.
+        String[] message = arrCommand.clone();
+        List<String> emptyStringRemover = Arrays.asList(message);
+        emptyStringRemover.removeAll(Arrays.asList(""));
+        message = emptyStringRemover.toArray(new String[0]);
 
+        //0-width.
+        if (message.length == 0) {
+            return;
+        }
+        if (!IsEnabled) return;
+        if (!Objects.equals(message[0], "/lottery") && !Objects.equals(message[0], "/l")) return;
+        // Check lock.
+        if (isLocked) {
+            SubjectContact.sendMessage("其他用户正在操作，请稍等。");
+            return;
+        }
+        //Process start.
+        long amount = 1;
+        if (message.length == 2) {
+             amount = Long.parseLong(message[1]);
+        }
+        if (amount < 1) {
+            SubjectContact.sendMessage("数额不可小于1");
+            return;
+        }
+
+        // Ready to add in pool.
+        if (lotteryPool.isFriendInList(Friend)) {
+            SubjectContact.sendMessage("你已经抽过了。");
+            return;
+        }
+        User user = RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrNull(Friend);
+        if (user == null) {
+            SubjectContact.sendMessage("您尚未创建用户");
+            return;
+        }
+        DataBlock block = user.DataBlockReadOrNull("DailySign");
+        if (block == null) {
+            SubjectContact.sendMessage("您尚未创建用户");
+            return;
+        }
+        long balance = (long) block.DataReadOrNull("Coin");
+        if (balance < amount) {
+            SubjectContact.sendMessage("您余额不足");
+            return;
+        }
+
+        balance -= amount;
+        block.DataRefresh("Coin", balance, PluginName);
+        user.DataBlockRefresh("DailySign", block, PluginName);
+        RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(Friend, user, PluginName);
+        // Process start. Locking.
+        isLocked = true;
+        boolean status = lotteryPool.inPool(amount, Friend);
+        MessageChainBuilder builder = new MessageChainBuilder();
+        if (!status) {
+            builder.append("很遗憾，没有中奖。\n");
+            builder.append("累计：").append(String.valueOf(lotteryPool.getPool()));
+            SubjectContact.sendMessage(builder.build());
+        } else {
+            long finalPool = lotteryPool.getFinalPool();
+            Log.WriteLog(Log.Level.Info,
+                    Friend + "got prize. Total: " + finalPool,
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            builder.append("恭喜，中奖了！\n");
+            builder.append("累计：").append(String.valueOf(finalPool));
+            SubjectContact.sendMessage(builder.build());
+            balance += finalPool;
+            finalPool = 0;
+            block.DataRefresh("Coin", balance, PluginName);
+            user.DataBlockRefresh("DailySign", block, PluginName);
+            RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(Friend, user, PluginName);
+        }
+        isLocked = false;
     }
 
     /**
@@ -55,7 +148,7 @@ public class Lottery extends Module {
      * @param SubjectContact
      */
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
-
+        FriendMain(arrCommand, Friend, SubjectContact);
     }
 
     /**
