@@ -8,6 +8,7 @@ import com.rongxiaoli.module.Broadcast.Broadcast;
 import com.rongxiaoli.module.DailySign.DailySign;
 import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.FortuneToday.FortuneToday;
+import com.rongxiaoli.module.Lottery.Lottery;
 import com.rongxiaoli.module.Ping.Ping;
 import com.rongxiaoli.module.PokeAction.PokeAction;
 import com.rongxiaoli.module.Repeater.Repeater;
@@ -60,6 +61,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         BotModuleLoader.ModuleList.add(new Ping());
         BotModuleLoader.ModuleList.add(new Repeater());
         BotModuleLoader.ModuleList.add(new FortuneToday());
+        BotModuleLoader.ModuleList.add(new Lottery());
         BotModuleLoader.ModuleList.add(new Baltop());
         //Done.
 

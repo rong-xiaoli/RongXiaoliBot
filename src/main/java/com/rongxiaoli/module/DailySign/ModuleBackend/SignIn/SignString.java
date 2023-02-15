@@ -23,7 +23,7 @@ public class SignString {
      * @param Minute Minute.
      * @param Second Second. Used for Jan 1st.
      * @param Millisecond Millisecond. Used for Jan 1st.
-     * @return Random string.
+     * @return NewRandom string.
      */
     public String GetRandomString(int Year, int Month, int Day, DayOfWeek Week, int Hour, int Minute, int Second, int Millisecond) {
         //Variables declaration.
