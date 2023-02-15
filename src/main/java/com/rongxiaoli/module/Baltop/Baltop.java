@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class Baltop extends Module {
     private final String PluginName = "Baltop";
-    private final String HelpContent = "/baltop + \n" +
+    private final String HelpContent = "/baltop\n" +
             "输出财富榜前10。";
     private boolean IsEnabled = true;
     /**
