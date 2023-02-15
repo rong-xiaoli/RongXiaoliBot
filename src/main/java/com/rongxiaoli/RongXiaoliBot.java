@@ -2,6 +2,7 @@ package com.rongxiaoli;
 
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
+import com.rongxiaoli.module.Baltop.Baltop;
 import com.rongxiaoli.module.BotCommand.BotCommand;
 import com.rongxiaoli.module.Broadcast.Broadcast;
 import com.rongxiaoli.module.DailySign.DailySign;
@@ -59,6 +60,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         BotModuleLoader.ModuleList.add(new Ping());
         BotModuleLoader.ModuleList.add(new Repeater());
         BotModuleLoader.ModuleList.add(new FortuneToday());
+        BotModuleLoader.ModuleList.add(new Baltop());
         //Done.
 
         //Module init.

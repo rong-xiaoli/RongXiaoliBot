@@ -112,4 +112,12 @@ public class DataBaseClass {
         if (!UserList.containsKey(userID)) throw new NoSuchElementException("User " + userID + "not exist in database. ");
         else return UserList.get(userID);
     }
+
+    /**
+     * Get a deep copy of UserList.
+     * @return User list.
+     */
+    public HashMap<Long, User> UserListDeepCopy() {
+        return (HashMap<Long, User>) UserList.clone();
+    }
 }
