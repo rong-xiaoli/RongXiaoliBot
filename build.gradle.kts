@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.rongxiaoli"
-version = "0.1.5"
+version = "0.2.0"
 
 repositories {
     maven("https://repo1.maven.org/maven2")
