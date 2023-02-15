@@ -2,16 +2,14 @@ package com.rongxiaoli.module.DailySign;
 
 import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
-import com.rongxiaoli.backend.JSONHelper;
 import com.rongxiaoli.backend.Log;
-import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInData;
+import com.rongxiaoli.data.DataBlock;
 import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignString;
-import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.User;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
-import java.io.IOException;
-import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class DailySign extends Module {
@@ -22,12 +20,7 @@ public class DailySign extends Module {
     private boolean IsEnabled = true;
     private boolean DebugMode = false;
     // Private vars.
-    private final String JSONFilePath = RongXiaoliBot.DataPath.toString() + "/DailySign/DailySignData.json";
     private final String Command = "/sign";
-    private Timer DailyRefreshTimer;
-    private DateRefresher refresher;
-    private SignInData signInData;
-    private JSONHelper json;
     private long SignInPosition = 1;
     //Vars def finish.
 
@@ -35,25 +28,6 @@ public class DailySign extends Module {
      * Module initiate function.
      */
     public void Init() {
-        // Ready to read JSON.
-        json = new JSONHelper();
-        json.filePath = JSONFilePath;
-
-        // Init signInData.
-        try {
-            json.JSONRead(SignInData.class);
-            signInData = (SignInData) json.jsonObject;
-        } catch (IOException IOE) {
-            Log.Exception(IOE, "Unexpected IOException. ", Log.LogClass.File, PluginName);
-            Log.WriteLog(Log.Level.Error, "DailySign will be run in memory mode due to an IOException. ", Log.LogClass.File, PluginName);
-        }
-        if (signInData == null) {
-            signInData = new SignInData();
-            signInData.UserList = new HashMap<>();
-        }
-        // Init DateRefresher.
-        refresher = new DateRefresher();
-        refresher.start();
         // Done.
         Log.WriteLog(Log.Level.Debug,
                 "DailySign initiated! ",
@@ -65,13 +39,6 @@ public class DailySign extends Module {
      * Module shutdown function.
      */
     public void Shutdown() {
-        json.jsonObject = signInData;
-        try {
-            json.JSONSave();
-        } catch (IOException e) {
-            Log.Exception(e, "Unexpected IOError occurred. ", Log.LogClass.File, PluginName);
-            Log.WriteLog(Log.Level.Error, "DailySign cannot save file do to unexpected IOException. Quitting without saving data!!! ", Log.LogClass.ModuleMain, PluginName);
-        }
         IsEnabled = false;
         Log.WriteLog(Log.Level.Debug, "DailySign shut down. ", Log.LogClass.ModuleMain, PluginName);
     }
@@ -97,45 +64,29 @@ public class DailySign extends Module {
         if (!IsEnabled) return;
         if (!message[0].equals(Command)) return;
         //Process start.
-        boolean isNew = false;
-        GregorianCalendar presentTime = new GregorianCalendar();
-        User friendUser = signInData.UserList.get(Friend);
+
+        UserDataOperation operation = new UserDataOperation(Friend);
+        operation.signInProcess();
         SignString str = new SignString();
-        //Null judgement.
-        if (friendUser == null) {
-            isNew = true;
-            friendUser = new User(Friend);
-            signInData.UserList.put(Friend, friendUser);
-        }
-        
-        int lastYear = friendUser.getDateLastSignIn().get(Calendar.YEAR),
-                lastMonth = friendUser.getDateLastSignIn().get(Calendar.MONTH),
-                lastDay = friendUser.getDateLastSignIn().get(Calendar.DAY_OF_MONTH);
-        int year = presentTime.get(Calendar.YEAR),
-                month = presentTime.get(Calendar.MONTH),
-                day = presentTime.get(Calendar.DAY_OF_MONTH);
-        if (year == lastYear && month == lastMonth && day == lastDay && !isNew) {
+        if (operation.isSigned) {
             //Already signed.
             MessageChainBuilder builder = new MessageChainBuilder();
             builder.append("您已经签到过了哦~\n");
             builder.append(str.GetRandomString(
-                    presentTime.get(Calendar.YEAR),
-                    presentTime.get(Calendar.MONTH) + 1,
-                    presentTime.get(Calendar.DAY_OF_MONTH),
-                    DayOfWeek.of(presentTime.get(Calendar.DAY_OF_WEEK)),
-                    presentTime.get(Calendar.HOUR_OF_DAY),
-                    presentTime.get(Calendar.MINUTE),
-                    presentTime.get(Calendar.SECOND),
-                    presentTime.get(Calendar.MILLISECOND)));
+                    operation.signInRequestDateTime.getYear(),
+                    operation.signInRequestDateTime.getMonthValue(),
+                    operation.signInRequestDateTime.getDayOfMonth(),
+                    operation.signInRequestDateTime.getDayOfWeek(),
+                    operation.signInRequestDateTime.getHour(),
+                    operation.signInRequestDateTime.getMinute(),
+                    operation.signInRequestDateTime.getSecond(),
+                    operation.signInRequestDateTime.getNano()));
             SubjectContact.sendMessage(builder.build());
             return;
         }
-        friendUser.giveCoin(1);
-        friendUser.refreshDateLastSignIn();
-        signInData.UserList.replace(Friend,friendUser);
         MessageChainBuilder builder = new MessageChainBuilder();
-        builder.append(str.FriendString(presentTime, SignInPosition));
-        builder.append("\n现在有").append(String.valueOf(friendUser.getCoin())).append("枚金币");
+        builder.append(str.FriendString(operation.signInRequestDateTime, SignInPosition));
+        builder.append("\n现在有").append(String.valueOf(operation.getCoin())).append("枚金币");
         SubjectContact.sendMessage(builder.build());
         SignInPosition++;
     }
@@ -194,32 +145,72 @@ public class DailySign extends Module {
         return DebugMode;
     }
 
-    private class DateRefresher extends Thread {
-        private int dayOfYear = -1;
-        @Override
-        public void run() {
-            GregorianCalendar gc;
-            while (isEnabled()) {
-                try {
-                    Thread.sleep(1000);
-                    gc = new GregorianCalendar();
-                    if (gc.get(Calendar.DAY_OF_YEAR) != dayOfYear) {
-                        dayOfYear = gc.get(Calendar.DAY_OF_YEAR);
-                        Log.WriteLog(Log.Level.Verbose, "DailyRefresher start. ", Log.LogClass.Multithreading, PluginName);
-                        SignInPosition = 1;
-                        try {
-                            json.JSONSave();
-                        } catch (IOException e) {
-                            Log.Exception(e, "Unexpected IOError occurred. ", Log.LogClass.File, PluginName);
-                            Log.WriteLog(Log.Level.Error, "DailySign cannot save file do to unexpected IOException. Quitting without saving data!!! ", Log.LogClass.ModuleMain, PluginName);
-                        }
-                        // Done.
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+    private class UserDataOperation {
+        private boolean isNew = false;
+        private boolean isSigned = false;
+        public UserDataOperation(long id) {
+            this.userID = id;
+            signInRequestDateTime = LocalDateTime.now();
+        }
+        private long userID;
+        private LocalDateTime lastSignInDateTime;
+        private LocalDateTime signInRequestDateTime;
+        public void signInProcess() {
+            com.rongxiaoli.data.User user = RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrNull(userID);
+            if (user == null) {
+                // New user.
+                isNew = true;
+                DataBlock block = new DataBlock();
+                block.DataAdd("Coin", 1, PluginName);
+                block.DataAdd("DateLastSignIn", LocalDateTime.now(), PluginName);
+                // Ready to add user.
+                user = new com.rongxiaoli.data.User();
+                user.DataBlockAdd(PluginName, block, PluginName);
+                // Add into database.
+                RongXiaoliBot.BotModuleLoader.DataBase.UserAdd(userID, user, PluginName);
+                isSigned = true;
+                // Done.
+                return;
+            }
+            DataBlock block = user.DataBlockReadOrNull(PluginName);
+            if (user.DataBlockReadOrNull(PluginName) == null) {
+                isNew = true;
+                block = new DataBlock();
+                block.DataAdd("Coin", 1, PluginName);
+                block.DataAdd("DateLastSignIn", LocalDateTime.now(), PluginName);
+                user.DataBlockAdd(PluginName, block, PluginName);
+                isSigned = true;
+            } else {
+                // Exist user. Reading data.
+                Object CoinObject = block.DataReadOrNull("Coin");
+                Object DateLastSignInObject = block.DataReadOrNull("DateLastSignIn");
+
+                long Coin = 0;
+
+                if (CoinObject != null) {
+                    Coin = (long) CoinObject;
+                }
+                if (DateLastSignInObject == null) {
+                    // Reset user data.
+                    Coin = 0;
+                    isNew = true;
+                    lastSignInDateTime = LocalDateTime.now();
+                } else {
+                    lastSignInDateTime = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                }
+                // Data write.
+                isSigned = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).getDayOfYear() == signInRequestDateTime.getDayOfYear();// Todo: bug. class java.lang.Double cannot be cast to class java.lang.String (java.lang.Double and java.lang.String
+                block.DataRefresh("DateLastSignIn", signInRequestDateTime, PluginName);
+                if (!isSigned) {
+                    block.DataRefresh("Coin", Coin + 1, PluginName);
                 }
             }
-
+        }
+        public LocalDateTime getLastSignInDateTime() {
+            return (LocalDateTime) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("DateLastSignIn");
+        }
+        public long getCoin() {
+            return (long) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("Coin");
         }
     }
 }

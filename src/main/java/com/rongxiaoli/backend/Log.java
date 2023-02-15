@@ -1,8 +1,11 @@
 package com.rongxiaoli.backend;
 
+import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 
 public class Log {
+    private static MiraiLogger logger;
+    private static boolean isMiraiLoggerMode = false;
     public enum Level {
         Verbose,
         Debug,
@@ -18,28 +21,45 @@ public class Log {
         Multithreading,
         ModuleMain,
     }
-    public static void Init() {
+    public static void Init(MiraiLogger log) {
+        if (log != null) {
+            logger = log;
+            isMiraiLoggerMode = true;
+        }
+
     }
     public static void WriteLog(@NotNull Level level, String msg, LogClass logClass, String PluginName) {
         switch (level) {
             case Verbose:
-                System.out.println("RongXiaoliBot Logger: VER "+PluginName+"."+ logClass +": "+msg);
+                if (isMiraiLoggerMode) logger.verbose(PluginName+"."+ logClass +": "+msg);
+                else System.out.println("RongXiaoliBot Logger: VER "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Debug:
-                System.out.println("RongXiaoliBot Logger: DBG "+PluginName+"."+ logClass +": "+msg);
+                if (isMiraiLoggerMode) logger.debug(PluginName+"."+ logClass +": "+msg);
+                else System.out.println("RongXiaoliBot Logger: DBG "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Info:
-                System.out.println("RongXiaoliBot Logger: INF "+PluginName+"."+ logClass +": "+msg);
+                if (isMiraiLoggerMode) logger.info(PluginName+"."+ logClass +": "+msg);
+                else System.out.println("RongXiaoliBot Logger: INF "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Warning:
-                System.out.println("RongXiaoliBot Logger: WRN "+PluginName+"."+ logClass +": "+msg);
+                if (isMiraiLoggerMode) logger.warning(PluginName+"."+ logClass +": "+msg);
+                else System.out.println("RongXiaoliBot Logger: WRN "+PluginName+"."+ logClass +": "+msg);
                 break;
             case Error:
-                System.out.println("RongXiaoliBot Logger: ERR "+PluginName+"."+ logClass +": "+msg);
+                if (isMiraiLoggerMode) logger.error(PluginName+"."+ logClass +": "+msg);
+                else System.out.println("RongXiaoliBot Logger: ERR "+PluginName+"."+ logClass +": "+msg);
                 break;
         }
     }
     public static void Exception(Exception e, String eInfo, LogClass logClass, String PluginName) {
+        if (isMiraiLoggerMode) {
+            logger.error("Exception occurred!" + "\n" +
+                    "In module:" + logClass + "\n" +
+                    "In plugin:" + PluginName);
+            logger.error(eInfo, e);
+            return;
+        }
         System.out.println("RongXiaoliBot Logger: ERR Exception occurred! " + "\n" +
                 e +
                 "Extra info: " + eInfo + "\n" +

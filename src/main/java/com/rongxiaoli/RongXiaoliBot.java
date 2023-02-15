@@ -36,7 +36,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Initiate all parts.
         getLogger().info("Plugin initiating. ");
         //Logger init.
-        Log.Init();
+        Log.Init(getLogger());
         Log.WriteLog(Log.Level.Debug,
                 "Log module initiated. ",
                 Log.LogClass.Log,
@@ -62,13 +62,12 @@ public final class RongXiaoliBot extends JavaPlugin {
         //Done.
 
         //Module init.
-        for (Module SingleModule :
-                BotModuleLoader.ModuleList) {
-            SingleModule.Init();
-        }
-        
-        //Plugin init finish.
-        //Register listener.
+        BotModuleLoader.ModuleInit();
+        // Data init.
+        BotModuleLoader.DataInit();
+
+        // Plugin init finish.
+        // Register listener.
         GlobalEventChannel.INSTANCE.registerListenerHost(new PluginListener());
         IsEnabled = true;
         Log.WriteLog(Log.Level.Info,
@@ -80,21 +79,23 @@ public final class RongXiaoliBot extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        //Disable all parts.
+        //Disabling all parts.
+        Log.WriteLog(Log.Level.Debug,
+                "Saving data...",
+                Log.LogClass.ModuleMain,
+                PluginName);
+
+        BotModuleLoader.DataSave();
+
         Log.WriteLog(Log.Level.Info,
                 "Plugin exiting...",
                 Log.LogClass.ModuleMain,
                 PluginName);
-
-        for (Module SingleModule:
-                BotModuleLoader.ModuleList) {
-            SingleModule.Shutdown();
-        }
+        BotModuleLoader.ModuleShutdown();
 
         Log.WriteLog(Log.Level.Debug,
-                "All modules disabled, shutting down! ",
+                "All modules disabled. shutting down! ",
                 Log.LogClass.ModuleMain,
                 PluginName);
     }
-
 }
