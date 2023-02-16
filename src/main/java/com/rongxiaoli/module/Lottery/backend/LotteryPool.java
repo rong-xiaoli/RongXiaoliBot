@@ -40,6 +40,7 @@ public class LotteryPool {
             return false;
         } else {
             finalPool = pool * multiplyRate + amount;
+            boughtFriendList.clear();
             return true;
         }
     }
@@ -103,6 +104,7 @@ public class LotteryPool {
                     date = LocalDate.now();
                     pool = 0;
                     finalPool = 0;
+                    boughtFriendList.clear();
                 }
             }
         }

@@ -199,7 +199,7 @@ public class DailySign extends Module {
                     lastSignInDateTime = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 }
                 // Data write.
-                isSigned = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).getDayOfYear() == signInRequestDateTime.getDayOfYear();// Todo: bug. class java.lang.Double cannot be cast to class java.lang.String (java.lang.Double and java.lang.String
+                isSigned = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).getDayOfYear() == signInRequestDateTime.getDayOfYear();
                 block.DataRefresh("DateLastSignIn", signInRequestDateTime, PluginName);
                 if (!isSigned) {
                     block.DataRefresh("Coin", Coin + 1, PluginName);

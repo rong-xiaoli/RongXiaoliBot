@@ -67,7 +67,7 @@ public class Baltop extends Module {
         List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> {
             return ((int) (((long) e2.getValue().DirectDataRead("DailySign", "Coin")) - ((long) e1.getValue().DirectDataRead("DailySign", "Coin"))));
         })
-                .map(longUserEntry -> longUserEntry.getKey()).collect(Collectors.toList())
+                .map(userEntry -> userEntry.getKey()).collect(Collectors.toList())
                 .subList(0,10);
         List<Long> topData = new ArrayList<>();
 

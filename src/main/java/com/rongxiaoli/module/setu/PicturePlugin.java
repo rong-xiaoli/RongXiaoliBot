@@ -16,7 +16,6 @@ import javax.net.ssl.SSLHandshakeException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.nio.channels.ClosedChannelException;
@@ -28,6 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PicturePlugin extends Module {
 
+    private static final boolean DebugMode = false;
     /**
      * Cooling thread.
      */
@@ -44,7 +44,6 @@ public class PicturePlugin extends Module {
      * Is plugin enabled.
      */
     private static boolean IsEnabled = false;
-    private static final boolean DebugMode = false;
     /**
      * Plugin name.
      */
@@ -65,9 +64,9 @@ public class PicturePlugin extends Module {
     /**
      * Plugin main method for groups.
      *
-     * @param arrCommand    Command array.
-     * @param Friend        QQID.
-     * @param Group         Group ID.
+     * @param arrCommand     Command array.
+     * @param Friend         QQID.
+     * @param Group          Group ID.
      * @param SubjectContact Contact of the sender.
      */
     public void GroupMain(String[] arrCommand, long Friend, long Group, Contact SubjectContact) {
@@ -124,7 +123,7 @@ public class PicturePlugin extends Module {
                 Log.LogClass.ModuleMain,
                 PluginName);
 
-        //Lock.
+        // Check lock.
         if (isProcessing) {
             SubjectContact.sendMessage("其他消息正在处理，请稍后");
             return;
@@ -137,215 +136,9 @@ public class PicturePlugin extends Module {
                 return;
             }
         }
+        // Lock.
         isProcessing = true;
-
-        //Process tags.
-        Keywords = null;
-        if (message.length >= 2) {
-            Keywords = new String[message.length - 1];
-            System.arraycopy(message, 1, Keywords, 0, Keywords.length - 1 + 1);
-            Log.WriteLog(Log.Level.Verbose,
-                    "Command received (raw): " + Arrays.toString(message),
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        }
-
-        //Construct API Request.
-        HttpsGet APIHttpsGet = new HttpsGet();
-        APIHttpsGet.targetUrl = ApiUrlString;
-        if (Keywords != null) {
-            for (String tag :
-                    Keywords) {
-                APIHttpsGet.Par.Append("tag", tag, true);
-            }
-        }
-        APIHttpsGet.Par.Append("size", "regular");
-        APIHttpsGet.Par.Append("proxy", PictureProxy);
-        try {
-            ApiReturnString = APIHttpsGet.GET(PluginName);
-            Log.WriteLog(Log.Level.Verbose,
-                    "API connect succeeded. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } catch (ConnectException CE) {
-            SubjectContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        } catch (IOException IOE) {
-            Log.WriteLog(Log.Level.Warning, "Unexpected IOException got. Try to get in http protocol. ", Log.LogClass.ModuleMain, PluginName);
-            HttpGet httpGet = new HttpGet();
-            httpGet.targetUrl = "http://api.lolicon.app/setu/v2";
-            for (String tag :
-                    Keywords) {
-                httpGet.Par.Append("tag", tag, true);
-            }
-            httpGet.Par.Append("size", "regular");
-            httpGet.Par.Append("proxy", PictureProxy);
-            try {
-                ApiReturnString = httpGet.GET(PluginName);
-            } catch (IOException e) {
-                SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
-                isProcessing = false;
-                throw new RuntimeException(e);
-            }
-        } catch (KeyManagementException KME) {
-            SubjectContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        } catch (Exception e) {
-            SubjectContact.sendMessage("API获取失败，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        }
-
-        //JSON resolve.
-        if (Objects.equals(ApiReturnString, "")) {
-            SubjectContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
-            Log.WriteLog(Log.Level.Warning,
-                    "API returned empty string. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            return;
-        }
-        if (Objects.equals(ApiReturnString, "{\"error\":\"\",\"data\":[]}")) {
-            SubjectContact.sendMessage("找不到相关图片，换一个关键词试试");
-            Log.WriteLog(Log.Level.Info,
-                    "Picture not found. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            return;
-        }
-        if (!JSON.isValid(ApiReturnString)) {
-            SubjectContact.sendMessage("错误：JSON未能正确转换");
-            Log.WriteLog(Log.Level.Warning,
-                    "JSON cannot be resolved. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            Log.WriteLog(Log.Level.Verbose,
-                    "JSON: " + ApiReturnString,
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            return;
-        }
-        LoliconAPIRespond APIRespond = JSON.parseObject(ApiReturnString, LoliconAPIRespond.class);
-        LoliconAPIRespond.Data PictData = APIRespond.getData().get(0);
-        PictureUrlString = PictData.getUrls().getOriginal();
-        if (PictureUrlString == null) {
-            PictureUrlString = PictData.getUrls().getRegular();
-        }
-        if (PictureUrlString == null) {
-            SubjectContact.sendMessage("图片链接获取失败，请联系主人维修");
-            isProcessing = false;
-            return;
-        }
-            // Download picture. (Not needed)
-        /*  catch (MalformedURLException MUE) {
-                SubjectContact.sendMessage("API返回URL错误，请重试");
-                isProcessing = false;
-            } catch (ConnectException CE) {
-                SubjectContact.sendMessage("连接超时，请重试");
-            } catch (FileNotFoundException FNFE) {
-                SubjectContact.sendMessage("API返回异常，请重试");
-                isProcessing = false;
-            } catch (IllegalArgumentException IAE) {
-                SubjectContact.sendMessage("未知的参数错误，请联系主人维修");
-                isProcessing = false;
-            } catch (ClosedChannelException CCE) {
-                SubjectContact.sendMessage("连结终止，请重试");
-                isProcessing = false;
-            } catch (SSLHandshakeException SSLHE) {
-                SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
-                isProcessing = false;
-            } catch (IOException IOE) {
-                if (IOE.getMessage().contains("timed out")) {
-                    SubjectContact.sendMessage("连接超时，请重试");
-                    isProcessing = false;
-                    return;
-                }
-                SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
-                isProcessing = false;
-            }
-                    String[] UrlSplit = PictureUrlString.split("/");
-        HttpDownload PictureDownload = new HttpDownload();
-        PictureDownload.targetUrl = PictureUrlString;
-        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
-        PictureDownload.localFilePath = PictureSavingPath;
-        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
-        PictureLocalFile = new File(PictureFilePath);
-        SubjectContact.sendMessage("图片获取中");
-        if (PictureLocalFile.exists()) {
-            Log.WriteLog(Log.Level.Verbose,
-                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } else {
-            try {
-                PictureDownload.Download(PluginName);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-*/
-        String[] UrlSplit = PictureUrlString.split("/");
-        HttpDownload PictureDownload = new HttpDownload();
-        PictureDownload.targetUrl = PictureUrlString;
-        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
-        PictureDownload.localFilePath = PictureSavingPath;
-        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
-        PictureLocalFile = new File(PictureFilePath);
-        SubjectContact.sendMessage("图片获取中");
-        if (PictureLocalFile.exists()) {
-            Log.WriteLog(Log.Level.Verbose,
-                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } else {
-            try {
-                PictureDownload.Download(PluginName);
-            } catch (IOException e) {
-                Log.Exception(e, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
-            }
-        }
-        PictureAuthor = PictData.getAuthor();
-        PicturePid = PictData.getPid();
-        //PictureTags = PictData.getTags().toString();
-        PictureTitle = PictData.getTitle();
-        //PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
-        PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
-        PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
-        //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
-        PictureInfoMessage.append("链接: ").append(PictureUrlString);
-        //PictureMessage.append(image);
-        SubjectContact.sendMessage(PictureInfoMessage.build());
-        //SenderContact.sendMessage(PictureMessage.build());
-        Log.WriteLog(Log.Level.Debug,
-                "Process completed. ",
-                Log.LogClass.ModuleMain,
-                PluginName);
-        isProcessing = false;
-
-        // Try to cache the queried picture.
-        PictureDownload.targetUrl = PictureUrlString;
-        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
-        PictureDownload.localFilePath = PictureSavingPath;
-        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
-        PictureLocalFile = new File(PictureFilePath);
-        SubjectContact.sendMessage("图片获取中");
-        if (PictureLocalFile.exists()) {
-            Log.WriteLog(Log.Level.Verbose,
-                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } else {
-            try {
-                PictureDownload.Download(PluginName);
-            } catch (IOException e) {
-                Log.WriteLog(Log.Level.Warning, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
-            }
-        }
+        process(message, SubjectContact, false);
     }
 
     /**
@@ -388,8 +181,8 @@ public class PicturePlugin extends Module {
     /**
      * Plugin main method for friends.
      *
-     * @param arrCommand    Command array.
-     * @param Friend        QQID.
+     * @param arrCommand     Command array.
+     * @param Friend         QQID.
      * @param SubjectContact Contact of the sender.
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
@@ -404,28 +197,9 @@ public class PicturePlugin extends Module {
             return;
         }
 
-        //Declare variables.
-        String[] Keywords;
-        String ApiUrlString = "https://api.lolicon.app/setu/v2";
-        String ApiReturnString = null;
-        String PictureAuthor;
-        String PictureFilePath;
-        String PictureSavingPath = RongXiaoliBot.DataPath.toString() + "/setu/Image/";
-        //String PictureTags;
-        String PictureTitle;
-        String PictureUrlString;
-
         long FriendID;
-
-        int PicturePid;
-
         short FreezeTime;
         short RemainingTime;
-
-        File PictureLocalFile;
-
-        MessageChainBuilder PictureInfoMessage = new MessageChainBuilder();
-        MessageChainBuilder PictureMessage = new MessageChainBuilder();
 
         //Start process.
         if (!Objects.equals(message[0], CommandPrefix)) {
@@ -447,9 +221,11 @@ public class PicturePlugin extends Module {
 
         //Version 0.1.0 add:
         //Reason: After being banned for many times, this function is banned forever for others.
-        if (FriendID != RongXiaoliBot.Owner) {
-            return;
-        }
+        //Version 0.2.0 delete:
+        //Reason: Now we don't need to worry.
+//        if (FriendID != RongXiaoliBot.Owner) {
+//            return;
+//        }
 
         //Lock.
         if (isProcessing) {
@@ -466,175 +242,7 @@ public class PicturePlugin extends Module {
                 return;
             }
         }
-
-
-        //Process tags.
-        Keywords = null;
-        if (message.length >= 2) {
-            Keywords = new String[message.length - 1];
-            System.arraycopy(message, 1, Keywords, 0, Keywords.length - 1 + 1);
-            Log.WriteLog(Log.Level.Verbose,
-                    "Command received (raw): " + Arrays.toString(message),
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        }
-
-        //Construct API Request.
-        HttpsGet APIHttpsGet = new HttpsGet();
-        APIHttpsGet.targetUrl = ApiUrlString;
-        if (Keywords != null) {
-            for (String tag :
-                    Keywords) {
-                APIHttpsGet.Par.Append("tag", tag);
-            }
-        }
-        APIHttpsGet.Par.Append("size", "regular");
-        APIHttpsGet.Par.Append("proxy", PictureProxy);
-        try {
-            ApiReturnString = APIHttpsGet.GET(PluginName);
-            Log.WriteLog(Log.Level.Verbose,
-                    "API connect succeeded. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } catch (ConnectException CE) {
-            SubjectContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        } catch (IOException IOE) {
-            SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        } catch (KeyManagementException KME) {
-            SubjectContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        } catch (Exception e) {
-            SubjectContact.sendMessage("API获取失败，多次失败请联系主人维修");
-            isProcessing = false;
-            return;
-        }
-
-        //JSON resolve.
-        if (Objects.equals(ApiReturnString, "")) {
-            SubjectContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
-            Log.WriteLog(Log.Level.Warning,
-                    "API returned empty string. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            return;
-        }
-        if (Objects.equals(ApiReturnString, "{\"error\":\"\",\"data\":[]}")) {
-            SubjectContact.sendMessage("找不到相关图片，换一个关键词试试");
-            Log.WriteLog(Log.Level.Info,
-                    "Picture not found. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            return;
-        }
-        if (!JSON.isValid(ApiReturnString)) {
-            SubjectContact.sendMessage("错误：JSON未能正确转换");
-            Log.WriteLog(Log.Level.Warning,
-                    "JSON cannot be resolved. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            Log.WriteLog(Log.Level.Verbose,
-                    "JSON: " + ApiReturnString,
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            return;
-        }
-        LoliconAPIRespond APIRespond = JSON.parseObject(ApiReturnString, LoliconAPIRespond.class);
-        LoliconAPIRespond.Data PictData = APIRespond.getData().get(0);
-        PictureUrlString = PictData.getUrls().getOriginal();
-        if (PictureUrlString == null) {
-            PictureUrlString = PictData.getUrls().getRegular();
-        }
-        if (PictureUrlString == null) {
-            SubjectContact.sendMessage("图片链接获取失败，请联系主人维修");
-            isProcessing = false;
-            return;
-        }
-
-        //Download picture.
-        String[] UrlSplit = PictureUrlString.split("/");
-        HttpDownload PictureDownload = new HttpDownload();
-        PictureDownload.targetUrl = PictureUrlString;
-        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
-        PictureDownload.localFilePath = PictureSavingPath;
-        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
-        PictureLocalFile = new File(PictureFilePath);
-        SubjectContact.sendMessage("图片加载中");
-        if (PictureLocalFile.exists()) {
-            Log.WriteLog(Log.Level.Verbose,
-                    "File: " + PictureLocalFile + " exists. Using local file instead. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-        } else {
-            try {
-                PictureDownload.Download(PluginName);
-            } catch (MalformedURLException MUE) {
-                SubjectContact.sendMessage("API返回URL错误，请重试");
-                isProcessing = false;
-                return;
-            } catch (ConnectException CE) {
-                SubjectContact.sendMessage("连接超时，请重试");
-                isProcessing = false;
-                return;
-            } catch (FileNotFoundException FNFE) {
-                SubjectContact.sendMessage("图床图片文件返回异常，请重试");
-                isProcessing = false;
-                return;
-            } catch (IllegalArgumentException IAE) {
-                SubjectContact.sendMessage("未知的参数错误，请联系主人维修");
-                isProcessing = false;
-                return;
-            } catch (ClosedChannelException CCE) {
-                SubjectContact.sendMessage("连结终止，请重试");
-                isProcessing = false;
-                return;
-            } catch (SSLHandshakeException SSLHE) {
-                SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
-                isProcessing = false;
-                return;
-            } catch (IOException IOE) {
-                if (IOE.getMessage().contains("timed out")) {
-                    SubjectContact.sendMessage("连接超时，请重试");
-                    isProcessing = false;
-                    return;
-                }
-                SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
-                isProcessing = false;
-                return;
-            }
-        }
-
-        //Send message.
-        Image image = ExternalResource.uploadAsImage(PictureLocalFile, SubjectContact);
-        Log.WriteLog(Log.Level.Verbose,
-                "Using file: " + PictureFilePath,
-                Log.LogClass.ModuleMain,
-                PluginName);
-        isProcessing = false;
-        PictureAuthor = PictData.getAuthor();
-        PicturePid = PictData.getPid();
-        //PictureTags = PictData.getTags().toString();
-        PictureTitle = PictData.getTitle();
-        PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
-        PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
-        PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
-        //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
-        PictureInfoMessage.append("链接: ").append(PictureUrlString);
-        PictureMessage.append(image);
-        SubjectContact.sendMessage(PictureInfoMessage.build());
-        SubjectContact.sendMessage(PictureMessage.build());
-        Log.WriteLog(Log.Level.Debug,
-                "Process completed. ",
-                Log.LogClass.ModuleMain,
-                PluginName);
-        isProcessing = false;
+        process(message, SubjectContact, true);
     }
 
     /**
@@ -744,6 +352,252 @@ public class PicturePlugin extends Module {
                     Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, "setu");
                 }
             }
+        }
+    }
+
+    private void process(String[] message, Contact SubjectContact, boolean sendPicture) {
+
+        String[] Keywords;
+        String ApiUrlString = "https://api.lolicon.app/setu/v2";
+        String ApiReturnString = null;
+        String PictureAuthor;
+        String PictureFilePath;
+        String PictureSavingPath = RongXiaoliBot.DataPath.toString() + "/setu/Image/";
+        //String PictureTags;
+        String PictureTitle;
+        String PictureUrlString;
+
+        int PicturePid;
+
+        File PictureLocalFile;
+
+        MessageChainBuilder PictureInfoMessage = new MessageChainBuilder();
+        MessageChainBuilder PictureMessage = new MessageChainBuilder();
+
+        //Process tags.
+        Keywords = null;
+        if (message.length >= 2) {
+            Keywords = new String[message.length - 1];
+            System.arraycopy(message, 1, Keywords, 0, Keywords.length - 1 + 1);
+            Log.WriteLog(Log.Level.Verbose,
+                    "Command received (raw): " + Arrays.toString(message),
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+        }
+
+        //Construct API Request.
+        HttpsGet APIHttpsGet = new HttpsGet();
+        APIHttpsGet.targetUrl = ApiUrlString;
+        if (Keywords != null) {
+            for (String tag :
+                    Keywords) {
+                APIHttpsGet.Par.Append("tag", tag, true);
+            }
+        }
+        APIHttpsGet.Par.Append("size", "regular");
+        APIHttpsGet.Par.Append("proxy", PictureProxy);
+        try {
+            ApiReturnString = APIHttpsGet.GET(PluginName);
+            Log.WriteLog(Log.Level.Verbose,
+                    "API connect succeeded. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+        } catch (ConnectException CE) {
+            SubjectContact.sendMessage("API连接失败，请重试，多次失败请联系主人维修");
+            isProcessing = false;
+            return;
+        } catch (IOException IOE) {
+            Log.WriteLog(Log.Level.Warning, "Unexpected IOException got. Try to get in http protocol. ", Log.LogClass.ModuleMain, PluginName);
+            HttpGet httpGet = new HttpGet();
+            httpGet.targetUrl = "http://api.lolicon.app/setu/v2";
+            for (String tag :
+                    Keywords) {
+                httpGet.Par.Append("tag", tag, true);
+            }
+            httpGet.Par.Append("size", "regular");
+            httpGet.Par.Append("proxy", PictureProxy);
+            try {
+                ApiReturnString = httpGet.GET(PluginName);
+            } catch (IOException e) {
+                SubjectContact.sendMessage("网络出错，请重试，多次失败请联系主人维修");
+                isProcessing = false;
+                throw new RuntimeException(e);
+            }
+        } catch (KeyManagementException KME) {
+            SubjectContact.sendMessage("URL验证失败，请重试，多次失败请联系主人维修");
+            isProcessing = false;
+            return;
+        } catch (Exception e) {
+            SubjectContact.sendMessage("API获取失败，多次失败请联系主人维修");
+            isProcessing = false;
+            return;
+        }
+
+        //JSON resolve.
+        if (Objects.equals(ApiReturnString, "")) {
+            SubjectContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
+            Log.WriteLog(Log.Level.Warning,
+                    "API returned empty string. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            isProcessing = false;
+            return;
+        }
+        if (Objects.equals(ApiReturnString, "{\"error\":\"\",\"data\":[]}")) {
+            SubjectContact.sendMessage("找不到相关图片，换一个关键词试试");
+            Log.WriteLog(Log.Level.Info,
+                    "Picture not found. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            isProcessing = false;
+            return;
+        }
+        if (!JSON.isValid(ApiReturnString)) {
+            SubjectContact.sendMessage("错误：JSON未能正确转换");
+            Log.WriteLog(Log.Level.Warning,
+                    "JSON cannot be resolved. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            Log.WriteLog(Log.Level.Verbose,
+                    "JSON: " + ApiReturnString,
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            isProcessing = false;
+            return;
+        }
+        LoliconAPIRespond APIRespond = JSON.parseObject(ApiReturnString, LoliconAPIRespond.class);
+        LoliconAPIRespond.Data PictData = APIRespond.getData().get(0);
+        PictureUrlString = PictData.getUrls().getOriginal();
+        if (PictureUrlString == null) {
+            PictureUrlString = PictData.getUrls().getRegular();
+        }
+        if (PictureUrlString == null) {
+            SubjectContact.sendMessage("图片链接获取失败，请联系主人维修");
+            isProcessing = false;
+            return;
+        }
+        if (sendPicture) {
+            //Download picture.
+            String[] UrlSplit = PictureUrlString.split("/");
+            HttpDownload PictureDownload = new HttpDownload();
+            PictureDownload.targetUrl = PictureUrlString;
+            PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+            PictureDownload.localFilePath = PictureSavingPath;
+            PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+            PictureLocalFile = new File(PictureFilePath);
+            SubjectContact.sendMessage("图片加载中");
+            if (PictureLocalFile.exists()) {
+                Log.WriteLog(Log.Level.Verbose,
+                        "File: " + PictureLocalFile + " exists. Using local file instead. ",
+                        Log.LogClass.ModuleMain,
+                        PluginName);
+            } else {
+                try {
+                    PictureDownload.Download(PluginName);
+                } catch (MalformedURLException MUE) {
+                    SubjectContact.sendMessage("API返回URL错误，请重试");
+                    isProcessing = false;
+                    return;
+                } catch (ConnectException CE) {
+                    SubjectContact.sendMessage("连接超时，请重试");
+                    isProcessing = false;
+                    return;
+                } catch (FileNotFoundException FNFE) {
+                    SubjectContact.sendMessage("图床图片文件返回异常，请重试");
+                    isProcessing = false;
+                    return;
+                } catch (IllegalArgumentException IAE) {
+                    SubjectContact.sendMessage("未知的参数错误，请联系主人维修");
+                    isProcessing = false;
+                    return;
+                } catch (ClosedChannelException CCE) {
+                    SubjectContact.sendMessage("连结终止，请重试");
+                    isProcessing = false;
+                    return;
+                } catch (SSLHandshakeException SSLHE) {
+                    SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
+                    isProcessing = false;
+                    return;
+                } catch (IOException IOE) {
+                    if (IOE.getMessage().contains("timed out")) {
+                        SubjectContact.sendMessage("连接超时，请重试");
+                        isProcessing = false;
+                        return;
+                    }
+                    SubjectContact.sendMessage("未知的IO错误，请联系主人维修，并提供时间");
+                    isProcessing = false;
+                    return;
+                }
+            }
+
+            //Send message.
+            Image image = ExternalResource.uploadAsImage(PictureLocalFile, SubjectContact);
+            Log.WriteLog(Log.Level.Verbose,
+                    "Using file: " + PictureFilePath,
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            isProcessing = false;
+            PictureAuthor = PictData.getAuthor();
+            PicturePid = PictData.getPid();
+            //PictureTags = PictData.getTags().toString();
+            PictureTitle = PictData.getTitle();
+            PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
+            PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
+            PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
+            //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
+            PictureInfoMessage.append("链接: ").append(PictureUrlString);
+            PictureMessage.append(image);
+            SubjectContact.sendMessage(PictureInfoMessage.build());
+            SubjectContact.sendMessage(PictureMessage.build());
+            Log.WriteLog(Log.Level.Debug,
+                    "Process completed. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            isProcessing = false;
+
+
+        } else {
+
+
+            PictureAuthor = PictData.getAuthor();
+            PicturePid = PictData.getPid();
+            //PictureTags = PictData.getTags().toString();
+            PictureTitle = PictData.getTitle();
+            //PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
+            PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
+            PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
+            //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
+            PictureInfoMessage.append("链接: ").append(PictureUrlString);
+            //PictureMessage.append(image);
+            SubjectContact.sendMessage(PictureInfoMessage.build());
+            //SenderContact.sendMessage(PictureMessage.build());
+            Log.WriteLog(Log.Level.Debug,
+                    "Process completed. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+            isProcessing = false;
+            // Try to cache the queried picture.
+            String[] UrlSplit = PictureUrlString.split("/");
+            HttpDownload PictureDownload = new HttpDownload();
+            PictureDownload.targetUrl = PictureUrlString;
+            PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+            PictureDownload.localFilePath = PictureSavingPath;
+            PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+            PictureLocalFile = new File(PictureFilePath);
+            if (PictureLocalFile.exists()) {
+                Log.WriteLog(Log.Level.Verbose,
+                        "File: " + PictureLocalFile + " exists. ",
+                        Log.LogClass.ModuleMain,
+                        PluginName);
+            } else {
+                try {
+                    PictureDownload.Download(PluginName);
+                } catch (IOException e) {
+                    Log.Exception(e, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
+                }
+            }
+
+
         }
     }
 }
