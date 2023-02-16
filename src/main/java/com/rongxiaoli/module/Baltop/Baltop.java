@@ -114,7 +114,7 @@ public class Baltop extends Module {
      * True if enabled.
      */
     public boolean isEnabled() {
-        return false;
+        return this.IsEnabled;
     }
 
     /**
