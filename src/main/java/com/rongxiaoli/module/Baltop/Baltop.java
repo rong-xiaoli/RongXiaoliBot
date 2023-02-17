@@ -55,7 +55,10 @@ public class Baltop extends Module {
         if (arrCommand.length == 0) {
             return;
         }
-        if (!IsEnabled) return;
+        if (!IsEnabled) {
+            SubjectContact.sendMessage("当前插件未启用");
+            return;
+        }
 
         // Process start.
         if (!Objects.equals(message[0], "/baltop")) {
@@ -64,9 +67,7 @@ public class Baltop extends Module {
         // Querying every single user's coin.
         SubjectContact.sendMessage("正在查询，请稍后");
         HashMap<Long, User> userList = RongXiaoliBot.BotModuleLoader.DataBase.UserListDeepCopy();
-        List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> {
-            return ((int) (((long) e2.getValue().DirectDataRead("DailySign", "Coin")) - ((long) e1.getValue().DirectDataRead("DailySign", "Coin"))));
-        })
+        List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> ((int) (((long) e2.getValue().DirectDataRead("DailySign", "Coin")) - ((long) e1.getValue().DirectDataRead("DailySign", "Coin")))))
                 .map(userEntry -> userEntry.getKey()).collect(Collectors.toList())
                 .subList(0,10);
         List<Long> topData = new ArrayList<>();
