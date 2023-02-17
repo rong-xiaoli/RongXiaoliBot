@@ -1,5 +1,6 @@
 package com.rongxiaoli.module.DailySign;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
@@ -201,10 +202,9 @@ public class DailySign extends Module {
                 // Exist user. Reading data.
                 Object structObject = block.DataReadOrNull("SignInStruct");
                 // Add into database.
-                RongXiaoliBot.BotModuleLoader.DataBase.UserAdd(userID, user, PluginName);
+                RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(userID, user, PluginName);
 
                 SignInStruct struct;
-                struct = (SignInStruct) structObject;
                 LocalDateTime lastSignInDateTime;
                 if (structObject == null) {
                     // Reset user data.
@@ -220,6 +220,12 @@ public class DailySign extends Module {
                     isNew = true;
                     lastSignInDateTime = LocalDateTime.now();
                 } else {
+                    try {
+                        LinkedTreeMap<String, Object> map = ((LinkedTreeMap<String, Object>) structObject);
+                        struct = SignInStruct.fromMap(map);
+                    } catch (ClassCastException CCE) {
+                        struct = ((SignInStruct) structObject);
+                    }
                     lastSignInDateTime = struct.toDateTime();
                 }
                 // Data write.
@@ -233,9 +239,8 @@ public class DailySign extends Module {
                 RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(userID, user, PluginName);
             }
         }
-
-        public long getCoin() {
-            return (long) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("Coin");
+        private long getCoin() {
+            return ((SignInStruct) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("SignInStruct")).getCoin();
         }
     }
 }

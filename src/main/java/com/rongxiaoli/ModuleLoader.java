@@ -34,7 +34,7 @@ public class ModuleLoader {
      * This function is used to initiate the data of the whole bot.
      */
     public void DataInit() {
-        JSONHelper helper = new JSONHelper();
+        JSONHelper helper = new JSONHelper("[ModuleLoader]");
         helper.filePath = RongXiaoliBot.DataPath.toString() + "/data/Data.json";
         try {
             helper.JSONRead(DataBaseClass.class);
@@ -49,7 +49,7 @@ public class ModuleLoader {
      * This function is used to save data for the whole bot.
      */
     public void DataSave() {
-        JSONHelper helper = new JSONHelper();
+        JSONHelper helper = new JSONHelper("[ModuleLoader]");
         helper.jsonObject = DataBase;
         helper.filePath = RongXiaoliBot.DataPath.toString() + "/data/Data.json";
         try {

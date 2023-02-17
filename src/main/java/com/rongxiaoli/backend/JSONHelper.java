@@ -3,7 +3,6 @@ package com.rongxiaoli.backend;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.ToNumberPolicy;
-import com.rongxiaoli.backend.JSONAdaptor.LocalDateTimeAdaptor;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -13,8 +12,12 @@ import java.time.LocalDateTime;
  * To use this class to write, first fill the file path, next set the jsonObject, finally call func: JSONSave().
  */
 public class JSONHelper {
+    private String PluginName;
     public Object jsonObject;
     public String filePath;
+    public JSONHelper(String name) {
+        PluginName = name;
+    }
 
     /**
      * Save JSON to file.
@@ -26,12 +29,23 @@ public class JSONHelper {
         // JSON converter builder.
         GsonBuilder builder = new GsonBuilder();
         // Add Adaptor below.
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdaptor());
-        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
+
+//        V0.2.0-Hotfix2 removed:
+//        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdaptor());
+//        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
+
+        builder.registerTypeAdapter(Long.class, new JSONAdaptor.LongTypeAdapter());
         // Finished. Building.
 
         Gson gson = builder.create();
-        String jsonString = gson.toJson(jsonObject);
+        String jsonString = "";
+        try {
+            jsonString = gson.toJson(jsonObject);
+        } catch (Exception e) {
+            Log.Exception(e, "Cannot read JSON string. ",
+                    Log.LogClass.File,
+                    PluginName);
+        }
         File jsonFile = new File(filePath);
         File jsonFileRoot = jsonFile.getParentFile();
         if (jsonFileRoot.mkdirs()) {
@@ -56,8 +70,11 @@ public class JSONHelper {
         // JSON converter builder.
         GsonBuilder builder = new GsonBuilder();
         // Add Adaptor below.
-        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdaptor());
-        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
+
+//        V0.2.0-Hotfix2 removed:
+//        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdaptor());
+//        builder.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE);
+        builder.registerTypeAdapter(Long.class, new JSONAdaptor.LongTypeAdapter());
         // Finished. Building.
 
         Gson gson = builder.create();
@@ -74,6 +91,13 @@ public class JSONHelper {
         InputStream inStream = new FileInputStream(jsonFile);
         byte[] jsonBytes = new byte[inStream.available()];
         inStream.read(jsonBytes);
-        jsonObject = gson.fromJson(new String(jsonBytes), objClass);
+        try {
+            jsonObject = gson.fromJson(new String(jsonBytes), objClass);
+        } catch (Exception e) {
+            Log.Exception(e, "Cannot read JSON string. ",
+                    Log.LogClass.File,
+                    PluginName);
+        }
+
     }
 }
