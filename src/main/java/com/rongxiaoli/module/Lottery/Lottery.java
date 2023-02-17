@@ -6,6 +6,7 @@ import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.data.DataBlock;
 import com.rongxiaoli.data.User;
 import com.rongxiaoli.module.DailySign.DailySign;
+import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInStruct;
 import com.rongxiaoli.module.Lottery.backend.LotteryPool;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
@@ -105,14 +106,13 @@ public class Lottery extends Module {
             SubjectContact.sendMessage("您尚未创建用户");
             return;
         }
-        long balance = (long) block.DataReadOrNull("Coin");
-        if (balance < amount) {
+        SignInStruct struct = (SignInStruct) block.DataReadOrNull("SignInStruct");
+        if (struct.getCoin() < amount) {
             SubjectContact.sendMessage("您余额不足");
             return;
         }
-
-        balance -= amount;
-        block.DataRefresh("Coin", balance, PluginName);
+        struct.revokeCoin(amount);
+        block.DataRefresh("SignInStruct", struct, PluginName);
         user.DataBlockRefresh("DailySign", block, PluginName);
         RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(Friend, user, PluginName);
         // Process start. Locking.
@@ -132,9 +132,8 @@ public class Lottery extends Module {
             builder.append("恭喜，中奖了！\n");
             builder.append("累计：").append(String.valueOf(finalPool));
             SubjectContact.sendMessage(builder.build());
-            balance += finalPool;
-            finalPool = 0;
-            block.DataRefresh("Coin", balance, PluginName);
+            struct.giveCoin(finalPool);
+            block.DataRefresh("SignInStruct", struct, PluginName);
             user.DataBlockRefresh("DailySign", block, PluginName);
             RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(Friend, user, PluginName);
         }

@@ -4,23 +4,24 @@ import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.data.DataBlock;
+import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInStruct;
 import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignString;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class DailySign extends Module {
     // Public vars.
     private final String PluginName = "DailySign";
     private final String HelpContent = "/sign\n" +
             "每日签到";
-    private boolean IsEnabled = true;
-    private boolean DebugMode = false;
     // Private vars.
     private final String Command = "/sign";
+    private boolean IsEnabled = true;
+    private boolean DebugMode = false;
     private long SignInPosition = 1;
     //Vars def finish.
 
@@ -29,6 +30,7 @@ public class DailySign extends Module {
      */
     public void Init() {
         // Done.
+        this.IsEnabled = true;
         Log.WriteLog(Log.Level.Debug,
                 "DailySign initiated! ",
                 Log.LogClass.ModuleMain,
@@ -73,19 +75,19 @@ public class DailySign extends Module {
             MessageChainBuilder builder = new MessageChainBuilder();
             builder.append("您已经签到过了哦~\n");
             builder.append(str.GetRandomString(
-                    operation.signInRequestDateTime.getYear(),
-                    operation.signInRequestDateTime.getMonthValue(),
-                    operation.signInRequestDateTime.getDayOfMonth(),
-                    operation.signInRequestDateTime.getDayOfWeek(),
-                    operation.signInRequestDateTime.getHour(),
-                    operation.signInRequestDateTime.getMinute(),
-                    operation.signInRequestDateTime.getSecond(),
-                    operation.signInRequestDateTime.getNano()));
+                    operation.requestDateTime.getYear(),
+                    operation.requestDateTime.getMonthValue(),
+                    operation.requestDateTime.getDayOfMonth(),
+                    operation.requestDateTime.getDayOfWeek(),
+                    operation.requestDateTime.getHour(),
+                    operation.requestDateTime.getMinute(),
+                    operation.requestDateTime.getSecond(),
+                    operation.requestDateTime.getNano()));
             SubjectContact.sendMessage(builder.build());
             return;
         }
         MessageChainBuilder builder = new MessageChainBuilder();
-        builder.append(str.FriendString(operation.signInRequestDateTime, SignInPosition));
+        builder.append(str.FriendString(operation.requestDateTime, SignInPosition));
         builder.append("\n现在有").append(String.valueOf(operation.getCoin())).append("枚金币");
         SubjectContact.sendMessage(builder.build());
         SignInPosition++;
@@ -146,29 +148,36 @@ public class DailySign extends Module {
     }
 
     private class UserDataOperation {
+        private final long userID;
+        private final LocalDateTime requestDateTime;
         private boolean isNew = false;
         private boolean isSigned = false;
         public UserDataOperation(long id) {
             this.userID = id;
-            signInRequestDateTime = LocalDateTime.now();
+            requestDateTime = LocalDateTime.now();
         }
-        private long userID;
-        private LocalDateTime lastSignInDateTime;
-        private LocalDateTime signInRequestDateTime;
+
         public void signInProcess() {
             com.rongxiaoli.data.User user = RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrNull(userID);
             if (user == null) {
                 // New user.
                 isNew = true;
                 DataBlock block = new DataBlock();
-                block.DataAdd("Coin", 1, PluginName);
-                block.DataAdd("DateLastSignIn", LocalDateTime.now(), PluginName);
+                SignInStruct struct = new SignInStruct(
+                        new SignInStruct.DateLastSignIn(
+                                requestDateTime.getYear(),
+                                requestDateTime.getMonthValue(),
+                                requestDateTime.getDayOfMonth(),
+                                requestDateTime.getHour(),
+                                requestDateTime.getMinute(),
+                                requestDateTime.getSecond(),
+                                requestDateTime.getNano()));
+                block.DataAdd("SignInStruct", struct, PluginName);
                 // Ready to add user.
                 user = new com.rongxiaoli.data.User();
                 user.DataBlockAdd(PluginName, block, PluginName);
                 // Add into database.
                 RongXiaoliBot.BotModuleLoader.DataBase.UserAdd(userID, user, PluginName);
-                isSigned = true;
                 // Done.
                 return;
             }
@@ -176,39 +185,55 @@ public class DailySign extends Module {
             if (user.DataBlockReadOrNull(PluginName) == null) {
                 isNew = true;
                 block = new DataBlock();
-                block.DataAdd("Coin", 1, PluginName);
-                block.DataAdd("DateLastSignIn", LocalDateTime.now(), PluginName);
+                SignInStruct struct = new SignInStruct(
+                        new SignInStruct.DateLastSignIn(
+                                requestDateTime.getYear(),
+                                requestDateTime.getMonthValue(),
+                                requestDateTime.getDayOfMonth(),
+                                requestDateTime.getHour(),
+                                requestDateTime.getMinute(),
+                                requestDateTime.getSecond(),
+                                requestDateTime.getNano()));
+                block.DataAdd("SignInStruct", struct, PluginName);
                 user.DataBlockAdd(PluginName, block, PluginName);
-                isSigned = true;
+                RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(userID, user, PluginName);
             } else {
                 // Exist user. Reading data.
-                Object CoinObject = block.DataReadOrNull("Coin");
-                Object DateLastSignInObject = block.DataReadOrNull("DateLastSignIn");
+                Object structObject = block.DataReadOrNull("SignInStruct");
+                // Add into database.
+                RongXiaoliBot.BotModuleLoader.DataBase.UserAdd(userID, user, PluginName);
 
-                long Coin = 0;
-
-                if (CoinObject != null) {
-                    Coin = (long) CoinObject;
-                }
-                if (DateLastSignInObject == null) {
+                SignInStruct struct;
+                struct = (SignInStruct) structObject;
+                LocalDateTime lastSignInDateTime;
+                if (structObject == null) {
                     // Reset user data.
-                    Coin = 0;
+                    struct = new SignInStruct(
+                            new SignInStruct.DateLastSignIn(
+                                    requestDateTime.getYear(),
+                                    requestDateTime.getMonthValue(),
+                                    requestDateTime.getDayOfMonth(),
+                                    requestDateTime.getHour(),
+                                    requestDateTime.getMinute(),
+                                    requestDateTime.getSecond(),
+                                    requestDateTime.getNano()));
                     isNew = true;
                     lastSignInDateTime = LocalDateTime.now();
                 } else {
-                    lastSignInDateTime = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                    lastSignInDateTime = struct.toDateTime();
                 }
                 // Data write.
-                isSigned = LocalDateTime.parse(((String) DateLastSignInObject), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).getDayOfYear() == signInRequestDateTime.getDayOfYear();
-                block.DataRefresh("DateLastSignIn", signInRequestDateTime, PluginName);
+                isSigned = lastSignInDateTime.getDayOfYear() == requestDateTime.getDayOfYear();
                 if (!isSigned) {
-                    block.DataRefresh("Coin", Coin + 1, PluginName);
+                    struct.giveCoin(1);
+                    struct.refreshDateTime(LocalDateTime.now());
                 }
+                block.DataRefresh("SignInStruct", struct, PluginName);
+                user.DataBlockRefresh(PluginName, block, PluginName);
+                RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(userID, user, PluginName);
             }
         }
-        public LocalDateTime getLastSignInDateTime() {
-            return (LocalDateTime) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("DateLastSignIn");
-        }
+
         public long getCoin() {
             return (long) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("Coin");
         }
