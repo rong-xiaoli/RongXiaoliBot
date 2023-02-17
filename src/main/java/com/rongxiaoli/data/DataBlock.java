@@ -65,4 +65,19 @@ public class DataBlock {
         }
         DataMap.replace(DataName, NewData);
     }
+    /**
+     * Delete data from data block.
+     * @param DataName Name of deleting data.
+     * @param moduleName Name of operation executor.
+     */
+    public void DataDelete(String DataName, String moduleName) {
+        if (!DataMap.containsKey(DataName)) {
+            Log.WriteLog(Log.Level.Info,
+                    "Data " + DataName + "not found in database. ",
+                    Log.LogClass.Data,
+                    moduleName);
+            return;
+        }
+        DataMap.remove(DataName);
+    }
 }

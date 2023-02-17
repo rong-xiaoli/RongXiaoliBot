@@ -28,7 +28,7 @@ public class BannedWordCheck {
         this.PluginName = pluginName;
         //Load word list.
         WordJSON wordJSON = new WordJSON();
-        JSONHelper helper = new JSONHelper();
+        JSONHelper helper = new JSONHelper("[BannedWordCheck]");
         helper.filePath = configFile;
         try {
             helper.JSONRead(wordJSON.getClass());
@@ -46,7 +46,7 @@ public class BannedWordCheck {
         }
     }
     public void saveBannedWord() {
-        JSONHelper helper = new JSONHelper();
+        JSONHelper helper = new JSONHelper("[BannedWordCheck]");
         WordJSON json = new WordJSON();
         json.BannedWordList = this.BannedWordList;
         helper.jsonObject = json;

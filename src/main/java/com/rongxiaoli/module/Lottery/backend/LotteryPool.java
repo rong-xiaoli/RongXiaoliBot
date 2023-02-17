@@ -2,11 +2,9 @@ package com.rongxiaoli.module.Lottery.backend;
 
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.backend.Math.NewRandom;
-import com.rongxiaoli.module.Lottery.Lottery;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LotteryPool {
     private NewRandom random = new NewRandom();
