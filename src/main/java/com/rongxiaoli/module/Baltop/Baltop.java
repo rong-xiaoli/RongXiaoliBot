@@ -4,6 +4,7 @@ import com.rongxiaoli.Module;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.data.User;
+import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInStruct;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -67,17 +68,18 @@ public class Baltop extends Module {
         // Querying every single user's coin.
         SubjectContact.sendMessage("正在查询，请稍后");
         HashMap<Long, User> userList = RongXiaoliBot.BotModuleLoader.DataBase.UserListDeepCopy();
-        List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> ((int) (((long) e2.getValue().DirectDataRead("DailySign", "Coin")) - ((long) e1.getValue().DirectDataRead("DailySign", "Coin")))))
+        List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> {
+                    return ((int) ((long) ((SignInStruct) e2.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin() - ((long) ((SignInStruct) e1.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin())));
+                })
                 .map(userEntry -> userEntry.getKey()).collect(Collectors.toList())
-                .subList(0,10);
-        List<Long> topData = new ArrayList<>();
+                .subList(0, 10);
 
         // Query finished.
         MessageChainBuilder builder = new MessageChainBuilder();
         int count = 0;
         for (long userID :
                 topList) {
-            count ++;
+            count++;
             builder.append("第" + count + ": " + userID + ": " + ((long) userList.get(userID).DirectDataRead("DailySign", "Coin")) + "\n");
         }
 
@@ -132,5 +134,55 @@ public class Baltop extends Module {
      */
     public boolean isDebugMode() {
         return false;
+    }
+
+    private class TopList extends Thread {
+        private boolean status;
+        private short LifeSpawn;
+        private Queue<Long> topUserID;
+        private Queue<Long> topUserAmount;
+
+        public TopList() {
+            topUserID = new LinkedList<>();
+            topUserAmount = new LinkedList<>();
+            LifeSpawn = 360;
+        }
+
+        public TopList(short spawn) {
+            topUserID = new LinkedList<>();
+            topUserAmount = new LinkedList<>();
+            LifeSpawn = spawn;
+        }
+
+        public void stopLifeSpawn() {
+            // Todo: finish this class.
+        }
+
+        public void Query() {
+            // Querying every single user's coin.
+            HashMap<Long, User> userList = RongXiaoliBot.BotModuleLoader.DataBase.UserListDeepCopy();
+            List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> {
+                        return ((int) ((long) ((SignInStruct) e2.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin() - ((long) ((SignInStruct) e1.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin())));
+                    })
+                    .map(userEntry -> userEntry.getKey()).collect(Collectors.toList())
+                    .subList(0, 10);
+            for (long userID :
+                    topList) {
+                topUserID.add(userID);
+                topUserAmount.add(((SignInStruct) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrNull(userID).DirectDataRead("DailySign", "SignInStruct")).getCoin());
+            }
+        }
+
+        public long getUserID() {
+            return topUserID.poll();
+        }
+
+        public long getUserAmount() {
+            return topUserAmount.poll();
+        }
+
+        @Override
+        public void run() {
+        }
     }
 }
