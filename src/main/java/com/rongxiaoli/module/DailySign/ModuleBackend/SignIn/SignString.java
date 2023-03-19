@@ -39,8 +39,6 @@ public class SignString {
 
         Random random = new Random();
 
-        Week = Week.minus(1);
-
         //Year only.
         YearBasedString = "今年是";
         switch (Year % 12) {
