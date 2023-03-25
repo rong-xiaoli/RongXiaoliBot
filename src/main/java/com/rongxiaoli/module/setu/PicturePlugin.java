@@ -152,9 +152,9 @@ public class PicturePlugin extends Module {
             return;
         }
         //Forcibly unlock this plugin.
-        if (Objects.equals(message[1], "unlock")) {
-            if (Friend == RongXiaoliBot.Owner) {
-                IsEnabled = false;
+        if (message.length > 1) {
+            if (Friend == RongXiaoliBot.Owner && Objects.equals(message[1], "unlock")) {
+                isProcessing = false;
                 Log.WriteLog(Log.Level.Info,
                         "setu unlocked. ",
                         Log.LogClass.ModuleMain,
