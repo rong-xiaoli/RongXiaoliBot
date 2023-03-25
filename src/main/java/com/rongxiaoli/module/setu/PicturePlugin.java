@@ -55,7 +55,7 @@ public class PicturePlugin extends Module {
     private final String PictureProxy = "i.pixiv.re";
     private final String HelpContent =
             "setu [Keyword] [Keyword] ...\n" +
-                    "暂时不能使用中文关键词\n" +
+                    //"暂时不能使用中文关键词\n" +
                     //"(一些特殊原因，该插件已弃用)\n" +
                     "获取一张涩图\n" +
                     "参数: \n" +
@@ -81,28 +81,11 @@ public class PicturePlugin extends Module {
         }
 
         //Declare variables.
-        String[] Keywords;
-        String ApiUrlString = "https://api.lolicon.app/setu/v2";
-        String ApiReturnString = null;
-        String PictureAuthor;
-        String PictureFilePath;
-        String PictureSavingPath = RongXiaoliBot.DataPath.toString() + "/setu/Image/";
-        //String PictureTags;
-        String PictureTitle;
-        String PictureUrlString;
 
         long FriendID;
         long GroupID;
-
-        int PicturePid;
-
         short FreezeTime;
         short RemainingTime;
-
-        File PictureLocalFile;
-
-        MessageChainBuilder PictureInfoMessage = new MessageChainBuilder();
-        MessageChainBuilder PictureMessage = new MessageChainBuilder();
 
         //Start process.
         if (!Objects.equals(message[0], CommandPrefix)) {
@@ -138,44 +121,7 @@ public class PicturePlugin extends Module {
         }
         // Lock.
         isProcessing = true;
-        process(message, SubjectContact, false);
-    }
-
-    /**
-     * Plugin name. Use in logs.
-     */
-    public String getPluginName() {
-        return PluginName;
-    }
-
-    /**
-     * Help content. Used in BotCommand.Modules.Help.
-     */
-    public String getHelpContent() {
-        return HelpContent;
-    }
-
-    /**
-     * True if enabled.
-     */
-    public boolean isEnabled() {
-        return IsEnabled;
-    }
-
-    /**
-     * Set status.
-     *
-     * @param status Status
-     */
-    public void setEnabled(boolean status) {
-        IsEnabled = status;
-    }
-
-    /**
-     * Debug mode.
-     */
-    public boolean isDebugMode() {
-        return DebugMode;
+        process(message, SubjectContact, true);
     }
 
     /**
@@ -204,6 +150,18 @@ public class PicturePlugin extends Module {
         //Start process.
         if (!Objects.equals(message[0], CommandPrefix)) {
             return;
+        }
+        //Forcibly unlock this plugin.
+        if (Objects.equals(message[1], "unlock")) {
+            if (Friend == RongXiaoliBot.Owner) {
+                IsEnabled = false;
+                Log.WriteLog(Log.Level.Info,
+                        "setu unlocked. ",
+                        Log.LogClass.ModuleMain,
+                        PluginName);
+                SubjectContact.sendMessage("setu unlocked. ");
+                return;
+            }
         }
         //Judge if the plugin is enabled.
         if (!IsEnabled) {
@@ -243,6 +201,43 @@ public class PicturePlugin extends Module {
             }
         }
         process(message, SubjectContact, true);
+    }
+
+    /**
+     * Plugin name. Use in logs.
+     */
+    public String getPluginName() {
+        return PluginName;
+    }
+
+    /**
+     * Help content. Used in BotCommand.Modules.Help.
+     */
+    public String getHelpContent() {
+        return HelpContent;
+    }
+
+    /**
+     * True if enabled.
+     */
+    public boolean isEnabled() {
+        return IsEnabled;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param status Status
+     */
+    public void setEnabled(boolean status) {
+        IsEnabled = status;
+    }
+
+    /**
+     * Debug mode.
+     */
+    public boolean isDebugMode() {
+        return DebugMode;
     }
 
     /**
@@ -321,32 +316,11 @@ public class PicturePlugin extends Module {
      * Cooling thread.
      */
     public static class CoolingThread extends Thread {
-        private int DebugTimer = 0;
-
         @Override
         public void run() {
             while (isRunning) {
                 try {
                     Thread.sleep(1000);
-                    DebugTimer++;
-                    if (DebugTimer >= 60) {
-                        DebugTimer = 0;
-                        if (IsEnabled) {
-                            if (DebugMode) {
-                                Log.WriteLog(Log.Level.Verbose,
-                                        "CoolingObject List: ",
-                                        Log.LogClass.Multithreading,
-                                        "setu");
-                                for (CoolingObject SingleObject :
-                                        CoolingObjectList.CoolingObjectList) {
-                                    Log.WriteLog(Log.Level.Verbose,
-                                            "ID: " + SingleObject.FriendID,
-                                            Log.LogClass.Multithreading,
-                                            "setu");
-                                }
-                            }
-                        }
-                    }
                     CoolingObjectList.Tick();
                 } catch (InterruptedException e) {
                     Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, "setu");

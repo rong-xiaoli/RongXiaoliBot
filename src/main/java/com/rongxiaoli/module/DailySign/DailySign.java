@@ -10,9 +10,11 @@ import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignString;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class DailySign extends Module {
     // Public vars.
@@ -24,12 +26,53 @@ public class DailySign extends Module {
     private boolean IsEnabled = true;
     private boolean DebugMode = false;
     private long SignInPosition = 1;
+    private PositionRefreshThread refreshThread;
     //Vars def finish.
 
+    /**
+     * This class is used as a thread for refreshing sign in position.
+     */
+    private class PositionRefreshThread extends Thread {
+        private LocalDate roamingDate;
+        public PositionRefreshThread() {
+            this.roamingDate = LocalDate.now();
+        }
+        private void refreshProcess() {
+            if (!Objects.equals(roamingDate, LocalDate.now())) {
+                roamingDate = LocalDate.now();
+                Log.WriteLog(Log.Level.Verbose,
+                        "Date changed. ",
+                        Log.LogClass.Multithreading,
+                        PluginName);
+                for (Module singleModule :
+                        RongXiaoliBot.BotModuleLoader.ModuleList) {
+                    if (singleModule instanceof DailySign) {
+                        ((DailySign) singleModule).SignInPosition = 1;
+                    }
+                }
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.Exception(e,
+                        "DailySign refresh thread interrupted. ",
+                        Log.LogClass.Multithreading,
+                        PluginName);
+            }
+        }
+        @Override
+        public void run() {
+            while (IsEnabled) {
+                refreshProcess();
+            }
+        }
+    }
     /**
      * Module initiate function.
      */
     public void Init() {
+        refreshThread = new PositionRefreshThread();
+        refreshThread.start();
         // Done.
         this.IsEnabled = true;
         Log.WriteLog(Log.Level.Debug,
@@ -67,7 +110,12 @@ public class DailySign extends Module {
         if (!IsEnabled) return;
         if (!message[0].equals(Command)) return;
         //Process start.
-
+        if (message.length == 2) {
+            if (message[1].equals("position")) {
+                SubjectContact.sendMessage("当前位次：" + SignInPosition);
+                return;
+            }
+        }
         UserDataOperation operation = new UserDataOperation(Friend);
         operation.signInProcess();
         SignString str = new SignString();
