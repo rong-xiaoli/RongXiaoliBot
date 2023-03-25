@@ -121,7 +121,7 @@ public class PicturePlugin extends Module {
         }
         // Lock.
         isProcessing = true;
-        process(message, SubjectContact, false);
+        process(message, SubjectContact, true);
     }
 
     /**

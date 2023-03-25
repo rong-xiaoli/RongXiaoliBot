@@ -20,6 +20,7 @@ import net.mamoe.mirai.event.GlobalEventChannel;
 import java.nio.file.Path;
 
 public final class RongXiaoliBot extends JavaPlugin {
+    public static final String PluginVersion = "0.2.1-Preview1";
     public static final RongXiaoliBot INSTANCE = new RongXiaoliBot();
     private static final String PluginName = "RongXiaoliBot PluginMain";
     public static final long Owner = 1751362263;
@@ -28,7 +29,7 @@ public final class RongXiaoliBot extends JavaPlugin {
     public static Path ConfigPath;
     public static ModuleLoader BotModuleLoader;
     private RongXiaoliBot() {
-        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", "0.2.0-Stable")
+        super(new JvmPluginDescriptionBuilder("com.rongxiaoli.RongXiaoliBot", PluginVersion)
                 .name("RongXiaoli Bot")
                 .author("RongXiaoli")
                 .build());

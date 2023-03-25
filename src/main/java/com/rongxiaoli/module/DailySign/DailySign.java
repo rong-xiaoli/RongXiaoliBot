@@ -2,7 +2,6 @@ package com.rongxiaoli.module.DailySign;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.rongxiaoli.Module;
-import com.rongxiaoli.PluginListener;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.data.DataBlock;
@@ -111,7 +110,12 @@ public class DailySign extends Module {
         if (!IsEnabled) return;
         if (!message[0].equals(Command)) return;
         //Process start.
-
+        if (message.length == 2) {
+            if (message[1].equals("position")) {
+                SubjectContact.sendMessage("当前位次：" + SignInPosition);
+                return;
+            }
+        }
         UserDataOperation operation = new UserDataOperation(Friend);
         operation.signInProcess();
         SignString str = new SignString();
