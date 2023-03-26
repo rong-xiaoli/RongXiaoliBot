@@ -63,7 +63,8 @@ public class HttpGet {
 
     /**
      * This function is to put a header on the request.
-     * @param key Variable name.
+     *
+     * @param key   Variable name.
      * @param value Variable value.
      */
     public void addHeader(String key, String value) {

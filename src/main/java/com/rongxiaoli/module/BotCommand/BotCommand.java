@@ -14,6 +14,7 @@ import java.util.Objects;
 
 public class BotCommand extends Module {
     public static final String PluginName = "BotCommand";
+
     public static void UnregisteredFriendMain(String[] arrCommand, Contact SenderContact) {
         // Remove empty spaces.
         String[] message = arrCommand.clone();
@@ -28,7 +29,7 @@ public class BotCommand extends Module {
 
         if (message[0].startsWith("/")) {
             //Pre-process.
-            message[0] = message[0].replaceFirst("/","");
+            message[0] = message[0].replaceFirst("/", "");
 
             if (Objects.equals(message[0], Management.CommandPrefix)) {
                 //Management.
@@ -50,6 +51,7 @@ public class BotCommand extends Module {
             }
         }
     }
+
     public static void UnregisteredGroupMain(String[] arrCommand, Contact SenderContact) {
         // Remove empty spaces.
         String[] message = arrCommand.clone();
@@ -63,7 +65,7 @@ public class BotCommand extends Module {
         }
         if (message[0].startsWith("/")) {
             //Pre-process.
-            message[0] = message[0].replaceFirst("/","");
+            message[0] = message[0].replaceFirst("/", "");
             if (Objects.equals(message[0], Help.CommandPrefix)) {
                 //Help message.
                 Help h = new Help();

@@ -16,6 +16,7 @@ public class Baltop extends Module {
     private final String HelpContent = "/baltop\n" +
             "输出财富榜前10。";
     private boolean IsEnabled = true;
+
     /**
      * Module initiate function.
      */

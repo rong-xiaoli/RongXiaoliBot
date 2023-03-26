@@ -60,8 +60,9 @@ public class DataBaseClass {
 
     /**
      * Adding a new user.
-     * @param userID New user ID.
-     * @param newUser New user data.
+     *
+     * @param userID     New user ID.
+     * @param newUser    New user data.
      * @param moduleName Name of operation executor.
      */
     public void UserAdd(long userID, User newUser, String moduleName) {
@@ -78,8 +79,9 @@ public class DataBaseClass {
 
     /**
      * Refresh an existing user.
-     * @param userID ID of refreshing user.
-     * @param newUser New user data.
+     *
+     * @param userID     ID of refreshing user.
+     * @param newUser    New user data.
      * @param moduleName Name of operation executor.
      */
     public void UserRefresh(long userID, User newUser, String moduleName) {
@@ -93,8 +95,10 @@ public class DataBaseClass {
         }
         UserList.replace(userID, newUser);
     }
+
     /**
      * Read an existing user. Null if user not exist.
+     *
      * @param userID User ID.
      * @return User data or null.
      */
@@ -104,17 +108,20 @@ public class DataBaseClass {
 
     /**
      * Read an existing user. Throw an exception if user not exist.
+     *
      * @param userID User ID.
      * @return User data.
      * @throws NoSuchElementException This exception is thrown when the user is not recorded in database.
      */
     public User UserReadOrException(long userID) throws NoSuchElementException {
-        if (!UserList.containsKey(userID)) throw new NoSuchElementException("User " + userID + "not exist in database. ");
+        if (!UserList.containsKey(userID))
+            throw new NoSuchElementException("User " + userID + "not exist in database. ");
         else return UserList.get(userID);
     }
 
     /**
      * Get a deep copy of UserList.
+     *
      * @return User list.
      */
     public HashMap<Long, User> UserListDeepCopy() {

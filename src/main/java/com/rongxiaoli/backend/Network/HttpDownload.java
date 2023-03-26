@@ -9,11 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 
 public class HttpDownload {
-
-    private boolean isSuccess = false;
 
     /**
      * Target url (including file name);
@@ -21,8 +22,9 @@ public class HttpDownload {
     public String targetUrl;
     public String localFilePath;
     public String localFileName;
-
     public URL urlHandle;
+    private boolean isSuccess = false;
+
     public boolean Status() {
         return isSuccess;
     }
@@ -30,15 +32,15 @@ public class HttpDownload {
     public void Download(String PluginName) throws IllegalArgumentException, IOException {
         try {
             urlHandle = new URL(targetUrl);
-            File file = new File(localFilePath , localFileName);
+            File file = new File(localFilePath, localFileName);
             file.getParentFile().mkdirs();
             ReadableByteChannel rbc = Channels.newChannel(urlHandle.openStream());
             FileOutputStream fos = new FileOutputStream(file);
             FileChannel fc = fos.getChannel();
-            fos.getChannel().transferFrom(rbc,0,Long.MAX_VALUE);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             fos.flush();
             Log.WriteLog(Log.Level.Debug,
-                    "File downloaded: "+ localFilePath + localFileName,
+                    "File downloaded: " + localFilePath + localFileName,
                     Log.LogClass.File,
                     PluginName);
             fos.close();

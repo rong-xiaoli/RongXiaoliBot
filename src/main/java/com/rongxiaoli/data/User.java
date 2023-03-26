@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
  */
 public class User {
     private HashMap<String, DataBlock> DataBlockMap;
+
     /**
      * New user constructing function.
      */
@@ -19,9 +20,10 @@ public class User {
 
     /**
      * Add a data block into DataBlockMap.
+     *
      * @param DataBlockName Name of data block.
-     * @param NewDataBlock New data block.
-     * @param moduleName Name of operation executor.
+     * @param NewDataBlock  New data block.
+     * @param moduleName    Name of operation executor.
      */
     public void DataBlockAdd(String DataBlockName, DataBlock NewDataBlock, String moduleName) {
         if (DataBlockMap.containsKey(DataBlockName)) {
@@ -37,9 +39,10 @@ public class User {
 
     /**
      * Refresh a data block.
+     *
      * @param DataBlockName Name of data block.
-     * @param NewDataBlock New data block.
-     * @param moduleName Name of operation executor.
+     * @param NewDataBlock  New data block.
+     * @param moduleName    Name of operation executor.
      */
     public void DataBlockRefresh(String DataBlockName, DataBlock NewDataBlock, String moduleName) {
         if (!DataBlockMap.containsKey(DataBlockName)) {
@@ -55,6 +58,7 @@ public class User {
 
     /**
      * Read data block. Null if data block not exist.
+     *
      * @param DataBlockName Name of data block.
      * @return Data block or null.
      */
@@ -64,32 +68,36 @@ public class User {
 
     /**
      * Read data block. Throw an exception if data block not exist.
+     *
      * @param DataBlockName Name of data block.
      * @return Data block.
      * @throws NoSuchElementException This exception is thrown when the data block is not recorded in database.
      */
     public DataBlock DataBlockReadOrException(String DataBlockName) {
-        if (!DataBlockMap.containsKey(DataBlockName)) throw new NoSuchElementException("Data block " + DataBlockName + " not exist in database. ");
+        if (!DataBlockMap.containsKey(DataBlockName))
+            throw new NoSuchElementException("Data block " + DataBlockName + " not exist in database. ");
         else return DataBlockMap.get(DataBlockName);
     }
 
     /**
      * Direct operation to data.
+     *
      * @param DataBlockName Name of operating data block.
-     * @param DataName Name of operating data.
-     * @param Data New data.
-     * @param moduleName Name of operating executor.
+     * @param DataName      Name of operating data.
+     * @param Data          New data.
+     * @param moduleName    Name of operating executor.
      * @throws NoSuchElementException This exception is thrown when data block or data is not found in database.
      */
-    public void DirectDataRefresh(String DataBlockName, String DataName, Object Data, String moduleName)  {
+    public void DirectDataRefresh(String DataBlockName, String DataName, Object Data, String moduleName) {
         DataBlock targetDataBlock = DataBlockReadOrException(DataBlockName);
         targetDataBlock.DataRefresh(DataName, Data, moduleName);
     }
 
     /**
      * Direct read from data.
+     *
      * @param DataBlockName Name of reading data block.
-     * @param DataName Name of reading data.
+     * @param DataName      Name of reading data.
      * @throws NoSuchElementException This exception is thrown when data block or data is not found in database.
      */
     public Object DirectDataRead(String DataBlockName, String DataName) {

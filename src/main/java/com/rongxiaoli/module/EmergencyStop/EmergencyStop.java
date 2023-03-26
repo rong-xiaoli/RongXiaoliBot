@@ -19,7 +19,7 @@ public class EmergencyStop extends Module {
         List<String> emptyStringRemover = Arrays.asList(message);
         emptyStringRemover.removeAll(Arrays.asList(""));
         message = emptyStringRemover.toArray(new String[0]);
-        
+
         //Start processing.
         if (RongXiaoliBot.IsEnabled) {
             if (message.length == 0) {
