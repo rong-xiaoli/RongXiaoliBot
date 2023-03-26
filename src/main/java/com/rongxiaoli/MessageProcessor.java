@@ -1,9 +1,8 @@
 package com.rongxiaoli;
 
 import com.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
-import com.rongxiaoli.module.Broadcast.Broadcast;
-import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.BotCommand.BotCommand;
+import com.rongxiaoli.module.EmergencyStop.EmergencyStop;
 import com.rongxiaoli.module.PokeAction.PokeAction;
 import net.mamoe.mirai.event.events.*;
 
@@ -11,8 +10,9 @@ public class MessageProcessor {
 
     /**
      * Invoke when a friend message is sent.
+     *
      * @param originalMessage Original message.
-     * @param e FriendMessageEvent.
+     * @param e               FriendMessageEvent.
      */
     public void FriendMessageProcess(String originalMessage, FriendMessageEvent e) {
         //Variables initiate.
@@ -33,14 +33,15 @@ public class MessageProcessor {
         //Second step.
         for (Module SingleModule :
                 RongXiaoliBot.BotModuleLoader.ModuleList) {
-            SingleModule.FriendMain(arrCommand,e.getSubject().getId(),e.getSender());
+            SingleModule.FriendMain(arrCommand, e.getSubject().getId(), e.getSender());
         }
     }
 
     /**
      * Invoke when a group message is sent.
+     *
      * @param originalMessage Original message.
-     * @param e GroupMessageEvent.
+     * @param e               GroupMessageEvent.
      */
     public void GroupMessageProcess(String originalMessage, GroupMessageEvent e) {
         //Variables initiate.
@@ -57,7 +58,7 @@ public class MessageProcessor {
             return;
         }
         //Second step: registered modules.
-        for (Module SingleModule:
+        for (Module SingleModule :
                 RongXiaoliBot.BotModuleLoader.ModuleList) {
             SingleModule.GroupMain(arrCommand, e.getSender().getId(), e.getSubject().getId(), e.getSubject());
         }
@@ -65,6 +66,7 @@ public class MessageProcessor {
 
     /**
      * Invoke when a friend request is sent.
+     *
      * @param e Friend request event.
      */
     public void FriendAddRequestProcess(NewFriendRequestEvent e) {
@@ -80,6 +82,7 @@ public class MessageProcessor {
 
     /**
      * Invoke when a friend is added.
+     *
      * @param e Friend add event.
      */
     public void FriendAddProcess(FriendAddEvent e) {
@@ -95,6 +98,7 @@ public class MessageProcessor {
 
     /**
      * Invoke when a group request is sent.
+     *
      * @param e Group request event.
      */
     public void GroupAddRequestProcess(BotInvitedJoinGroupRequestEvent e) {
@@ -107,6 +111,7 @@ public class MessageProcessor {
         }
         AA.Main(e);
     }
+
     /**
      * Invoke when added in a group.
      */
@@ -121,7 +126,7 @@ public class MessageProcessor {
         AA.Main(e);
     }
 
-    public void PokeProcess(NudgeEvent e){
+    public void PokeProcess(NudgeEvent e) {
         PokeAction PA = null;
         for (Module SingleModule :
                 RongXiaoliBot.BotModuleLoader.ModuleList) {

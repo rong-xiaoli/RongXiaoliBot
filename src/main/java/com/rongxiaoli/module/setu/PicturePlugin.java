@@ -261,74 +261,6 @@ public class PicturePlugin extends Module {
                 PluginName);
     }
 
-    /**
-     * Single cooling object.
-     */
-    public static class CoolingObject {
-        public long FriendID;
-        public short RemainingTime;
-
-        public CoolingObject(long Friend, short RemainingTime) {
-            this.FriendID = Friend;
-            this.RemainingTime = RemainingTime;
-
-        }
-    }
-
-    /**
-     * List of cooling objects.
-     */
-    public static class CoolingObjectList {
-        private static final CopyOnWriteArrayList<CoolingObject> CoolingObjectList = new CopyOnWriteArrayList<>();
-
-        public static void Tick() {
-            for (CoolingObject SingleObj :
-                    CoolingObjectList) {
-                SingleObj.RemainingTime--;
-                if (SingleObj.RemainingTime <= 0) {
-                    Log.WriteLog(Log.Level.Debug,
-                            "CoolingObject removed: " + SingleObj.FriendID,
-                            Log.LogClass.Multithreading,
-                            "setu");
-                    CoolingObjectList.remove(SingleObj);
-                }
-            }
-        }
-
-        public static short Add(long Friend, short RemainingTime) {
-            CoolingObject ObjAdding = new CoolingObject(Friend, RemainingTime);
-            for (CoolingObject SingleObject :
-                    CoolingObjectList) {
-                if (SingleObject.FriendID == Friend) {
-                    return SingleObject.RemainingTime;
-                }
-            }
-            Log.WriteLog(Log.Level.Debug,
-                    "CoolingObject added: " + Friend,
-                    Log.LogClass.Multithreading,
-                    "setu");
-            CoolingObjectList.add(ObjAdding);
-            return -1;
-        }
-    }
-
-    /**
-     * Cooling thread.
-     */
-    public static class CoolingThread extends Thread {
-        @Override
-        public void run() {
-            while (isRunning) {
-                try {
-                    Thread.sleep(1000);
-                    CoolingObjectList.Tick();
-                } catch (InterruptedException e) {
-                    Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, "setu");
-                }
-            }
-        }
-    }
-
     private void process(String[] message, Contact SubjectContact, boolean sendPicture) {
 
         String[] Keywords;
@@ -572,6 +504,74 @@ public class PicturePlugin extends Module {
             }
 
 
+        }
+    }
+
+    /**
+     * Single cooling object.
+     */
+    public static class CoolingObject {
+        public long FriendID;
+        public short RemainingTime;
+
+        public CoolingObject(long Friend, short RemainingTime) {
+            this.FriendID = Friend;
+            this.RemainingTime = RemainingTime;
+
+        }
+    }
+
+    /**
+     * List of cooling objects.
+     */
+    public static class CoolingObjectList {
+        private static final CopyOnWriteArrayList<CoolingObject> CoolingObjectList = new CopyOnWriteArrayList<>();
+
+        public static void Tick() {
+            for (CoolingObject SingleObj :
+                    CoolingObjectList) {
+                SingleObj.RemainingTime--;
+                if (SingleObj.RemainingTime <= 0) {
+                    Log.WriteLog(Log.Level.Debug,
+                            "CoolingObject removed: " + SingleObj.FriendID,
+                            Log.LogClass.Multithreading,
+                            "setu");
+                    CoolingObjectList.remove(SingleObj);
+                }
+            }
+        }
+
+        public static short Add(long Friend, short RemainingTime) {
+            CoolingObject ObjAdding = new CoolingObject(Friend, RemainingTime);
+            for (CoolingObject SingleObject :
+                    CoolingObjectList) {
+                if (SingleObject.FriendID == Friend) {
+                    return SingleObject.RemainingTime;
+                }
+            }
+            Log.WriteLog(Log.Level.Debug,
+                    "CoolingObject added: " + Friend,
+                    Log.LogClass.Multithreading,
+                    "setu");
+            CoolingObjectList.add(ObjAdding);
+            return -1;
+        }
+    }
+
+    /**
+     * Cooling thread.
+     */
+    public static class CoolingThread extends Thread {
+        @Override
+        public void run() {
+            while (isRunning) {
+                try {
+                    Thread.sleep(1000);
+                    CoolingObjectList.Tick();
+                } catch (InterruptedException e) {
+                    Log.Exception(e, "Cooling thread stopped. ", Log.LogClass.Multithreading, "setu");
+                }
+            }
         }
     }
 }

@@ -66,7 +66,7 @@ public class Ping extends Module {
         List<String> emptyStringRemover = Arrays.asList(message);
         emptyStringRemover.removeAll(Arrays.asList(""));
         message = emptyStringRemover.toArray(new String[0]);
-        
+
         //0-length array.
         if (arrCommand.length == 0) {
             return;

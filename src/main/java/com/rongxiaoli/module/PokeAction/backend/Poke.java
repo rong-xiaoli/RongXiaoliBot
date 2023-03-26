@@ -12,15 +12,16 @@ import java.util.Random;
 public class Poke {
     /**
      * Poke back to the object.
+     *
      * @param e
      * @param TargetID
      * @param BotID
      * @param IsGroup
      * @param GroupID
      */
-    private static void PokeBack(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID){
+    private static void PokeBack(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID) {
         if (IsGroup) {
-            if (GroupID == 0){
+            if (GroupID == 0) {
                 return;
             }
             Group group = (Group) e.getSubject();
@@ -34,9 +35,11 @@ public class Poke {
         Nudge n = new FriendNudge((Friend) e.getFrom());
         n.sendTo(e.getSubject());
     }
-    private static void PokeOthers(){
+
+    private static void PokeOthers() {
         //Todo: Complete this method.
     }
+
     private static String generatePokeMessage() {
         Random r = new Random();
         switch (r.nextInt(2)) {
@@ -49,7 +52,8 @@ public class Poke {
                 return "我要戳疼你！";
         }
     }
-    public static void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID){
+
+    public static void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID) {
         PokeBack(e, TargetID, BotID, IsGroup, GroupID);
     }
 }

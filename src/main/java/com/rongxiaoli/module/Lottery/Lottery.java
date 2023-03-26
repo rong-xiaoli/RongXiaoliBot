@@ -16,19 +16,20 @@ import java.util.List;
 import java.util.Objects;
 
 public class Lottery extends Module {
-    /**
-     * This is the data lock.
-     */
-    private boolean isLocked = false;
     private final String PluginName = "Lottery";
-    private boolean IsEnabled = false;
     private final String HelpContent = "/lottery [amount]\n" +
             "或/l [amount]\n" +
             "抽奖\n" +
             "抽奖随机数公式在GitHub上的/src/main/java/com.rongxiaoli/module/Lottery/backend/LotteryPool.java。\n" +
             "参数：\n" +
             "amount：抽奖时消耗的货币数。";
+    /**
+     * This is the data lock.
+     */
+    private boolean isLocked = false;
+    private boolean IsEnabled = false;
     private LotteryPool lotteryPool;
+
     /**
      * Module initiate function.
      */
@@ -83,7 +84,7 @@ public class Lottery extends Module {
         //Process start.
         long amount = 1;
         if (message.length == 2) {
-             amount = Long.parseLong(message[1]);
+            amount = Long.parseLong(message[1]);
         }
         if (amount < 1) {
             SubjectContact.sendMessage("数额不可小于1");
