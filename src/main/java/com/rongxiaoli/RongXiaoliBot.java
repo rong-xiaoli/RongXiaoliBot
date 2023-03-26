@@ -74,6 +74,7 @@ public final class RongXiaoliBot extends JavaPlugin {
         BotModuleLoader.DataInit();
 
         // Plugin init finish.
+        //Todo: Read bot owner from a file. 
         // Register listener.
         GlobalEventChannel.INSTANCE.registerListenerHost(new PluginListener());
         IsEnabled = true;

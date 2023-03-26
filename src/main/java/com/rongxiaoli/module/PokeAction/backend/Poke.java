@@ -13,11 +13,11 @@ public class Poke {
     /**
      * Poke back to the object.
      *
-     * @param e
-     * @param TargetID
-     * @param BotID
-     * @param IsGroup
-     * @param GroupID
+     * @param e        Nudge event.
+     * @param TargetID The target to be poked.
+     * @param BotID    Bot ID.
+     * @param IsGroup  True if the event happened in group.
+     * @param GroupID  Group ID. Zero if not a group.
      */
     private static void PokeBack(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID) {
         if (IsGroup) {
@@ -42,12 +42,17 @@ public class Poke {
 
     private static String generatePokeMessage() {
         Random r = new Random();
-        switch (r.nextInt(2)) {
+        int t = r.nextInt(3);
+        switch (t) {
             case 0:
                 return "看我戳回去！";
             case 1:
                 return "就你会戳吗？";
             default:
+                Log.WriteLog(Log.Level.Warning,
+                        "Except a number from 0 to 2, received " + t,
+                        Log.LogClass.ModuleMain,
+                        "PokeAction");
             case 2:
                 return "我要戳疼你！";
         }
