@@ -16,11 +16,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class BannedWordCheck {
     private final String configFile;
+    private final String PluginName;
     /**
      * This list stores the banned word.
      */
     private CopyOnWriteArrayList<String> BannedWordList;
-    private final String PluginName;
+
     public BannedWordCheck(String conPath, String pluginName) {
         // Load word list on init.
         configFile = conPath + "BannedWord.txt";
@@ -34,7 +35,7 @@ public class BannedWordCheck {
             helper.JSONRead(wordJSON.getClass());
             if (helper.jsonObject == null) {
                 BannedWordList = new CopyOnWriteArrayList<>();
-            } else  {
+            } else {
                 BannedWordList = ((WordJSON) helper.jsonObject).BannedWordList;
             }
         } catch (IOException e) {
@@ -45,6 +46,7 @@ public class BannedWordCheck {
                     pluginName);
         }
     }
+
     public void saveBannedWord() {
         JSONHelper helper = new JSONHelper("[BannedWordCheck]");
         WordJSON json = new WordJSON();
@@ -57,12 +59,13 @@ public class BannedWordCheck {
             Log.Exception(e, "", Log.LogClass.File, PluginName);
         }
     }
+
     public boolean isSuitable(String[] originalMessage) {
         // Start processing.
         // Clone target string.
         String[] message = originalMessage.clone();
         // First step: check raw string.
-        for(String singleString :
+        for (String singleString :
                 message) {
             if (BannedWordList.contains(singleString)) {
                 return false;
@@ -74,7 +77,7 @@ public class BannedWordCheck {
         if (ImpString == null) {
             return true;
         }
-        for(String singleString :
+        for (String singleString :
                 ImpString) {
             if (BannedWordList.contains(singleString)) {
                 return false;
@@ -90,11 +93,12 @@ public class BannedWordCheck {
 
     /**
      * Add a ban word.
+     *
      * @param bannedWord The key word.
      * @return True if the banned word already exists. False if the banned word is not in the list.
      */
     public boolean addBannedWord(String bannedWord) {
-        for(String singleBannedWord :
+        for (String singleBannedWord :
                 BannedWordList) {
             if (Objects.equals(singleBannedWord, bannedWord)) {
                 return true;
@@ -103,8 +107,9 @@ public class BannedWordCheck {
         this.BannedWordList.add(bannedWord);
         return false;
     }
+
     public boolean delBannedWord(String bannedWord) {
-        for(String singleString :
+        for (String singleString :
                 BannedWordList) {
             if (singleString.equals(bannedWord)) {
                 this.BannedWordList.remove(singleString);
@@ -114,11 +119,12 @@ public class BannedWordCheck {
         }
         return false;
     }
+
     public String getBannedWord() {
         if (BannedWordList.isEmpty()) return "无禁用词";
         StringBuilder stb = new StringBuilder();
         stb.append("禁用词：\n");
-        for(String singleBannedWord :
+        for (String singleBannedWord :
                 BannedWordList) {
             stb.append(singleBannedWord + "\n");
         }

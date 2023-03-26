@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import com.rongxiaoli.module.DailySign.ModuleBackend.SignIn.SignInStruct;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -41,6 +40,7 @@ public class JSONAdaptor {
             writer.value(value);
         }
     }
+
     public static class DoubleSerializer implements JsonSerializer<Double> {
         @Override
         public JsonElement serialize(Double src, Type typeOfSrc, JsonSerializationContext context) {
@@ -50,6 +50,7 @@ public class JSONAdaptor {
             return new JsonPrimitive(src);
         }
     }
+
     @Deprecated
     public static class LocalDateTimeAdaptor implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
 
