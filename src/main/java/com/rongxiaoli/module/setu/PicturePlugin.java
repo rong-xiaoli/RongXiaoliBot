@@ -20,6 +20,7 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.nio.channels.ClosedChannelException;
 import java.security.KeyManagementException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -121,7 +122,7 @@ public class PicturePlugin extends Module {
         }
         // Lock.
         isProcessing = true;
-        process(message, SubjectContact, true);
+        process(message, SubjectContact, true, true);
     }
 
     /**
@@ -200,7 +201,7 @@ public class PicturePlugin extends Module {
                 return;
             }
         }
-        process(message, SubjectContact, true);
+        process(message, SubjectContact, true, false);
     }
 
     /**
@@ -261,7 +262,7 @@ public class PicturePlugin extends Module {
                 PluginName);
     }
 
-    private void process(String[] message, Contact SubjectContact, boolean sendPicture) {
+    private void process(String[] message, Contact SubjectContact, boolean sendPicture, boolean isGroup) {
 
         String[] Keywords;
         String ApiUrlString = "https://api.lolicon.app/setu/v2";
@@ -381,6 +382,29 @@ public class PicturePlugin extends Module {
             SubjectContact.sendMessage("图片链接获取失败，请联系主人维修");
             isProcessing = false;
             return;
+        }
+        // This part is to filter R-18 tags.
+        if (isGroup) {
+            ArrayList<String> r18Tags = new ArrayList<>();
+            r18Tags.add("R-18");
+            r18Tags.add("R18");
+            r18Tags.add("r18");
+            r18Tags.add("r-18");
+            r18Tags.add("nsfw");
+            r18Tags.add("NSFW");
+            for (String singleTag :
+                    PictData.getTags()) {
+                if (!sendPicture) {
+                    break;
+                }
+                for (String r18Tag :
+                        r18Tags) {
+                    if (singleTag.equals(r18Tag)) {
+                        sendPicture = false;
+                        break;
+                    }
+                }
+            }
         }
         if (sendPicture) {
             //Download picture.
