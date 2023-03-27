@@ -471,13 +471,21 @@ public class PicturePlugin extends Module {
             PicturePid = PictData.getPid();
             //PictureTags = PictData.getTags().toString();
             PictureTitle = PictData.getTitle();
-            PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
+            //PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
             PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
             PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
             //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
             PictureInfoMessage.append("链接: ").append(PictureUrlString);
             PictureMessage.append(image);
             SubjectContact.sendMessage(PictureInfoMessage.build());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.WriteLog(Log.Level.Warning,
+                        "setu message sending cooling interrupted. ",
+                        Log.LogClass.ModuleMain,
+                        PluginName);
+            }
             SubjectContact.sendMessage(PictureMessage.build());
             Log.WriteLog(Log.Level.Debug,
                     "Process completed. ",
