@@ -7,6 +7,7 @@ import java.util.List;
 public class StringProcess {
     /**
      * Turn string array into command string array.
+     *
      * @param originalMessage Original message needed to process
      * @return Imperative string.
      */
@@ -24,9 +25,10 @@ public class StringProcess {
         message = messageWordList.toArray(new String[0]);
         return message;
     }
+
     public static String RemoveSpace(String[] originalMessage) {
         StringBuilder stb = new StringBuilder();
-        for(String singleString :
+        for (String singleString :
                 originalMessage) {
             stb.append(singleString);
         }

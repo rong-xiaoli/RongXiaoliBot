@@ -12,22 +12,23 @@ public class ModuleLoader {
     public DataBaseClass DataBase;
     public List<Module> ModuleList;
 
+    public ModuleLoader() {
+        ModuleList = new ArrayList<>();
+        DataBase = new DataBaseClass();
+    }
+
     public void ModuleInit() {
         for (Module SingleModule :
                 ModuleList) {
             SingleModule.Init();
         }
     }
+
     public void ModuleShutdown() {
         for (Module module :
                 RongXiaoliBot.BotModuleLoader.ModuleList) {
             module.Shutdown();
         }
-    }
-
-    public ModuleLoader() {
-        ModuleList = new ArrayList<>();
-        DataBase = new DataBaseClass();
     }
 
     /**

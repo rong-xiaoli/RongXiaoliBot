@@ -16,9 +16,9 @@ import java.util.Random;
 
 public class Broadcast extends Module {
     public static final String PluginName = "Broadcast";
-    public final String HelpContent = "";//"/broadcast (message) +\n" +
-            //"广播消息至所有联系人。（仅限号主可用）\n";
+    //"广播消息至所有联系人。（仅限号主可用）\n";
     private static boolean IsEnabled = true;
+    public final String HelpContent = "";//"/broadcast (message) +\n" +
 
     public void Init() {
         Log.WriteLog(Log.Level.Debug, "Broadcast module initiated. ", Log.LogClass.ModuleMain, PluginName);
@@ -54,7 +54,7 @@ public class Broadcast extends Module {
                         PluginName);
                 //Process.
                 BroadcastMessageBuilder = new StringBuilder();
-                for (int num = 1; num <= message.length - 1; num ++) {
+                for (int num = 1; num <= message.length - 1; num++) {
                     BroadcastMessageBuilder.append(message[num]);
                 }
                 MessageChainBuilder BroadcastMessage = new MessageChainBuilder();
@@ -71,7 +71,7 @@ public class Broadcast extends Module {
                             Log.LogClass.ModuleMain,
                             PluginName);
                     try {
-                        Thread.sleep(ran.nextInt(100,3000));
+                        Thread.sleep(ran.nextInt(100, 3000));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -84,7 +84,7 @@ public class Broadcast extends Module {
                             Log.LogClass.ModuleMain,
                             PluginName);
                     try {
-                        Thread.sleep(ran.nextInt(100,3000));
+                        Thread.sleep(ran.nextInt(100, 3000));
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

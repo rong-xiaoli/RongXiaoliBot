@@ -2,25 +2,25 @@ package com.rongxiaoli.backend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.ToNumberPolicy;
 
 import java.io.*;
-import java.time.LocalDateTime;
 
 /**
  * To use this class to read, first fill the file path, then call func: JSONRead(Class objClass), finally get and cast the jsonObject.
  * To use this class to write, first fill the file path, next set the jsonObject, finally call func: JSONSave().
  */
 public class JSONHelper {
-    private String PluginName;
     public Object jsonObject;
     public String filePath;
+    private String PluginName;
+
     public JSONHelper(String name) {
         PluginName = name;
     }
 
     /**
      * Save JSON to file.
+     *
      * @throws IOException Exception thrown when unexpected IOException occurred.
      */
     public void JSONSave() throws IOException {
@@ -62,6 +62,7 @@ public class JSONHelper {
 
     /**
      * Read JSON from file and convert to Object.
+     *
      * @throws IOException Exception thrown when unexpected IOException occurred.
      */
     public void JSONRead(Class objClass) throws IOException {
