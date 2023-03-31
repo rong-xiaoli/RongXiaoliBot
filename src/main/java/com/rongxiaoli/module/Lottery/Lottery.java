@@ -83,6 +83,10 @@ public class Lottery extends Module {
         }
         //Process start.
         long amount = 1;
+        if (message[1].equals("pool") {
+            //pool.
+            return;
+        }
         if (message.length == 2) {
             amount = Long.parseLong(message[1]);
         }
