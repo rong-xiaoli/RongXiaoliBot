@@ -153,9 +153,9 @@ public class PicturePlugin extends Module {
             return;
         }
         //Forcibly unlock this plugin.
-        if (Objects.equals(message[1], "unlock")) {
-            if (Friend == RongXiaoliBot.Owner) {
-                IsEnabled = false;
+        if (message.length > 1) {
+            if (Friend == RongXiaoliBot.Owner && Objects.equals(message[1], "unlock")) {
+                isProcessing = false;
                 Log.WriteLog(Log.Level.Info,
                         "setu unlocked. ",
                         Log.LogClass.ModuleMain,
@@ -317,9 +317,11 @@ public class PicturePlugin extends Module {
             Log.WriteLog(Log.Level.Warning, "Unexpected IOException got. Try to get in http protocol. ", Log.LogClass.ModuleMain, PluginName);
             HttpGet httpGet = new HttpGet();
             httpGet.targetUrl = "http://api.lolicon.app/setu/v2";
-            for (String tag :
-                    Keywords) {
-                httpGet.Par.Append("tag", tag, true);
+            if (Keywords != null) {
+                for (String tag :
+                        Keywords) {
+                    httpGet.Par.Append("tag", tag, true);
+                }
             }
             httpGet.Par.Append("size", "regular");
             httpGet.Par.Append("proxy", PictureProxy);
