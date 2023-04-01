@@ -83,8 +83,9 @@ public class Lottery extends Module {
         }
         //Process start.
         long amount = 1;
-        if (message[1].equals("pool") {
-            //pool.
+        // Query pool. 
+        if (Objects.equals(message[1], "pool")) {
+            SubjectContact.sendMessage("当前奖池内共有：" + lotteryPool + "枚金币");
             return;
         }
         if (message.length == 2) {
