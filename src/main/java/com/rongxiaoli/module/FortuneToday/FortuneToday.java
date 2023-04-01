@@ -13,8 +13,8 @@ public class FortuneToday extends Module {
     private final String PluginName = "FortuneToday";
     private final String HelpContent = "/fortune\n" +
             "获取今日运势";
-    private boolean IsEnabled = true;
     private final String Command = "/fortune";
+    private boolean IsEnabled = true;
 
     /**
      * Module initiate function.

@@ -10,16 +10,26 @@ public class LotteryPool {
     private NewRandom random = new NewRandom();
     private long pool, finalPool;
     private boolean isEnabled;
+    private RefreshThread refreshThread;
+    private ArrayList<Long> boughtFriendList;
+    public LotteryPool() {
+        this.refreshThread = new RefreshThread();
+        isEnabled = true;
+        refreshThread.start();
+        this.boughtFriendList = new ArrayList<>();
+    }
+
     public void setEnabled(boolean status) {
         this.isEnabled = status;
     }
-    private RefreshThread refreshThread;
-    private ArrayList<Long> boughtFriendList;
+
     public boolean isFriendInList(long Friend) {
         return boughtFriendList.contains(Friend);
     }
+
     /**
      * Throw amount in pool.
+     *
      * @param amount Amount in.
      * @return True if player win the lottery.
      */
@@ -42,8 +52,10 @@ public class LotteryPool {
             return true;
         }
     }
+
     /**
      * Get final award amount.
+     *
      * @return
      */
     public long getFinalPool() {
@@ -51,13 +63,16 @@ public class LotteryPool {
         finalPool = 0;
         return temp;
     }
+
     /**
      * Get current award amount.
+     *
      * @return Current amount.
      */
     public long getPool() {
         return pool;
     }
+
     /**
      * Start pool refresh.
      */
@@ -71,20 +86,17 @@ public class LotteryPool {
             isEnabled = true;
         }
     }
+
     /**
      * Stop pool refresh.
      */
     public void RefreshStop() {
         isEnabled = false;
     }
-    public LotteryPool() {
-        this.refreshThread = new RefreshThread();
-        isEnabled = true;
-        refreshThread.start();
-        this.boughtFriendList = new ArrayList<>();
-    }
+
     private class RefreshThread extends Thread {
         private LocalDate date = LocalDate.now();
+
         @Override
         public void run() {
             while (isEnabled) {

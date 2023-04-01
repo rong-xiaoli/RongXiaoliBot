@@ -9,11 +9,11 @@ import java.util.Random;
 
 public class PokeAction extends Module {
 
-    // Module status vars.
-    private Action action;
     private final String PluginName = "PokeAction";
     private final String HelpContent = "戳一戳\n" +
             "无帮助文档。";
+    // Module status vars.
+    private Action action;
     private Boolean IsEnabled = false;
     private Boolean DebugMode = false;
 
@@ -51,7 +51,7 @@ public class PokeAction extends Module {
         long SubjectID = e.getSubject().getId();
         long FromID = e.getFrom().getId();
         //Start processing.
-        int ReplyType = random.nextInt(0,2);
+        int ReplyType = random.nextInt(0, 2);
         int InnerRandom1 = random.nextInt(0, 2);
         int InnerRandom2 = random.nextInt(0, 5);
         action.Main(e, e.getFrom().getId(), e.getBot().getId(), isFromGroup, e.getSubject().getId(), ReplyType);

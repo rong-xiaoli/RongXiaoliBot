@@ -2,7 +2,6 @@ package com.rongxiaoli.module.DailySign;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.rongxiaoli.Module;
-import com.rongxiaoli.PluginListener;
 import com.rongxiaoli.RongXiaoliBot;
 import com.rongxiaoli.backend.Log;
 import com.rongxiaoli.data.DataBlock;
@@ -30,44 +29,6 @@ public class DailySign extends Module {
     private PositionRefreshThread refreshThread;
     //Vars def finish.
 
-    /**
-     * This class is used as a thread for refreshing sign in position.
-     */
-    private class PositionRefreshThread extends Thread {
-        private LocalDate roamingDate;
-        public PositionRefreshThread() {
-            this.roamingDate = LocalDate.now();
-        }
-        private void refreshProcess() {
-            if (!Objects.equals(roamingDate, LocalDate.now())) {
-                roamingDate = LocalDate.now();
-                Log.WriteLog(Log.Level.Verbose,
-                        "Date changed. ",
-                        Log.LogClass.Multithreading,
-                        PluginName);
-                for (Module singleModule :
-                        RongXiaoliBot.BotModuleLoader.ModuleList) {
-                    if (singleModule instanceof DailySign) {
-                        ((DailySign) singleModule).SignInPosition = 1;
-                    }
-                }
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Log.Exception(e,
-                        "DailySign refresh thread interrupted. ",
-                        Log.LogClass.Multithreading,
-                        PluginName);
-            }
-        }
-        @Override
-        public void run() {
-            while (IsEnabled) {
-                refreshProcess();
-            }
-        }
-    }
     /**
      * Module initiate function.
      */
@@ -111,7 +72,12 @@ public class DailySign extends Module {
         if (!IsEnabled) return;
         if (!message[0].equals(Command)) return;
         //Process start.
-
+        if (message.length == 2) {
+            if (message[1].equals("position")) {
+                SubjectContact.sendMessage("当前位次：" + SignInPosition);
+                return;
+            }
+        }
         UserDataOperation operation = new UserDataOperation(Friend);
         operation.signInProcess();
         SignString str = new SignString();
@@ -192,11 +158,54 @@ public class DailySign extends Module {
         return DebugMode;
     }
 
+    /**
+     * This class is used as a thread for refreshing sign in position.
+     */
+    private class PositionRefreshThread extends Thread {
+        private LocalDate roamingDate;
+
+        public PositionRefreshThread() {
+            this.roamingDate = LocalDate.now();
+        }
+
+        private void refreshProcess() {
+            if (!Objects.equals(roamingDate, LocalDate.now())) {
+                roamingDate = LocalDate.now();
+                Log.WriteLog(Log.Level.Verbose,
+                        "Date changed. ",
+                        Log.LogClass.Multithreading,
+                        PluginName);
+                for (Module singleModule :
+                        RongXiaoliBot.BotModuleLoader.ModuleList) {
+                    if (singleModule instanceof DailySign) {
+                        ((DailySign) singleModule).SignInPosition = 1;
+                    }
+                }
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.Exception(e,
+                        "DailySign refresh thread interrupted. ",
+                        Log.LogClass.Multithreading,
+                        PluginName);
+            }
+        }
+
+        @Override
+        public void run() {
+            while (IsEnabled) {
+                refreshProcess();
+            }
+        }
+    }
+
     private class UserDataOperation {
         private final long userID;
         private final LocalDateTime requestDateTime;
         private boolean isNew = false;
         private boolean isSigned = false;
+
         public UserDataOperation(long id) {
             this.userID = id;
             requestDateTime = LocalDateTime.now();
@@ -283,6 +292,7 @@ public class DailySign extends Module {
                 RongXiaoliBot.BotModuleLoader.DataBase.UserRefresh(userID, user, PluginName);
             }
         }
+
         private long getCoin() {
             return ((SignInStruct) RongXiaoliBot.BotModuleLoader.DataBase.UserReadOrException(userID).DataBlockReadOrException(PluginName).DataReadOrException("SignInStruct")).getCoin();
         }

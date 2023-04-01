@@ -7,8 +7,8 @@ import net.mamoe.mirai.event.events.NudgeEvent;
 
 public class Action {
 
-    public void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID, int ReplyType){
-        switch (ReplyType){
+    public void Main(NudgeEvent e, long TargetID, long BotID, boolean IsGroup, long GroupID, int ReplyType) {
+        switch (ReplyType) {
             default:
                 Log.Exception(new IndexOutOfBoundsException("Expected rand to give out numbers from 0 to 1, but given " + ReplyType), "", Log.LogClass.Data, "PokeAction");
             case 0:

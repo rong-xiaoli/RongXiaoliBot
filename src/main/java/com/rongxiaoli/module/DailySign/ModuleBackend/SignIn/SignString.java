@@ -2,26 +2,23 @@ package com.rongxiaoli.module.DailySign.ModuleBackend.SignIn;
 
 import com.rongxiaoli.backend.Log;
 
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Random;
 
 public class SignString {
 
     /**
      * Get a random string.
-     * @param Year Year.
-     * @param Month Month.
-     * @param Day Day.
-     * @param Week Day of week.
-     * @param Hour Hour.
-     * @param Minute Minute.
-     * @param Second Second. Used for Jan 1st.
+     *
+     * @param Year        Year.
+     * @param Month       Month.
+     * @param Day         Day.
+     * @param Week        Day of week.
+     * @param Hour        Hour.
+     * @param Minute      Minute.
+     * @param Second      Second. Used for Jan 1st.
      * @param Millisecond Millisecond. Used for Jan 1st.
      * @return NewRandom string.
      */
@@ -81,13 +78,13 @@ public class SignString {
         }
         //Holiday region start.
         //MixedString.
-        if (Month == 1 && Day >= 1 && Day <=3) {
+        if (Month == 1 && Day >= 1 && Day <= 3) {
             MixedString = "元旦快乐！";
         }
         if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0) {
             MixedString = "真准时呢~元旦快乐哦~";
         }
-        if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0 && Second == 0 && Millisecond == 0){
+        if (Month == 1 && Day == 1 && Hour == 0 && Minute == 0 && Second == 0 && Millisecond == 0) {
             MixedString = "怎么做到这么准时的？？新年快乐~";
         }
         if (Month == 2 && Day == 14) {
@@ -127,7 +124,7 @@ public class SignString {
             MixedString = "返校了吗？";
         }
         if (Month == 9 && Day == 1) {
-            MixedString = "开学快乐！" ;
+            MixedString = "开学快乐！";
         }
         if (Month == 10 && Day >= 1 && Day <= 7) {
             MixedString = "国庆快乐！";
@@ -312,7 +309,7 @@ public class SignString {
                 break;
         }
 
-        switch (random.nextInt(0,6)) {
+        switch (random.nextInt(0, 6)) {
             case 0:
                 OtherString = "QwQ";
                 break;
@@ -330,9 +327,9 @@ public class SignString {
                 break;
             default:
                 Log.WriteLog(Log.Level.Warning,
-                    "Unexpected value: (nextInt(6))",
-                    Log.LogClass.ModuleMain,
-                    "DailySign");
+                        "Unexpected value: (nextInt(6))",
+                        Log.LogClass.ModuleMain,
+                        "DailySign");
             case 5:
                 OtherString = "C#是世界上最美的语言！";
                 break;
@@ -342,7 +339,7 @@ public class SignString {
         if (!MixedString.equals("")) {
             return MixedString;
         }
-        StringSelection = random.nextInt(1,6);
+        StringSelection = random.nextInt(1, 6);
         switch (StringSelection) {
             case 1:
                 return YearBasedString;
@@ -380,7 +377,7 @@ public class SignString {
         friendStringBuilder.append("今天是").append(year).append("年").append(month).append("月").append(day).append("日").append("\n");
         friendStringBuilder.append("现在是").append(presentTime.format(formatter)).append("\n");
         friendStringBuilder.append("本次打卡位次为：").append(signInPosition).append("\n");
-        friendStringBuilder.append(GetRandomString(year,month,day, presentTime.getDayOfWeek(), hour,minute,second,millisecond));
+        friendStringBuilder.append(GetRandomString(year, month, day, presentTime.getDayOfWeek(), hour, minute, second, millisecond));
         return friendStringBuilder.toString();
     }
 }
