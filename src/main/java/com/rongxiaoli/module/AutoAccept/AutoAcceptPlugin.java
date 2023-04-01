@@ -70,8 +70,9 @@ public class AutoAcceptPlugin extends Module {
         }
         MessageChainBuilder WelcomeMessage = new MessageChainBuilder();
         WelcomeMessage.append("欢迎使用容小狸Bot！\n");
-        WelcomeMessage.append("目前主要功能：\n");
-        WelcomeMessage.append("涩图，命令：setu [Keyword1] [keyword2] ...\n");
+        WelcomeMessage.append("项目地址：https://github.com/rong-xiaoli/RongXiaoliBot\n");
+        WelcomeMessage.append("请输入/help以查看命令帮助。\n");
+        WelcomeMessage.append("请访问项目地址以查看最新功能。");
         e.getGroup().sendMessage(WelcomeMessage.build());
     }
 
