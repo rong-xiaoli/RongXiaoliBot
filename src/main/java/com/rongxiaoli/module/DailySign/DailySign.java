@@ -12,6 +12,7 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -71,14 +72,18 @@ public class DailySign extends Module {
         }
         if (!IsEnabled) return;
         if (!message[0].equals(Command)) return;
-        //Process start.
+        // Process start.
+        UserDataOperation operation = new UserDataOperation(Friend);
         if (message.length == 2) {
             if (message[1].equals("position")) {
                 SubjectContact.sendMessage("当前位次：" + SignInPosition);
                 return;
             }
+            if (message[1].equals("query")) {
+                SubjectContact.sendMessage("当前有金币：" + operation.getCoin() + "枚");
+                return;
+            }
         }
-        UserDataOperation operation = new UserDataOperation(Friend);
         operation.signInProcess();
         SignString str = new SignString();
         if (operation.isSigned) {
@@ -99,7 +104,15 @@ public class DailySign extends Module {
         }
         MessageChainBuilder builder = new MessageChainBuilder();
         builder.append(str.FriendString(operation.requestDateTime, SignInPosition));
-        builder.append("\n现在有").append(String.valueOf(operation.getCoin())).append("枚金币");
+
+        if (operation.requestDateTime.getMonth() == Month.APRIL && operation.requestDateTime.getDayOfMonth() == 1 && message[1] == null) {
+            // April fool's day.
+            builder.append("\n现在有").append("114514").append("枚金币");
+        } else {
+            // Normal.
+            builder.append("\n现在有").append(String.valueOf(operation.getCoin())).append("枚金币");
+        }
+
         SubjectContact.sendMessage(builder.build());
         SignInPosition++;
     }
