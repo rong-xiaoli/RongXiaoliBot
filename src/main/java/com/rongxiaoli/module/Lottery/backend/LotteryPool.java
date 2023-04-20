@@ -34,6 +34,7 @@ public class LotteryPool {
      * @return True if player win the lottery.
      */
     public boolean inPool(long amount, long Friend) {
+        double result = 0;
         random = new NewRandom();
         if (boughtFriendList.contains(Friend)) {
             return false;
@@ -43,10 +44,13 @@ public class LotteryPool {
         if (pool == 0) {
             multiplyRate = 1;
         } else multiplyRate = amount / pool + 1;
+        result = random.nextHalfRangedGaussian(0, 1);
         if (random.nextHalfRangedGaussian(0, 1) < 3) {
+            Log.WriteLog(Log.Level.Verbose, "User " + Friend + " lose, result = " + result, Log.LogClass.ModuleMain, "Lottery");
             pool += amount;
             return false;
         } else {
+            Log.WriteLog(Log.Level.Verbose, "User " + Friend + " won, result = " + result, Log.LogClass.ModuleMain, "Lottery");
             finalPool = pool * multiplyRate + amount;
             boughtFriendList.clear();
             return true;
