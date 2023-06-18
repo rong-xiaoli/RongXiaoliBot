@@ -128,7 +128,12 @@ public class FortuneToday extends Module {
             year = cal.get(Calendar.YEAR) * 10000;
             month = cal.get(Calendar.MONTH) * 100;
             day = cal.get(Calendar.DAY_OF_YEAR);
-            Random rand = new Random(ID + year + month + day);
+            Random rand;
+            if (cal.get(Calendar.MONTH) == Calendar.APRIL && cal.get(Calendar.DAY_OF_MONTH) == 1) {
+                rand = new Random();
+                return rand.nextInt(-100, 200);
+            }
+            rand = new Random(ID + year + month + day);
             return rand.nextInt(0, 100);
         }
 
@@ -151,7 +156,7 @@ public class FortuneToday extends Module {
                 return "Lucky~今天好幸运啊!";
             } else if (fortuneRandom == 100) {
                 return "哇！欧皇！";
-            } else return "";
+            } else return "这啥？";
         }
     }
 }

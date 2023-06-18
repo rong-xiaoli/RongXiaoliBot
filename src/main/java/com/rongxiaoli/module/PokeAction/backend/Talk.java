@@ -7,9 +7,11 @@ import net.mamoe.mirai.event.events.NudgeEvent;
 import java.util.Random;
 
 public class Talk {
-    private static String Generate(int type, int number) {
+    private static String Generate(int type, Random rand) {
+        int number;
         switch (type) {
             case 0:
+                number = rand.nextInt(0, 5);
                 switch (number) {
                     default:
                         Log.Exception(new IndexOutOfBoundsException("Expected rand return a number from 0 to 4, but rand returned" + number), "", Log.LogClass.Data, "PokeAction");
@@ -25,6 +27,7 @@ public class Talk {
                         return "oxO";
                 }
             case 1:
+                number = rand.nextInt(0, 4);
                 switch (number) {
                     default:
                         Log.WriteLog(Log.Level.Warning, "Expected number to be from 0 to 3, got " + number, Log.LogClass.Data, "PokeAction");
@@ -51,10 +54,10 @@ public class Talk {
             if (GroupID == 0) {
                 return;
             }
-            e.getSubject().sendMessage(Generate(type, number));
+            e.getSubject().sendMessage(Generate(type, random));
             return;
         }
         Friend friend = (Friend) e.getFrom();
-        friend.sendMessage(Generate(type, number));
+        friend.sendMessage(Generate(type, random));
     }
 }
