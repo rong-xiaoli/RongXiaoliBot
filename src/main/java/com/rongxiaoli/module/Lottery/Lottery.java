@@ -83,10 +83,12 @@ public class Lottery extends Module {
         }
         //Process start.
         long amount = 1;
-        // Query pool. 
-        if (Objects.equals(message[1], "pool")) {
-            SubjectContact.sendMessage("当前奖池内共有：" + lotteryPool + "枚金币");
-            return;
+        // Query pool.
+        if (message.length >= 2) {
+            if (Objects.equals(message[1], "pool")) {
+                SubjectContact.sendMessage("当前奖池内共有：" + lotteryPool.getPool() + "枚金币");
+                return;
+            }
         }
         if (message.length == 2) {
             amount = Long.parseLong(message[1]);
