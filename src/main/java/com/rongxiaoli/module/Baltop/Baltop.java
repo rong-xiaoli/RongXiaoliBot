@@ -70,7 +70,7 @@ public class Baltop extends Module {
         SubjectContact.sendMessage("正在查询，请稍后");
         HashMap<Long, User> userList = RongXiaoliBot.BotModuleLoader.DataBase.UserListDeepCopy();
         List<Long> topList = userList.entrySet().stream().sorted((Map.Entry<Long, User> e1, Map.Entry<Long, User> e2) -> {
-                    return ((int) ((long) ((SignInStruct) e2.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin() - ((long) ((SignInStruct) e1.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin())));
+                    return ((int) ((long) ((SignInStruct) e2.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin() - ((long) ((SignInStruct) e1.getValue().DirectDataRead("DailySign", "SignInStruct")).getCoin()))); // TODO: 2023/6/19 Some problems here.
                 })
                 .map(userEntry -> userEntry.getKey()).collect(Collectors.toList())
                 .subList(0, 10);

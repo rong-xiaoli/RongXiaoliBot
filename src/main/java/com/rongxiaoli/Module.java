@@ -2,13 +2,34 @@ package com.rongxiaoli;
 
 import net.mamoe.mirai.contact.Contact;
 
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+
 /**
  * Module class.
  */
 public abstract class Module {
-
-    private String PluginName;
-    private String HelpContent;
+    private HashMap<String, Object> moduleSettingMap;
+    public void setModuleSettingOrAdd(String moduleSetting, Object value) {
+    if (moduleSettingMap.containsKey(moduleSetting)) {
+        moduleSettingMap.replace(moduleSetting, value);
+    } else moduleSettingMap.put(moduleSetting, value);
+}
+    public void setModuleSetting(String moduleSetting, Object value) {
+        if (moduleSettingMap.containsKey(moduleSetting)) {
+            moduleSettingMap.replace(moduleSetting, value);
+        }
+    }
+    public Object readModuleSetting(String moduleSetting) {
+        if (moduleSettingMap.containsKey(moduleSetting)) {
+            return moduleSettingMap.get(moduleSetting);
+        } else throw new NoSuchElementException("No " + "\"" + moduleSetting + "\"" + "found. ");
+    }
+    public Object readModuleSettingOrNull(String moduleSetting) {
+        return moduleSettingMap.getOrDefault(moduleSetting, null);
+    }
+    private String PluginName = "DefaultPluginName";
+    private String HelpContent = "Default plugin help content. ";
     private boolean IsEnabled;
     private boolean DebugMode;
 
