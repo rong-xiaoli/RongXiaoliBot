@@ -6,7 +6,7 @@ plugins {
     id("net.mamoe.mirai-console") version "2.13.0-RC2"
 }
 
-group = "com.rongxiaoli"
+group = "top.rongxiaoli"
 version = "0.2.1-Preview1"
 
 repositories {
