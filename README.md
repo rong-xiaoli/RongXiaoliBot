@@ -1,5 +1,12 @@
 # RongXiaoliBot
 
+---
+[![Static Badge](https://img.shields.io/badge/rong--xiaoli-RongXiaoliBot-white?logo=github)](https://github.com/rong-xiaoli/RongXiaoliBot)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/rong-xiaoli/RongXiaoliBot)](https://github.com/rong-xiaoli/RongXiaoliBot/releases/latest)
+<!--
+![GitHub issues](https://img.shields.io/github/issues-raw/rong-xiaoli/RongXiaoliBot)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/rong-xiaoli/RongXiaoliBot)
+-->
 ## 许可证 Licence
 
 本插件沿用[mirai框架](https://github.com/mamoe/mirai)所使用的AGPL-3.0许可证。
