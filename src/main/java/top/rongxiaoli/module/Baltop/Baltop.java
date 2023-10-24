@@ -48,6 +48,7 @@ public class Baltop extends Module {
      */
     public void FriendMain(String[] arrCommand, long Friend, Contact SubjectContact) {
         // Remove empty spaces.
+        // To be fixed.
         String[] message = arrCommand.clone();
         List<String> emptyStringRemover = Arrays.asList(message);
         emptyStringRemover.removeAll(Arrays.asList(""));
