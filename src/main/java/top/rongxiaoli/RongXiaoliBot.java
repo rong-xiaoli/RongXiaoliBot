@@ -20,6 +20,7 @@ import net.mamoe.mirai.event.GlobalEventChannel;
 import java.nio.file.Path;
 
 public final class RongXiaoliBot extends JavaPlugin {
+    // TODO: 2023/6/19 Add global control func.
     public static final String PluginVersion = "0.2.1-Preview1";
     public static final RongXiaoliBot INSTANCE = new RongXiaoliBot();
     public static final long Owner = 1751362263;
