@@ -3,6 +3,18 @@ package top.rongxiaoli;
 import top.rongxiaoli.backend.JSONHelper;
 import top.rongxiaoli.backend.Log;
 import top.rongxiaoli.data.DataBaseClass;
+import top.rongxiaoli.module.AutoAccept.AutoAcceptPlugin;
+import top.rongxiaoli.module.Baltop.Baltop;
+import top.rongxiaoli.module.BotCommand.BotCommand;
+import top.rongxiaoli.module.Broadcast.Broadcast;
+import top.rongxiaoli.module.DailySign.DailySign;
+import top.rongxiaoli.module.EmergencyStop.EmergencyStop;
+import top.rongxiaoli.module.FortuneToday.FortuneToday;
+import top.rongxiaoli.module.Lottery.Lottery;
+import top.rongxiaoli.module.Ping.Ping;
+import top.rongxiaoli.module.PokeAction.PokeAction;
+import top.rongxiaoli.module.Repeater.Repeater;
+import top.rongxiaoli.module.setu.PicturePlugin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +27,21 @@ public class ModuleLoader {
     public ModuleLoader() {
         ModuleList = new ArrayList<>();
         DataBase = new DataBaseClass();
+
+        // DAMN This shit...
+        // Add every module into the array... What's wrong with it...
+        ModuleList.add(new EmergencyStop());
+        ModuleList.add(new BotCommand());
+        ModuleList.add(new Broadcast());
+        ModuleList.add(new AutoAcceptPlugin());
+        ModuleList.add(new PicturePlugin());
+        ModuleList.add(new DailySign());
+        ModuleList.add(new PokeAction());
+        ModuleList.add(new Ping());
+        ModuleList.add(new Repeater());
+        ModuleList.add(new FortuneToday());
+        ModuleList.add(new Lottery());
+        ModuleList.add(new Baltop());
     }
 
     public void ModuleInit() {

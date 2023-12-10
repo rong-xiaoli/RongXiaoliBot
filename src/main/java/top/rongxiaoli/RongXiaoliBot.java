@@ -54,24 +54,14 @@ public final class RongXiaoliBot extends JavaPlugin {
         BotModuleLoader = new ModuleLoader();
         //Adding bot module.
 
-        BotModuleLoader.ModuleList.add(new EmergencyStop());
-        BotModuleLoader.ModuleList.add(new BotCommand());
-        BotModuleLoader.ModuleList.add(new Broadcast());
-        BotModuleLoader.ModuleList.add(new AutoAcceptPlugin());
-        BotModuleLoader.ModuleList.add(new PicturePlugin());
-        BotModuleLoader.ModuleList.add(new DailySign());
-        BotModuleLoader.ModuleList.add(new PokeAction());
-        BotModuleLoader.ModuleList.add(new Ping());
-        BotModuleLoader.ModuleList.add(new Repeater());
-        BotModuleLoader.ModuleList.add(new FortuneToday());
-        BotModuleLoader.ModuleList.add(new Lottery());
-        BotModuleLoader.ModuleList.add(new Baltop());
         //Done.
 
         //Module init.
         BotModuleLoader.ModuleInit();
         // Data init.
         BotModuleLoader.DataInit();
+        // Todo: Add a config loader.
+
 
         // Plugin init finish.
         //Todo: Read bot owner from a file. 

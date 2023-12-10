@@ -76,6 +76,7 @@ This bot has these modules:
 | 抽奖                   | /lottery                              | 进行一次抽奖           |
 | 抽奖                   | /l                                    | 进行一次抽奖           |
 | 财富榜                  | /baltop                               | 查看财富榜前10名        |
+
 The chart below offers every parameter of each command, the module name is in the brackets, which will be used in managing modules.
 
 In the "Command + Parameters" row,
@@ -107,5 +108,6 @@ Modules marked * cannot be disabled by management module.
 | Lottery                             | /l                                    | Buy a lottery.                                               |
 | Baltop                              | /baltop                               | Check balance list top 10.                                   |
 ## 自行运行报告bug须知 Bug report
-
+记得附上日志，再怎么说得把Exception报给我（如果你确信这是我干的话。）
+Remember to post your logs, give me the exception to me at least (if you are sure this is my fault).  
 ![Apache.png](assets/Apache.png)
