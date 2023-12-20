@@ -1,6 +1,8 @@
 package top.rongxiaoli.backend.Network;
 
 import top.rongxiaoli.backend.Log;
+import top.rongxiaoli.backend.Network.HttpsTrustManager.TrustAnyHostnameVerifier;
+import top.rongxiaoli.backend.Network.HttpsTrustManager.TrustAnyTrustManager;
 
 import javax.net.ssl.*;
 import java.io.BufferedReader;
@@ -11,8 +13,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.HashMap;
 
 public class HttpsGet {
@@ -35,7 +35,7 @@ public class HttpsGet {
     }
 
     public String getFinalURL() {
-        return targetUrl + Par.Build();
+        return targetUrl + Par.BuildGet();
     }
 
     /**
@@ -89,71 +89,5 @@ public class HttpsGet {
             conn.disconnect();
         }
         return Output.toString();
-    }
-
-    public static class TrustAnyTrustManager implements X509TrustManager {
-        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-        }
-
-        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-        }
-
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[]{};
-        }
-    }
-
-    public static class TrustAnyHostnameVerifier implements HostnameVerifier {
-        public boolean verify(String arg0, SSLSession arg1) {
-            return true;
-        }
-    }
-
-    public static class Param {
-        public StringBuilder Par;
-
-        public Param() {
-            this.Par = new StringBuilder();
-        }
-
-        /**
-         * Append a param to params.
-         *
-         * @param name  Param name.
-         * @param value Param value.
-         */
-        public void Append(String name, String value) {
-            if (Par.length() == 0) {
-                Par.append('?').append(name).append('=').append(value);
-            } else {
-                Par.append('&').append(name).append('=').append(value);
-            }
-        }
-
-        public void Append(String name, String value, boolean unicodeEncodeMode) {
-            String finalValue = value;
-            if (unicodeEncodeMode) {
-                byte[] ParByte = value.getBytes(StandardCharsets.UTF_8);
-                StringBuilder encodedParByte = new StringBuilder();
-                for (byte singleByte :
-                        ParByte) {
-                    encodedParByte.append("%").append((Integer.toHexString((singleByte & 0x000000ff) | 0xffffff00)).substring(6));
-                }
-                finalValue = encodedParByte.toString();
-            }
-            Append(name, finalValue);
-        }
-
-        /**
-         * Get params.
-         *
-         * @return The param added to the end of Url.
-         */
-        public String Build() {
-            if (Par == null) {
-                return "";
-            }
-            return Par.toString();
-        }
     }
 }
