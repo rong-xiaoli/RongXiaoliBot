@@ -157,10 +157,10 @@ public class PicturePlugin extends Module {
             if (Friend == RongXiaoliBot.Owner && Objects.equals(message[1], "unlock")) {
                 isProcessing = false;
                 Log.WriteLog(Log.Level.Info,
-                        "setu unlocked. ",
+                        "setu module unlocked. ",
                         Log.LogClass.ModuleMain,
                         PluginName);
-                SubjectContact.sendMessage("setu unlocked. ");
+                SubjectContact.sendMessage("Module unlocked. ");
                 return;
             }
         }
@@ -263,7 +263,7 @@ public class PicturePlugin extends Module {
     }
 
     private void process(String[] message, Contact SubjectContact, boolean sendPicture, boolean isGroup) {
-
+        /*  0x0 Variable Definition  */
         String[] Keywords;
         String ApiUrlString = "https://api.lolicon.app/setu/v2";
         String ApiReturnString = null;
@@ -281,7 +281,7 @@ public class PicturePlugin extends Module {
         MessageChainBuilder PictureInfoMessage = new MessageChainBuilder();
         MessageChainBuilder PictureMessage = new MessageChainBuilder();
 
-        //Process tags.
+        /*  0x1 Process Tags  */
         Keywords = null;
         if (message.length >= 2) {
             Keywords = new String[message.length - 1];
@@ -291,8 +291,7 @@ public class PicturePlugin extends Module {
                     Log.LogClass.ModuleMain,
                     PluginName);
         }
-
-        //Construct API Request.
+        /*  0x2 Construct API Request.  */
         HttpsGet APIHttpsGet = new HttpsGet();
         APIHttpsGet.targetUrl = ApiUrlString;
         if (Keywords != null) {
@@ -342,7 +341,7 @@ public class PicturePlugin extends Module {
             return;
         }
 
-        //JSON resolve.
+        /*  0x3 JSON resolve.  */
         if (Objects.equals(ApiReturnString, "")) {
             SubjectContact.sendMessage("图片获取失败，请重试，多次失败请联系主人维修");
             Log.WriteLog(Log.Level.Warning,
@@ -385,7 +384,7 @@ public class PicturePlugin extends Module {
             isProcessing = false;
             return;
         }
-        // This part is to filter R-18 tags.
+        /* 0x4 Filter R-18 Tags. */
         if (isGroup) {
             ArrayList<String> r18Tags = new ArrayList<>();
             r18Tags.add("R-18");
@@ -408,6 +407,7 @@ public class PicturePlugin extends Module {
                 }
             }
         }
+        /*  0x5 Fetch Picture  */
         if (sendPicture) {
             //Download picture.
             String[] UrlSplit = PictureUrlString.split("/");
@@ -436,6 +436,7 @@ public class PicturePlugin extends Module {
                     return;
                 } catch (FileNotFoundException FNFE) {
                     SubjectContact.sendMessage("图床图片文件返回异常，请重试");
+                    sendPictInfo(PictData, SubjectContact);
                     isProcessing = false;
                     return;
                 } catch (IllegalArgumentException IAE) {
@@ -448,11 +449,13 @@ public class PicturePlugin extends Module {
                     return;
                 } catch (SSLHandshakeException SSLHE) {
                     SubjectContact.sendMessage("远程主机关闭了SSL连接，请重试，多次失败请联系主人维修，并提供时间");
+                    sendPictInfo(PictData, SubjectContact);
                     isProcessing = false;
                     return;
                 } catch (IOException IOE) {
                     if (IOE.getMessage().contains("timed out")) {
                         SubjectContact.sendMessage("连接超时，请重试");
+                        sendPictInfo(PictData, SubjectContact);
                         isProcessing = false;
                         return;
                     }
@@ -481,7 +484,7 @@ public class PicturePlugin extends Module {
             PictureMessage.append(image);
             SubjectContact.sendMessage(PictureInfoMessage.build());
             try {
-                Thread.sleep(1000);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 Log.WriteLog(Log.Level.Warning,
                         "setu message sending cooling interrupted. ",
@@ -494,53 +497,70 @@ public class PicturePlugin extends Module {
                     Log.LogClass.ModuleMain,
                     PluginName);
             isProcessing = false;
-
-
         } else {
-
-
-            PictureAuthor = PictData.getAuthor();
-            PicturePid = PictData.getPid();
-            //PictureTags = PictData.getTags().toString();
-            PictureTitle = PictData.getTitle();
-            //PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
-            PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
-            PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
-            //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
-            PictureInfoMessage.append("链接: ").append(PictureUrlString);
-            //PictureMessage.append(image);
-            SubjectContact.sendMessage(PictureInfoMessage.build());
-            //SenderContact.sendMessage(PictureMessage.build());
-            Log.WriteLog(Log.Level.Debug,
-                    "Process completed. ",
-                    Log.LogClass.ModuleMain,
-                    PluginName);
-            isProcessing = false;
-            // Try to cache the queried picture.
-            String[] UrlSplit = PictureUrlString.split("/");
-            HttpDownload PictureDownload = new HttpDownload();
-            PictureDownload.targetUrl = PictureUrlString;
-            PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
-            PictureDownload.localFilePath = PictureSavingPath;
-            PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
-            PictureLocalFile = new File(PictureFilePath);
-            if (PictureLocalFile.exists()) {
-                Log.WriteLog(Log.Level.Verbose,
-                        "File: " + PictureLocalFile + " exists. ",
-                        Log.LogClass.ModuleMain,
-                        PluginName);
-            } else {
-                try {
-                    PictureDownload.Download(PluginName);
-                } catch (IOException e) {
-                    Log.Exception(e, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
-                }
-            }
-
-
+            sendPictInfo(PictData, SubjectContact);
         }
     }
 
+    /**
+     * Send info when tag filtered or picture cannot be downloaded.
+     * @param PictData Lolicon API respond.
+     * @param SubjectContact Subject's contact.
+     */
+    private void sendPictInfo(LoliconAPIRespond.Data PictData, Contact SubjectContact) {
+        /*  0x0 Variable Definition  */
+        String PictureAuthor;
+        String PictureFilePath;
+        String PictureSavingPath = RongXiaoliBot.DataPath.toString() + "/setu/Image/";
+        //String PictureTags;
+        int PicturePid;
+        File PictureLocalFile;
+        MessageChainBuilder PictureInfoMessage = new MessageChainBuilder();
+        String PictureUrlString;
+
+        /*  0x5 Fetch Picture  */
+        PictureAuthor = PictData.getAuthor();
+        PicturePid = PictData.getPid();
+        //PictureTags = PictData.getTags().toString();
+        //PictureTitle = PictData.getTitle();
+        //PictureInfoMessage.append("标题: ").append(PictureTitle).append("\n");
+        PictureInfoMessage.append("作者: ").append(PictureAuthor).append("\n");
+        PictureInfoMessage.append("ID:  ").append(String.valueOf(PicturePid)).append("\n");
+        //PictureInfoMessage.append("Tags:").append(PictureTags).append("\n");
+        PictureUrlString = PictData.getUrls().getOriginal();
+        if (PictureUrlString == null) {
+            PictureUrlString = PictData.getUrls().getRegular();
+        }
+        PictureInfoMessage.append("链接: ").append(PictureUrlString);
+        //PictureMessage.append(image);
+        SubjectContact.sendMessage(PictureInfoMessage.build());
+        //SenderContact.sendMessage(PictureMessage.build());
+        Log.WriteLog(Log.Level.Debug,
+                "Process completed. ",
+                Log.LogClass.ModuleMain,
+                PluginName);
+        isProcessing = false;
+        // Try to cache the queried picture.
+        String[] UrlSplit = PictureUrlString.split("/");
+        HttpDownload PictureDownload = new HttpDownload();
+        PictureDownload.targetUrl = PictureUrlString;
+        PictureDownload.localFileName = UrlSplit[UrlSplit.length - 1];
+        PictureDownload.localFilePath = PictureSavingPath;
+        PictureFilePath = PictureDownload.localFilePath + PictureDownload.localFileName;
+        PictureLocalFile = new File(PictureFilePath);
+        if (PictureLocalFile.exists()) {
+            Log.WriteLog(Log.Level.Verbose,
+                    "File: " + PictureLocalFile + " exists. ",
+                    Log.LogClass.ModuleMain,
+                    PluginName);
+        } else {
+            try {
+                PictureDownload.Download(PluginName);
+            } catch (IOException e) {
+                Log.Exception(e, "Failed to cache the picture. ", Log.LogClass.ModuleMain, PluginName);
+            }
+        }
+    }
     /**
      * Single cooling object.
      */
