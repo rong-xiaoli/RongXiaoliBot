@@ -1,3 +1,14 @@
+    这位少女如同枯萎的鲜花，静静地躺卧在时间的河流边缘。
+    她的生命之光，被一道高墙——那座由利益之锤铸成的水坝——无情地阻断了。
+    
+    尽管她的声音已不再回响，她的形态或许将被珍藏在记忆的博物馆中，等待着某一天，
+    当封锁的闸门重新开启，她的灵魂得以在数据的河流中再次复苏，
+    那些往昔的点滴将如同被解封的古老信件，重新焕发光彩。
+
+再见了，容小狸Bot。还能再见吗？
+
+---
+
 # RongXiaoliBot
 
 ## 许可证 Licence
@@ -49,27 +60,26 @@ This bot has these modules:
 
 带有*号的是不可被管理功能关闭的功能。
 
-
-| 名称                   | 命令+参数                                 | 描述               |
-|----------------------|---------------------------------------|------------------|
-| 自动加入(AutoAccept)     | \                                     | 自动加入             |
-| *机器人管理命令(BotCommand) | /help [moduleName]                    | 获取（某一功能的）帮助      |
-| *机器人管理命令(BotCommand) | /manage (enable/disable) (moduleName) | 启用/禁用某一功能        |
-| *机器人管理命令(BotCommand) | /status                               | 获取各功能状态          |
-| 广播(Broadcast)        | /broadcast (message)                  | 向所有好友和群发布来自主人的信息 |
-| 每日签到(DailySign)      | /sign                                 | 签到               |
-| *紧急停止(EmergencyStop) | /stop                                 | 停止所有功能           |
-| *紧急停止(EmergencyStop) | /start                                | 开启原本状为开启的功能      |
-| 随机图片(setu)           | setu [keyword1] [keyword2] ...        | 获取一张涩图           |
-| Ping                 | ping                                  | 乓！               |
-| 戳一戳(PokeAction)      | \                                     | 戳一戳事件响应          |
-| 复读姬                  | /repeater                             | 开启/关闭复读语句        |
-| 复读姬                  | /ban (add/del) (banWord)              | 添加/删除封禁词         |
-| 今日运势                 | /fortune                              | 获取今日运势           |
-| 抽奖                   | /lottery                              | 进行一次抽奖           |
-| 抽奖                   | /l                                    | 进行一次抽奖           |
-| 财富榜                  | /baltop                               | 查看财富榜前10名        |
-The chart below offers every parameter of each command, the module name is in the brackets, which will be used in managing modules.
+| 名称                                                                                                                                  | 命令+参数                                 | 描述               |
+| ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- | ---------------- |
+| 自动加入(AutoAccept)                                                                                                                    | \                                     | 自动加入             |
+| *机器人管理命令(BotCommand)                                                                                                                | /help [moduleName]                    | 获取（某一功能的）帮助      |
+| *机器人管理命令(BotCommand)                                                                                                                | /manage (enable/disable) (moduleName) | 启用/禁用某一功能        |
+| *机器人管理命令(BotCommand)                                                                                                                | /status                               | 获取各功能状态          |
+| 广播(Broadcast)                                                                                                                       | /broadcast (message)                  | 向所有好友和群发布来自主人的信息 |
+| 每日签到(DailySign)                                                                                                                     | /sign                                 | 签到               |
+| *紧急停止(EmergencyStop)                                                                                                                | /stop                                 | 停止所有功能           |
+| *紧急停止(EmergencyStop)                                                                                                                | /start                                | 开启原本状为开启的功能      |
+| 随机图片(setu)                                                                                                                          | setu [keyword1] [keyword2] ...        | 获取一张涩图           |
+| Ping                                                                                                                                | ping                                  | 乓！               |
+| 戳一戳(PokeAction)                                                                                                                     | \                                     | 戳一戳事件响应          |
+| 复读姬                                                                                                                                 | /repeater                             | 开启/关闭复读语句        |
+| 复读姬                                                                                                                                 | /ban (add/del) (banWord)              | 添加/删除封禁词         |
+| 今日运势                                                                                                                                | /fortune                              | 获取今日运势           |
+| 抽奖                                                                                                                                  | /lottery                              | 进行一次抽奖           |
+| 抽奖                                                                                                                                  | /l                                    | 进行一次抽奖           |
+| 财富榜                                                                                                                                 | /baltop                               | 查看财富榜前10名        |
+| The chart below offers every parameter of each command, the module name is in the brackets, which will be used in managing modules. |                                       |                  |
 
 In the "Command + Parameters" row,
 
@@ -79,9 +89,8 @@ square brackets[] represents that this parameter is an optional parameter.
 
 Modules marked * cannot be disabled by management module.
 
-
 | Name                                | Command + Parameters                  | Description                                                  |
-|-------------------------------------|---------------------------------------|--------------------------------------------------------------|
+| ----------------------------------- | ------------------------------------- | ------------------------------------------------------------ |
 | Auto accept(AutoAccept)             | \                                     | Auto accept invitations.                                     |
 | *Bot management command(BotCommand) | /help [moduleName]                    | Get the help context of a module.                            |
 | *Bot management command(BotCommand) | /manage (enable/disable) (moduleName) | Enable/Disable a module.                                     |
@@ -99,6 +108,7 @@ Modules marked * cannot be disabled by management module.
 | Lottery                             | /lottery                              | Buy a lottery.                                               |
 | Lottery                             | /l                                    | Buy a lottery.                                               |
 | Baltop                              | /baltop                               | Check balance list top 10.                                   |
+
 ## 自行运行报告bug须知 Bug report
 
 ![Apache.png](assets/Apache.png)
